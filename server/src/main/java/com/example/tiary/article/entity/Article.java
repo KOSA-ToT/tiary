@@ -28,4 +28,17 @@ public class Article extends AuditingFields {
 	@Column(length = 65554)
 	private String content;
 
+	private Long view;
+
+	public static Article of(Long id, String title, String content, Long view) {
+		return new Article(id, title, content, view);
+	}
+
+	public void updateTitle(String title) {
+		this.title = title;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
 }
