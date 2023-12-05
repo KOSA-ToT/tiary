@@ -23,7 +23,6 @@ import lombok.ToString;
 @Getter
 @Entity
 public class Article extends AuditingFields {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -35,16 +34,15 @@ public class Article extends AuditingFields {
 	private Long view;
 
 	@OneToMany(mappedBy = "article")
+	@ToString.Exclude
 	private List<ArticleHashtag> articleHashtags = new ArrayList<>();
 
 	public static Article of(Long id, String title, String content, Long view, List<ArticleHashtag> articleHashtags) {
-		return new Article(id, title, content, view,articleHashtags);
+		return new Article(id, title, content, view, articleHashtags);
 	}
-
 	public void updateTitle(String title) {
 		this.title = title;
 	}
-
 	public void updateContent(String content) {
 		this.content = content;
 	}

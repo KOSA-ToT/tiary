@@ -9,9 +9,11 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Entity
 public class ArticleHashtag {
 	@Id
@@ -24,7 +26,7 @@ public class ArticleHashtag {
 	@JoinColumn(name = "hashtag_id")
 	private Hashtag hashtag;
 
-	public static ArticleHashtag of(Article article, Hashtag hashtag){
-		return new ArticleHashtag(null,article, hashtag);
+	public static ArticleHashtag of(Article article, Hashtag hashtag) {
+		return new ArticleHashtag(null, article, hashtag);
 	}
 }

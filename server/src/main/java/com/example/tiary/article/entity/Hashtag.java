@@ -13,9 +13,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Getter
 @Entity
 public class Hashtag {
@@ -23,21 +25,17 @@ public class Hashtag {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 20)
+	@Column(length = 20, unique = true)
 	private String hashtagName;
 
 	@OneToMany(mappedBy = "hashtag")
-	private List<ArticleHashtag> articleHashtags  = new ArrayList<>();
+	@ToString.Exclude
+	private List<ArticleHashtag> articleHashtags = new ArrayList<>();
 
 	public static Hashtag of(Long id, String hashtagName, List<ArticleHashtag> articleHashtags) {
 		return new Hashtag(null, hashtagName, articleHashtags);
 	}
-
 	public static Hashtag of(String hashtagName) {
-		return new Hashtag(null, hashtagName,null);
-	}
-
-	public void updateHashtagName(String hashtagName) {
-		this.hashtagName = hashtagName;
+		return new Hashtag(null, hashtagName, null);
 	}
 }

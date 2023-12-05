@@ -1,10 +1,6 @@
 package com.example.tiary.article.dto.request;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.example.tiary.article.entity.Article;
-import com.example.tiary.article.entity.Hashtag;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
