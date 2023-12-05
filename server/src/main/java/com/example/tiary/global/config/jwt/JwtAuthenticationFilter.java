@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			.withExpiresAt(new Date(System.currentTimeMillis()
 				+ JwtProperties.EXPIRATION_TIME))
 			.withClaim("id", principalDetails.getId())
-			.withClaim("useremail", principalDetails.getEmail())
+			.withClaim("email", principalDetails.getEmail())
 			.sign(Algorithm.HMAC512(JwtProperties.SECRET));
 		response.addHeader(JwtProperties.HEADER_STRING,
 			JwtProperties.TOKEN_PREFIX + jwtToken);
