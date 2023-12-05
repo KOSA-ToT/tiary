@@ -31,7 +31,6 @@ public class CommentService {
 	public Comment create(CommentRequestDTO commentRequestDTO, Long articleId) {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
-
 		return commentRepository.save(commentRequestDTO.toEntity(article));
 	}
 
@@ -47,6 +46,12 @@ public class CommentService {
 		return commentResponseDTOList;
 	}
 
+	// 익명 댓글 비밀번호 확인
+	public boolean confirmPassword(Long commentId, String password) {
+		String commentPassword = commentRepository.findById(commentId).get().getPassword();
+		return commentPassword.equals(password);
+	}
+
 	// 수정
 	@Transactional
 	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO) {
@@ -55,12 +60,12 @@ public class CommentService {
 		// 	comment.updateContent(commentRequestDTO.getContent());
 		// }
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
-
 		CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
 		return commentResponseDTO.from(commentRepository.save(comment));
 	}
 
 	// 삭제
+	@Transactional
 	public String delete(Long commentId) {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new EntityNotFoundException("댓글이 이미 삭제되었습니다."));
