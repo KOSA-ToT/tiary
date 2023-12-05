@@ -15,23 +15,22 @@ import com.example.tiary.article.repository.ArticleHashtagRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.article.service.HashtagService;
+import com.example.tiary.category.entity.Category;
+import com.example.tiary.category.service.CategoryService;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class ArticleServiceImpl implements ArticleService {
 	private final ArticleRepository articleRepository;
 	private final ArticleHashtagRepository articleHashtagRepository;
 	private final HashtagService hashtagService;
+	private final CategoryService categoryService;
 
-	public ArticleServiceImpl(ArticleRepository articleRepository, ArticleHashtagRepository articleHashtagRepository,
-		HashtagService hashtagService) {
-		this.articleRepository = articleRepository;
-		this.articleHashtagRepository = articleHashtagRepository;
-		this.hashtagService = hashtagService;
-	}
 
 	// 게시물 조회
 	@Transactional(readOnly = true)
@@ -65,14 +64,25 @@ public class ArticleServiceImpl implements ArticleService {
 		return responseArticleDtoList;
 	}
 
+	//카테고리로 조회
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode){
+		List<ResponseArticleDto> responseArticleDtoList = articleRepository.findAllByCategory_CategoryCode(categoryCode)
+			.stream().map(ResponseArticleDto::from).toList();
+		return responseArticleDtoList;
+
+	}
+
 	// 게시물 생성
 	//TODO DB 최적화 고민
 	@Transactional
 	@Override
 	public Article createArticle(RequestArticleDto requestArticleDto) {
+		Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
+		Article article = articleRepository.save(requestArticleDto.toEntity(category));
 
-		Article article = articleRepository.saveAndFlush(requestArticleDto.toEntity());
-		hashtagService.saveHashtag(hashtagService.createHashtag(requestArticleDto), article);
+		hashtagService.saveHashtag(requestArticleDto, article);
 
 		return article;
 	}

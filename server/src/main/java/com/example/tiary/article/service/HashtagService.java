@@ -12,8 +12,9 @@ public interface HashtagService {
 	@Transactional
 	List<String> createHashtag(RequestArticleDto requestArticleDto);
 
+	//해시태그 저장
 	@Transactional
-	Boolean saveHashtag(List<String> hashtagList, Article article);
+	Boolean saveHashtag(RequestArticleDto requestArticleDto, Article article);
 
 	@Transactional
 	Boolean updateHashtag(List<String> hashList, Article article);

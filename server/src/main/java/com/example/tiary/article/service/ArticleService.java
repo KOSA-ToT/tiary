@@ -13,6 +13,8 @@ public interface ArticleService {
 	List<ResponseArticleDto> readArticleList();
 	ResponseArticleDto readArticle(Long articleId);
 	List<ResponseArticleDto> readArticleFromHashtag(String hashtag);
+	//카테고리로 조회
+	List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode);
 	Article createArticle(RequestArticleDto requestArticleDto);
 	// 게시물 수정
 	@Transactional
