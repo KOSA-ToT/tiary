@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.dto.response.ResponseArticleDto;
 import com.example.tiary.article.entity.Article;
-import com.example.tiary.article.entity.ArticleHashtag;
-import com.example.tiary.article.entity.Hashtag;
 import com.example.tiary.article.repository.ArticleHashtagRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleService;
@@ -66,7 +64,7 @@ public class ArticleServiceImpl implements ArticleService {
 	public Article createArticle(RequestArticleDto requestArticleDto) {
 
 		Article article = articleRepository.saveAndFlush(requestArticleDto.toEntity());
-		hashtagService.saveHashtag(hashtagService.createHashtag(requestArticleDto),article);
+		hashtagService.saveHashtag(hashtagService.createHashtag(requestArticleDto), article);
 
 		return article;
 	}
@@ -80,6 +78,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 		Optional.ofNullable(requestArticleDto.getTitle()).ifPresent(article::updateTitle);
 		Optional.ofNullable(requestArticleDto.getContent()).ifPresent(article::updateContent);
+
+		hashtagService.removeOldHashtag(article);
+		hashtagService.updateHashtag(hashtagService.createHashtag(requestArticleDto), article);
 
 		return articleRepository.save(article);
 	}
