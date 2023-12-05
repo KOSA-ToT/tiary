@@ -3,8 +3,6 @@ package com.example.tiary.article.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.tiary.global.audit.AuditingFields;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,28 +20,22 @@ import lombok.ToString;
 @ToString
 @Getter
 @Entity
-public class Article extends AuditingFields {
+public class Hashtag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String title;
 
-	@Column(length = 65554)
-	private String content;
+	@Column(length = 20, unique = true)
+	private String hashtagName;
 
-	private Long view;
-
-	@OneToMany(mappedBy = "article")
+	@OneToMany(mappedBy = "hashtag")
 	@ToString.Exclude
 	private List<ArticleHashtag> articleHashtags = new ArrayList<>();
 
-	public static Article of(Long id, String title, String content, Long view, List<ArticleHashtag> articleHashtags) {
-		return new Article(id, title, content, view, articleHashtags);
+	public static Hashtag of(Long id, String hashtagName, List<ArticleHashtag> articleHashtags) {
+		return new Hashtag(null, hashtagName, articleHashtags);
 	}
-	public void updateTitle(String title) {
-		this.title = title;
-	}
-	public void updateContent(String content) {
-		this.content = content;
+	public static Hashtag of(String hashtagName) {
+		return new Hashtag(null, hashtagName, null);
 	}
 }

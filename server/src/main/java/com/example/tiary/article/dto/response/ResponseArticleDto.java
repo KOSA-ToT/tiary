@@ -1,30 +1,33 @@
 package com.example.tiary.article.dto.response;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.example.tiary.article.entity.Article;
+import com.example.tiary.article.entity.Hashtag;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-/**
- * DTO for {@link com.example.tiary.article.entity.Article}
- */
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Builder
+public class ResponseArticleDto {
+	private Long id;
+	private String title;
+	private String content;
+	private Long view;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
+	private String createdBy;
+	private String modifiedBy;
+	private List<Hashtag> hashtagList;
 
-public record ResponseArticleDto(
-	Long id,
-	String title,
-	String content,
-	Long view,
-	LocalDateTime createdAt,
-	LocalDateTime modifiedAt,
-	String createdBy,
-	String modifiedBy
-) implements Serializable {
-
-	public static ResponseArticleDto from(Article article) {
+	public static ResponseArticleDto from(Article article, List<Hashtag> hashtagList) {
 		return ResponseArticleDto.builder()
 			.id(article.getId())
 			.title(article.getTitle())
@@ -34,6 +37,7 @@ public record ResponseArticleDto(
 			.modifiedAt(article.getModifiedAt())
 			.createdBy(article.getCreatedBy())
 			.modifiedBy(article.getModifiedBy())
+			.hashtagList(hashtagList)
 			.build();
 	}
 }

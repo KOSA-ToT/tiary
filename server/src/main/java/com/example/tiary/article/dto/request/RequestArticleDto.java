@@ -1,28 +1,32 @@
 package com.example.tiary.article.dto.request;
 
-import java.io.Serializable;
-
 import com.example.tiary.article.entity.Article;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-/**
- * DTO for {@link com.example.tiary.article.entity.Article}
- */
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Builder
-public record RequestArticleDto(
-	@NotNull(message = "제목을 작성해 주세요.") String title,
-	@NotNull String content)
-
-	implements Serializable {
+public class RequestArticleDto {
+	@NotNull(message = "제목을 작성해 주세요.")
+	private String title;
+	@NotNull
+	private String content;
+	private String hashtag;
 
 	public Article toEntity() {
 		return Article.of(
 			null,
 			title,
 			content,
-			1L
+			1L,
+			null
 		);
 	}
 }
