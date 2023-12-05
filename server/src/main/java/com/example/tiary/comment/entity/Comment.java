@@ -33,6 +33,10 @@ public class Comment extends AuditingFields {
 	@ManyToOne
 	private Article article;
 
+	public void updateContent(String content){
+		this.content = content;
+	}
+
 	//    @ManyToOne
 	//    @JoinColumn(name = "user_id")
 	//    private Users users;
