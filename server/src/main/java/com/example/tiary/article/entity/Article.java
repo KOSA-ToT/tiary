@@ -1,5 +1,8 @@
 package com.example.tiary.article.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.tiary.global.audit.AuditingFields;
 
 import jakarta.persistence.Column;
@@ -7,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,8 +34,11 @@ public class Article extends AuditingFields {
 
 	private Long view;
 
-	public static Article of(Long id, String title, String content, Long view) {
-		return new Article(id, title, content, view);
+	@OneToMany(mappedBy = "article")
+	private List<ArticleHashtag> articleHashtags = new ArrayList<>();
+
+	public static Article of(Long id, String title, String content, Long view, List<ArticleHashtag> articleHashtags) {
+		return new Article(id, title, content, view,articleHashtags);
 	}
 
 	public void updateTitle(String title) {
