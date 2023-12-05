@@ -20,6 +20,8 @@ import lombok.ToString;
 public class CommentResponseDTO {
 	private Long id;
 	private String content;
+	private  String password;
+	private String commentType;
 	private Long articleId;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -30,6 +32,8 @@ public class CommentResponseDTO {
 		return CommentResponseDTO.builder()
 			.id(comment.getId())
 			.content(comment.getContent())
+			.password(comment.getPassword())
+			.commentType(comment.getCommentType())
 			.articleId(comment.getArticle().getId())
 			.createdAt(comment.getCreatedAt())
 			.modifiedAt(comment.getModifiedAt())

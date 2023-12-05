@@ -18,10 +18,14 @@ import lombok.ToString;
 @ToString
 public class CommentRequestDTO {
 	private String content;
+	private String password;
+	private String commentType;
 
 	public Comment toEntity(Article article) {
 		return Comment.builder()
 			.content(content)
+			.password(password)
+			.commentType(commentType)
 			.article(article)
 			.build();
 	}
