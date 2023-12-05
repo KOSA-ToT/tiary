@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,16 +28,31 @@ public class CommentController {
 	CommentService commentService;
 
 	@PostMapping("/{article-id}")
-	public ResponseEntity save(@PathVariable("article-id") Long articleId,
+	public ResponseEntity create(@PathVariable("article-id") Long articleId,
 		@RequestBody CommentRequestDTO commentRequestDTO) {
 
-		return new ResponseEntity<>(commentService.save(commentRequestDTO,articleId),HttpStatus.OK);
+		return new ResponseEntity<>(commentService.create(commentRequestDTO, articleId), HttpStatus.OK);
 	}
 
-	@GetMapping
-	public ResponseEntity<List<CommentResponseDTO>> readAll() {
-		List<CommentResponseDTO> commentResponseDTOList = commentService.readAll();
+	@GetMapping("/{article-id}")
+	public ResponseEntity<List<CommentResponseDTO>> readCommentList(@PathVariable("article-id") Long articleId) {
+		List<CommentResponseDTO> commentResponseDTOList = commentService.readCommentList(articleId);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(commentResponseDTOList);
+	}
+
+	@PatchMapping("/{comment-id}")
+	public ResponseEntity<CommentResponseDTO> updateComment(
+		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
+
+		return ResponseEntity.status(HttpStatus.RESET_CONTENT)
+			.body(commentService.update(commentId, commentRequestDTO));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity deleteComment(@PathVariable ("id") Long commentId) {
+
+		return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(commentService.delete(commentId));
 	}
 
 }
