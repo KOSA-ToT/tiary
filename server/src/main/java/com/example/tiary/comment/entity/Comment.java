@@ -30,15 +30,20 @@ public class Comment extends AuditingFields {
 	@Column(length = 200)
 	private String content;
 
+	private String password;
+
+	@Column(name = "comment_type")
+	private String commentType;
+
 	@ManyToOne
 	private Article article;
-
-	public void updateContent(String content){
-		this.content = content;
-	}
 
 	//    @ManyToOne
 	//    @JoinColumn(name = "user_id")
 	//    private Users users;
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
 
 }
