@@ -10,18 +10,12 @@ import jakarta.transaction.Transactional;
 
 public interface ArticleService {
 	// 게시물 조회
-	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	List<ResponseArticleDto> readArticleList();
-
-	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	ResponseArticleDto readArticle(Long articleId);
-
+	List<ResponseArticleDto> readArticleFromHashtag(String hashtag);
 	Article createArticle(RequestArticleDto requestArticleDto);
-
 	// 게시물 수정
 	@Transactional
 	Article updateArticle(RequestArticleDto requestArticleDto, Long articleId);
-
-	@org.springframework.transaction.annotation.Transactional
 	String deleteArticle(Long articleId);
 }

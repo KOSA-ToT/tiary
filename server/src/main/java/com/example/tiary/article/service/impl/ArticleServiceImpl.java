@@ -1,5 +1,6 @@
 package com.example.tiary.article.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.dto.response.ResponseArticleDto;
 import com.example.tiary.article.entity.Article;
+import com.example.tiary.article.entity.ArticleHashtag;
 import com.example.tiary.article.repository.ArticleHashtagRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleService;
@@ -35,16 +37,10 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<ResponseArticleDto> readArticleList() {
-		List<Article> articles = articleRepository.findAll();
-
-		// return articles.stream()
-		// 	.map(article -> ResponseArticleDto.from(article,
-		// 		hashtagRepository.findAllBy(article.getId()))).toList();
-		return null;
+		return articleRepository.findAll().stream().map(ResponseArticleDto::from).toList();
 	}
 
 	//게시물 단건 조회
-
 	@Transactional(readOnly = true)
 	@Override
 	public ResponseArticleDto readArticle(Long articleId) {
@@ -52,9 +48,21 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
 
-		// ResponseArticleDto responseArticleDto = ResponseArticleDto.from(article, hashtagRepository.findAllByArticleId(article.getId()))
+		return ResponseArticleDto.from(article);
+	}
 
-		return null;
+	// 해시태그로 조회
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseArticleDto> readArticleFromHashtag(String hashtag) {
+		List<ArticleHashtag> articleHashtag = articleHashtagRepository.findAllByHashtag_HashtagName(hashtag);
+		List<ResponseArticleDto> responseArticleDtoList = new ArrayList<>();
+
+		for(ArticleHashtag a : articleHashtag){
+			responseArticleDtoList.add(ResponseArticleDto.from(a.getArticle()));
+		}
+
+		return responseArticleDtoList;
 	}
 
 	// 게시물 생성
