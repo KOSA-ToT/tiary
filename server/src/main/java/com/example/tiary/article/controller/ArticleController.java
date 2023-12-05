@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
@@ -26,7 +27,11 @@ public class ArticleController {
 
 	//게시물 리스트 조회
 	@GetMapping
-	public ResponseEntity getArticleList() {
+	public ResponseEntity getArticleList(@RequestParam(value = "hashtag", required = false) String hashtag) {
+
+		if(hashtag != null){
+			return new ResponseEntity(articleService.readArticleFromHashtag(hashtag), HttpStatus.OK);
+		}
 		return new ResponseEntity<>(articleService.readArticleList(), HttpStatus.OK);
 	}
 

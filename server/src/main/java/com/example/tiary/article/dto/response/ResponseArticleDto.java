@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.tiary.article.entity.Article;
+import com.example.tiary.article.entity.ArticleHashtag;
 import com.example.tiary.article.entity.Hashtag;
 
 import lombok.AccessLevel;
@@ -25,9 +26,9 @@ public class ResponseArticleDto {
 	private LocalDateTime modifiedAt;
 	private String createdBy;
 	private String modifiedBy;
-	private List<Hashtag> hashtagList;
+	private List<ResponseHashtagDto> hashtagList;
 
-	public static ResponseArticleDto from(Article article, List<Hashtag> hashtagList) {
+	public static ResponseArticleDto from(Article article) {
 		return ResponseArticleDto.builder()
 			.id(article.getId())
 			.title(article.getTitle())
@@ -37,7 +38,7 @@ public class ResponseArticleDto {
 			.modifiedAt(article.getModifiedAt())
 			.createdBy(article.getCreatedBy())
 			.modifiedBy(article.getModifiedBy())
-			.hashtagList(hashtagList)
+			.hashtagList(article.getArticleHashtags().stream().map(ResponseHashtagDto::from).toList())
 			.build();
 	}
 }

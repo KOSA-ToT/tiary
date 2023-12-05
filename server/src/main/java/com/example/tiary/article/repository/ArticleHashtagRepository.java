@@ -9,4 +9,6 @@ import com.example.tiary.article.entity.ArticleHashtag;
 
 public interface ArticleHashtagRepository extends JpaRepository<ArticleHashtag, Long> {
 	List<ArticleHashtag> findAllByArticle(Article article);
+
+	List<ArticleHashtag> findAllByHashtag_HashtagName(String hashtagName);
 }
