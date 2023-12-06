@@ -48,6 +48,9 @@ dependencies {
 
 	//h2 DB
 	runtimeOnly 'com.h2database:h2'
+
+	//aws S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('bootBuildImage') {
