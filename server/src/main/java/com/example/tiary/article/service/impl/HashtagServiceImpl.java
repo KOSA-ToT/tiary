@@ -34,7 +34,9 @@ public class HashtagServiceImpl implements HashtagService {
 	// 해시태그 가공
 	@Override
 	public List<String> createHashtag(RequestArticleDto requestArticleDto) {
-
+		if(requestArticleDto.getHashtag() == null){
+			return new ArrayList<>();
+		}
 		Pattern HASHTAG_PATTERN = Pattern.compile("#(\\S+)");
 		Matcher matcher = HASHTAG_PATTERN.matcher(requestArticleDto.getHashtag());
 		List<String> hashtagList = new ArrayList<>();
@@ -48,7 +50,8 @@ public class HashtagServiceImpl implements HashtagService {
 	//해시태그 저장
 	@Transactional
 	@Override
-	public Boolean saveHashtag(List<String> hashtagList, Article article) {
+	public Boolean saveHashtag(RequestArticleDto requestArticleDto, Article article) {
+		List<String> hashtagList = createHashtag(requestArticleDto);
 		for (String tag : hashtagList) {
 			Hashtag hashtag = hashtagRepository.findHashtagByHashtagName(tag);
 			if (hashtag == null) {

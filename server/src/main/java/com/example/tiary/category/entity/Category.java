@@ -1,8 +1,8 @@
-package com.example.tiary.article.entity;
+package com.example.tiary.category.entity;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.example.tiary.article.entity.Article;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,26 +13,23 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 @Getter
 @Entity
-public class ArticleHashtag {
+public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
-	@JoinColumn(name = "article_id")
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private Article article;
-	@ManyToOne
-	@JoinColumn(name = "hashtag_id")
-	private Hashtag hashtag;
 
-	public static ArticleHashtag of(Article article, Hashtag hashtag) {
-		return new ArticleHashtag(null, article, hashtag);
+	@Column(length = 10, unique = true)
+	private String categoryCode;
+
+	@Column(length = 50)
+	private String categoryName;
+
+	public static Category of(Long id, String categoryCode, String categoryName){
+		return new Category(id, categoryCode, categoryName);
 	}
 }
