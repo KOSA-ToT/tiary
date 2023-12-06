@@ -1,6 +1,6 @@
 package com.example.tiary.users.dto;
 
-import com.example.tiary.users.entity.User;
+import com.example.tiary.users.entity.Users;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +10,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class UserDto {
-	private User user;
+	private Users users;
 
 	private String email;
 
-	public UserDto(User user) {
-		this.user = user;
+	public UserDto(Users users) {
+		this.users = users;
 	}
 
 }

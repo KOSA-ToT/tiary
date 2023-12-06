@@ -5,7 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import com.example.tiary.users.entity.User;
+import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.service.UserService;
 
 public class CustomAuthenticationProvider
@@ -22,10 +22,10 @@ public class CustomAuthenticationProvider
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String email = authentication.getName();
 
-		User user = userService.loadUserByUsername(email);
+		Users users = userService.loadUserByUsername(email);
 
-		if (user != null) {
-			return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+		if (users != null) {
+			return new UsernamePasswordAuthenticationToken(users, null, users.getAuthorities());
 		} else {
 			throw new BadCredentialsException("회원 정보가 없습니다.");
 		}

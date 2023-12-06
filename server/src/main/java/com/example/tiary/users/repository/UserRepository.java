@@ -5,11 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.tiary.users.entity.User;
+import com.example.tiary.users.entity.Users;
+public interface UserRepository extends JpaRepository<Users, Long> {
+	Optional<Users> findByEmail(String email);
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findByEmail(String email);
-
-	User findUserByEmail(String email);
+	Users findUserByEmail(String email);
 }

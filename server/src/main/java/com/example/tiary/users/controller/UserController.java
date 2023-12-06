@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.users.constant.Role;
 import com.example.tiary.users.dto.UserDto;
-import com.example.tiary.users.entity.User;
+import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -31,15 +31,15 @@ public class UserController {
 	public String user(Authentication authentication) {
 		System.out.println(authentication.getPrincipal());
 		UserDto principal = (UserDto)authentication.getPrincipal();
-		System.out.println("principal nickname : " + principal.getUser().getNickname());
-		System.out.println("principal email : " + principal.getUser().getEmail());
+		System.out.println("principal nickname : " + principal.getUsers().getNickname());
+		System.out.println("principal email : " + principal.getUsers().getEmail());
 		return "<h1>user</h1>";
 	}
 
 	@PostMapping("/join")
-	public String join(@RequestBody User user) {
-		user.setRole(Role.USER);
-		userRepository.save(user);
+	public String join(@RequestBody Users users) {
+		users.setRole(Role.USER);
+		userRepository.save(users);
 		return "회원 가입 완료";
 	}
 
