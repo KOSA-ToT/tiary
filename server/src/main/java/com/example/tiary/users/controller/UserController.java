@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import com.example.tiary.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
@@ -26,10 +28,10 @@ public class UserController {
 		return "<h1>home</h1>";
 	}
 
-	// 유저, 매니저, 어드민 접근 가능 TEST
-	@GetMapping("/user")
-	@PreAuthorize("hasAnyRole('USER', 'WRITER', 'ADMIN')")
-	public String user(Authentication authentication) {
+	// 매니저, 어드민 접근 가능 TEST
+	@GetMapping("/no-user")
+	@PreAuthorize("hasAnyRole('WRITER', 'ADMIN')")
+	public String noUser(Authentication authentication) {
 		System.out.println(authentication.getPrincipal());
 		UserDto principal = (UserDto)authentication.getPrincipal();
 		System.out.println("principal nickname : " + principal.getUsers().getNickname());
@@ -60,5 +62,4 @@ public class UserController {
 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.")
 			: ResponseEntity.ok("사용 가능한 닉네임입니다.");
 	}
-
 }

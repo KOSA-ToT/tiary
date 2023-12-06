@@ -14,7 +14,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.tiary.global.config.auth.CustomAuthenticationProvider;
-import com.example.tiary.users.dto.UserDto;
+import com.example.tiary.users.dto.LoginDto;
 import com.example.tiary.users.entity.Users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	@Autowired
 	private CustomAuthenticationProvider customAuthenticationProvider;
 	private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER =
-		new AntPathRequestMatcher("/login", "POST");
+		new AntPathRequestMatcher("/auth/login", "POST");
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
 		super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
@@ -42,10 +42,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		System.out.println("JwtAuthenticationFilter : 진입");
 
 		ObjectMapper om = new ObjectMapper();
-		UserDto userDto = om.readValue(request.getInputStream(), UserDto.class);
+		LoginDto loginDto = om.readValue(request.getInputStream(), LoginDto.class);
 
 		UsernamePasswordAuthenticationToken authenticationToken =
-			new UsernamePasswordAuthenticationToken(userDto.getEmail(), "");
+			new UsernamePasswordAuthenticationToken(loginDto.getEmail(), "");
 
 		System.out.println("JwtAuthenticationFilter : 토큰생성완료");
 

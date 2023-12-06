@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -22,6 +23,7 @@ import com.example.tiary.users.service.UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // @PreAuthorize, @PostAuthorize, @Secured 등과 같은 메소드 수준의 보안 어노테이션을 사용 가능하게 만들어줌
 public class SpringSecurityConfig {
 	public SpringSecurityConfig(UsersRepository userRepository, UserService userService,
 		AuthenticationConfiguration authenticationConfiguration, CorsConfig corsConfig) {
@@ -62,12 +64,7 @@ public class SpringSecurityConfig {
 			.addFilter(jwtAuthorizationFilter())
 			.authorizeHttpRequests(authorize -> {
 				authorize
-					.requestMatchers(new AntPathRequestMatcher("/home")).permitAll()
-					.requestMatchers(new AntPathRequestMatcher("/signup")).permitAll()
-					.requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-					.requestMatchers(new AntPathRequestMatcher("/user")).permitAll()
-					.requestMatchers(new AntPathRequestMatcher("/chk-email")).permitAll()
-					.requestMatchers(new AntPathRequestMatcher("/chk-nickname")).permitAll();
+					.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
 				authorize.anyRequest().authenticated();
 			});
 		return http.build();
