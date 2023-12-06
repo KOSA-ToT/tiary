@@ -1,7 +1,9 @@
 package com.example.tiary.comment.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -31,18 +33,40 @@ public class CommentService {
 	public Comment create(CommentRequestDTO commentRequestDTO, Long articleId) {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
-		return commentRepository.save(commentRequestDTO.toEntity(article));
+		Comment comment = commentRequestDTO.toEntity(article);
+		Comment parentComment;
+		// 부모 댓글이 있을 경우
+		if (commentRequestDTO.getParentId() != null) {
+			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
+				.orElseThrow(() -> new EntityNotFoundException("없는 commentid입니다." + commentRequestDTO.getParentId()));
+			comment.updateParent(parentComment);
+		}
+		return commentRepository.save(comment);
 	}
 
 	// 전체 댓글
 	@Transactional(readOnly = true) // 직관적으로 이거는 조회하는 메서드임을 알려줌
 	public List<CommentResponseDTO> readCommentList(Long articleId) {
-		List<Comment> commentList = commentRepository.findAllByArticleId(articleId);
+		List<Comment> commentList = commentRepository.findAllByArticleIdOrderByParentIdAscCreatedAtAsc(articleId);
 		List<CommentResponseDTO> commentResponseDTOList = new ArrayList<>();
-		CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
-		for (Comment comment : commentList) {
-			commentResponseDTOList.add(new CommentResponseDTO().from(comment));
-		}
+		// 댓글의 아이디를 키로 사용하는 맵
+		Map<Long, CommentResponseDTO> commentResponseDTOMap = new HashMap<>();
+		commentList.forEach(comment -> {
+			CommentResponseDTO commentResponseDTO = new CommentResponseDTO().from(comment);
+			commentResponseDTOMap.put(commentResponseDTO.getId(), commentResponseDTO);
+			// 부모 댓글이 있는 경우(부모 댓글 id를 가진 댓글 children에 넣음
+			if (comment.getParent() != null) {
+				CommentResponseDTO parentDTO = commentResponseDTOMap.get(comment.getParent().getId());
+				if (parentDTO.getChildren() == null) {
+					// 부모 댓글의 children 리스트가 null인 경우 새로운 리스트를 할당
+					parentDTO.setChildren(new ArrayList<>());
+				}
+				parentDTO.getChildren().add(commentResponseDTO);
+			} else {
+				// 최상위 부모 댓글의 경우
+				commentResponseDTOList.add(commentResponseDTO);
+			}
+		});
 		return commentResponseDTOList;
 	}
 
@@ -56,9 +80,6 @@ public class CommentService {
 	@Transactional
 	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO) {
 		Comment comment = commentRepository.findById(commentId).get();
-		// if(!commentRequestDTO.getContent().isBlank()){
-		// 	comment.updateContent(commentRequestDTO.getContent());
-		// }
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
 		CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
 		return commentResponseDTO.from(commentRepository.save(comment));
