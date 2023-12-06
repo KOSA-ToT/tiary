@@ -1,6 +1,7 @@
 package com.example.tiary.comment.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.example.tiary.comment.entity.Comment;
 
@@ -23,13 +24,15 @@ public class CommentResponseDTO {
 	private  String password;
 	private String commentType;
 	private Long articleId;
+	private List<CommentResponseDTO> children;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private String createdBy;
 	private String modifiedBy;
 
 	public CommentResponseDTO from(Comment comment) {
-		return CommentResponseDTO.builder()
+		return
+			CommentResponseDTO.builder()
 			.id(comment.getId())
 			.content(comment.getContent())
 			.password(comment.getPassword())
@@ -41,4 +44,6 @@ public class CommentResponseDTO {
 			.modifiedBy(comment.getModifiedBy())
 			.build();
 	}
+
+
 }

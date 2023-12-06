@@ -20,6 +20,7 @@ public class CommentRequestDTO {
 	private String content;
 	private String password;
 	private String commentType;
+	private Long parentId;
 
 	public Comment toEntity(Article article) {
 		return Comment.builder()
