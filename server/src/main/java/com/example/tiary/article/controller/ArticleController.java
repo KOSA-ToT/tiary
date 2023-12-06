@@ -1,6 +1,10 @@
 package com.example.tiary.article.controller;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.service.ArticleService;
@@ -42,15 +48,19 @@ public class ArticleController {
 	}
 
 	//게시물 등록
-	@PostMapping
-	public ResponseEntity postArticle(@RequestBody RequestArticleDto requestArticleDto) {
-		return new ResponseEntity<>(articleService.createArticle(requestArticleDto), HttpStatus.CREATED);
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity postArticle(
+		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
+		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList) throws
+		IOException {
+		return new ResponseEntity<>(articleService.createArticle(requestArticleDto,multipartFileList), HttpStatus.CREATED);
 	}
 
-	@PatchMapping("/{article-id}")
+	@PatchMapping(value = "/{article-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity patchArticle(@PathVariable("article-id") Long articleId,
-		@RequestBody RequestArticleDto requestArticleDto) {
-		return new ResponseEntity<>(articleService.updateArticle(requestArticleDto, articleId),
+		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
+		@RequestPart(value = "images",required = false) List<MultipartFile> multipartFileList) throws IOException {
+		return new ResponseEntity<>(articleService.updateArticle(articleId, requestArticleDto, multipartFileList),
 			HttpStatus.RESET_CONTENT);
 	}
 

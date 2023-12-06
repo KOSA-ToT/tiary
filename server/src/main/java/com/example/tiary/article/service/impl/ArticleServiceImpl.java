@@ -1,22 +1,28 @@
 package com.example.tiary.article.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.dto.response.ResponseArticleDto;
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.ArticleHashtag;
+import com.example.tiary.article.entity.ArticleImage;
+import com.example.tiary.article.entity.ArticleImageRepository;
 import com.example.tiary.article.repository.ArticleHashtagRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.article.service.HashtagService;
 import com.example.tiary.category.entity.Category;
 import com.example.tiary.category.service.CategoryService;
+import com.example.tiary.global.s3.S3UploadService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ArticleServiceImpl implements ArticleService {
 	private final ArticleRepository articleRepository;
 	private final ArticleHashtagRepository articleHashtagRepository;
+	private final ArticleImageRepository articleImageRepository;
 	private final HashtagService hashtagService;
 	private final CategoryService categoryService;
+	private final S3UploadService s3UploadService;
 
 
 	// 게시물 조회
@@ -68,9 +76,8 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode){
-		List<ResponseArticleDto> responseArticleDtoList = articleRepository.findAllByCategory_CategoryCode(categoryCode)
+		return articleRepository.findAllByCategory_CategoryCode(categoryCode)
 			.stream().map(ResponseArticleDto::from).toList();
-		return responseArticleDtoList;
 
 	}
 
@@ -78,24 +85,52 @@ public class ArticleServiceImpl implements ArticleService {
 	//TODO DB 최적화 고민
 	@Transactional
 	@Override
-	public Article createArticle(RequestArticleDto requestArticleDto) {
+	public Article createArticle(RequestArticleDto requestArticleDto, List<MultipartFile> multipartFiles) throws
+		IOException {
+
 		Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
 		Article article = articleRepository.save(requestArticleDto.toEntity(category));
 
-		hashtagService.saveHashtag(requestArticleDto, article);
+		for(MultipartFile image : multipartFiles){
+			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+			s3UploadService.upload(image,storeName);
 
+			ArticleImage articleImage = ArticleImage.of(storeName, article);
+			articleImageRepository.save(articleImage);
+		}
+		hashtagService.saveHashtag(requestArticleDto, article);
 		return article;
 	}
 
 	// 게시물 수정
 	@Transactional
 	@Override
-	public Article updateArticle(RequestArticleDto requestArticleDto, Long articleId) {
+	public Article updateArticle(Long articleId, RequestArticleDto requestArticleDto,
+		List<MultipartFile> multipartFiles) throws
+		IOException {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
 
 		Optional.ofNullable(requestArticleDto.getTitle()).ifPresent(article::updateTitle);
 		Optional.ofNullable(requestArticleDto.getContent()).ifPresent(article::updateContent);
+
+		if(requestArticleDto.getCategoryCode() != null){
+			Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
+			article.updateCategory(category);
+		}
+
+		List<ArticleImage> oldImage = articleImageRepository.findAllByArticleId(articleId);
+		for(ArticleImage image : oldImage){
+			s3UploadService.deleteImage(image.getImgUrl());
+		}
+
+		for(MultipartFile image : multipartFiles){
+			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+			s3UploadService.upload(image,storeName);
+
+			ArticleImage articleImage = ArticleImage.of(storeName, article);
+			articleImageRepository.save(articleImage);
+		}
 
 		hashtagService.removeOldHashtag(article);
 		hashtagService.updateHashtag(hashtagService.createHashtag(requestArticleDto), article);
@@ -110,6 +145,10 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new EntityNotFoundException("게시물이 이미 삭제 되었습니다."));
 
+		List<ArticleImage> articleImage = articleImageRepository.findAllByArticleId(articleId);
+		for(ArticleImage a : articleImage){
+			s3UploadService.deleteImage(a.getImgUrl());
+		}
 		articleRepository.delete(article);
 		return "삭제 완료";
 	}

@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,26 +14,25 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 @Getter
+@Setter
 @Entity
-public class ArticleHashtag {
+public class ArticleImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	private String imgUrl;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "article_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Article article;
-	@ManyToOne
-	@JoinColumn(name = "hashtag_id")
-	private Hashtag hashtag;
 
-	public static ArticleHashtag of(Article article, Hashtag hashtag) {
-		return new ArticleHashtag(null, article, hashtag);
+	public static ArticleImage of (String imgUrl ,Article article){
+		return new ArticleImage(null, imgUrl, article);
 	}
 }

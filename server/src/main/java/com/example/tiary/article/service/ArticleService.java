@@ -1,6 +1,9 @@
 package com.example.tiary.article.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.dto.response.ResponseArticleDto;
@@ -15,9 +18,11 @@ public interface ArticleService {
 	List<ResponseArticleDto> readArticleFromHashtag(String hashtag);
 	//카테고리로 조회
 	List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode);
-	Article createArticle(RequestArticleDto requestArticleDto);
+	// 게시물 생성
+	//TODO DB 최적화 고민
+	Article createArticle(RequestArticleDto requestArticleDto, List<MultipartFile> multipartFiles) throws IOException;
 	// 게시물 수정
-	@Transactional
-	Article updateArticle(RequestArticleDto requestArticleDto, Long articleId);
+	Article updateArticle(Long articleId, RequestArticleDto requestArticleDto, List<MultipartFile> multipartFiles) throws
+		IOException;
 	String deleteArticle(Long articleId);
 }
