@@ -11,8 +11,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.tiary.users.dto.UserDto;
-import com.example.tiary.users.entity.User;
-import com.example.tiary.users.repository.UserRepository;
+import com.example.tiary.users.entity.Users;
+import com.example.tiary.users.repository.UsersRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,12 +20,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 
 	public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
-		UserRepository userRepository) {
+		UsersRepository usersRepository) {
 		super(authenticationManager);
-		this.userRepository = userRepository;
+		this.usersRepository = usersRepository;
 	}
 
 	@Override
@@ -44,15 +44,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				.getClaim("email").asString();
 		System.out.println("email : " + email);
 		if (email != null) {
-			User user = userRepository.findUserByEmail(email);
+			Users user = usersRepository.findUserByEmail(email);
 			System.out.println("User : " + user);
 			UserDto principalDetails = new UserDto(user);
-			System.out.println(principalDetails.getUser().getAuthorities());
+			System.out.println(principalDetails.getUsers().getAuthorities());
 			Authentication authentication =
 				new UsernamePasswordAuthenticationToken(
 					principalDetails,
 					null,
-					principalDetails.getUser().getAuthorities());
+					principalDetails.getUsers().getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		chain.doFilter(request, response);

@@ -15,7 +15,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.tiary.global.config.auth.CustomAuthenticationProvider;
 import com.example.tiary.users.dto.UserDto;
-import com.example.tiary.users.entity.User;
+import com.example.tiary.users.entity.Users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		HttpServletResponse response, FilterChain chain,
 		Authentication authResult) throws IOException, ServletException {
 		System.out.println("successfulAuthentication ");
-		User principalDetails = (User)authResult.getPrincipal();
+		Users principalDetails = (Users)authResult.getPrincipal();
 		String jwtToken = JWT.create()
 			.withSubject(principalDetails.getEmail())
 			.withExpiresAt(new Date(System.currentTimeMillis()

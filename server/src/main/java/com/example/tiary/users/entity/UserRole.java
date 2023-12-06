@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Email;
 @Entity
 public class UserRole {
 	@Id
-	private Long id2;
+	private Long id;
 	@Email
 	private String email;
 }

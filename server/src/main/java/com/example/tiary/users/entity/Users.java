@@ -16,7 +16,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -24,6 +27,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,6 +40,10 @@ public class Users implements UserDetails {
 	private Role role;
 	private String userPicture;
 	private String userStatus;
+
+	public static Users of(String nickname, String email) {
+		return new Users(null, nickname, email, null, null, null);
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
