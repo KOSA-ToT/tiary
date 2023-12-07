@@ -109,4 +109,3 @@ public class Users implements UserDetails {
 		this.userPicture = userPicture;
 	}
 }
-

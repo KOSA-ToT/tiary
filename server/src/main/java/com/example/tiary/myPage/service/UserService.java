@@ -1,6 +1,5 @@
 package com.example.tiary.myPage.service;
 
-
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.myPage.dto.response.ResponseUsersDto;
 import com.example.tiary.users.entity.Users;
@@ -15,6 +14,7 @@ public interface UserService {
     Users editNickname(RequestUserDto requestUserDto, Long userId);
     //이미지 경로 수정
     Users editProfileImg(RequestUserDto requestUserDto, Long userId);
+
     //닉네임 중복 검사
     boolean isNicknameDuplicate(String nickname);
     //이메일 중복 검사
