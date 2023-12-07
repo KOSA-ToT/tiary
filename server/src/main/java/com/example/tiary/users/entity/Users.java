@@ -99,4 +99,14 @@ public class Users implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	public void updateEmail(String email) {
+		this.email = email;
+	}
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public void updateProfileImg(String userPicture) {
+		this.userPicture = userPicture;
+	}
 }
+
