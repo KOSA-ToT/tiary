@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.users.dto.UserDto;
+import com.example.tiary.users.service.EmailService;
+import com.example.tiary.users.service.RedisUtil;
 import com.example.tiary.users.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
+	private final EmailService emailService;
+	private final RedisUtil redisUtil;
 
 	@GetMapping("/home")
 	public String home() {
@@ -61,5 +65,23 @@ public class UserController {
 		return userService.existsNickname(nickname)
 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.")
 			: ResponseEntity.ok("사용 가능한 닉네임입니다.");
+	}
+
+	// 인증 이메일 전송
+	@PostMapping("/send-email")
+	public ResponseEntity sendEmail(@RequestParam("email") String email) {
+		String encodedKey = redisUtil.setDataExpire(email);
+		emailService.sendMail(email, encodedKey);
+		return ResponseEntity.ok("인증 이메일 전송 완료 / 테스트 키: " + redisUtil.setDataExpire(email));
+	}
+
+	// 인증 확인
+	@GetMapping("/verify-email")
+	public ResponseEntity<String> verifiedEmail(@RequestParam("link") String encodedKey) {
+		String result = redisUtil.getData(encodedKey);
+		redisUtil.deleteData(encodedKey);
+		return result != null
+			? ResponseEntity.ok("이메일 인증 완료")
+			: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("제한시간이 초과되었습니다.");
 	}
 }
