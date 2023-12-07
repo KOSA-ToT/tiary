@@ -19,7 +19,7 @@ public class ResponseArticleDto {
 	private Long id;
 	private String title;
 	private String content;
-	private Long view;
+	private int view;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private String createdBy;

@@ -3,6 +3,7 @@ package com.example.tiary.article.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
@@ -30,4 +31,7 @@ public interface ArticleService {
 		IOException;
 
 	String deleteArticle(Long articleId);
+
+	@Transactional
+	int updateView(Long articleId);
 }

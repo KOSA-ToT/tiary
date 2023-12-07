@@ -43,7 +43,7 @@ public class Users implements UserDetails {
 	@NotBlank(message = "이름은 필수 값입니다.")
 	private String nickname;
 
-	@Column(nullable = false, length = 60)
+	@Column(nullable = false, length = 60,unique = true)
 	@Length(min = 1, max = 60, message = "이메일은 60자 이하여야 합니다.")
 	@NotBlank(message = "이메일은 필수 값입니다.")
 	@Email

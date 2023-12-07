@@ -8,6 +8,8 @@ import com.example.tiary.article.entity.ArticleLikes;
 import com.example.tiary.article.repository.ArticleLikesRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleLikesService;
+import com.example.tiary.global.exception.BusinessLogicException;
+import com.example.tiary.global.exception.ExceptionCode;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UsersRepository;
 
@@ -30,9 +32,9 @@ public class ArticleLikesServiceImpl implements ArticleLikesService {
 	@Override
 	public boolean choiceLikes(Long articleId, Long usersId) {
 		Users users = usersRepository.findById(usersId)
-			.orElseThrow(() -> new EntityNotFoundException("사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		ArticleLikes articleLikes = new ArticleLikes(null, article, users);
 		articleLikesRepository.save(articleLikes);
 		return true;
@@ -42,9 +44,9 @@ public class ArticleLikesServiceImpl implements ArticleLikesService {
 	@Override
 	public boolean cancleLikes(Long articleId, Long usersId) {
 		Users users = usersRepository.findById(usersId)
-			.orElseThrow(() -> new EntityNotFoundException("사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		articleLikesRepository.deleteArticleLikesByArticleIdAndUsersId(article.getId(), users.getId());
 		return true;
 	}

@@ -28,7 +28,7 @@ public class RequestArticleDto {
 			null,
 			title,
 			content,
-			1L,
+			0,
 			category,
 			null
 		);

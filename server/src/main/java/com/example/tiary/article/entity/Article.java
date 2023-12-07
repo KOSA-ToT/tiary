@@ -34,7 +34,7 @@ public class Article extends AuditingFields {
 	@Column(length = 65554)
 	private String content;
 
-	private Long view;
+	private int view = 0;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -44,7 +44,7 @@ public class Article extends AuditingFields {
 	@ToString.Exclude
 	private List<ArticleHashtag> articleHashtags = new ArrayList<>();
 
-	public static Article of(Long id, String title, String content, Long view, Category category,
+	public static Article of(Long id, String title, String content, int view, Category category,
 		List<ArticleHashtag> articleHashtags) {
 		return new Article(id, title, content, view, category, articleHashtags);
 	}
