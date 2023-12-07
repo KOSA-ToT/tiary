@@ -28,6 +28,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		this.usersRepository = usersRepository;
 	}
 
+	//TODO : 민지님 authentication 객체 확인 해보기 getPrincipal()
+	/*
+	Principal 객체는 임의로 안의 값을 설정할 수 있음
+	e.g
+	유저 PK id 를 넣어줄 지
+	유저 이름, 이메일 등등 이런거를 넣어주고
+	혹은 또 어떤 다른 것들을 넣어줄 수 있음
+	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws
 		IOException,
@@ -56,6 +64,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		chain.doFilter(request, response);
-
 	}
+
 }

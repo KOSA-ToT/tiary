@@ -17,14 +17,14 @@ public class CategoryDto {
 	private String categoryCode;
 	private String categoryName;
 
-	public static CategoryDto from(Category category){
+	public static CategoryDto from(Category category) {
 		return CategoryDto.builder()
 			.categoryCode(category.getCategoryCode())
 			.categoryName(category.getCategoryName())
 			.build();
 	}
 
-	public Category toEntity(){
+	public Category toEntity() {
 		return Category.of(
 			null,
 			categoryCode,

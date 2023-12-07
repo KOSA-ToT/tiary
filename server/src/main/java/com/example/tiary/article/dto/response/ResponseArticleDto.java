@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.tiary.article.entity.Article;
-import com.example.tiary.article.entity.ArticleHashtag;
-import com.example.tiary.article.entity.Hashtag;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

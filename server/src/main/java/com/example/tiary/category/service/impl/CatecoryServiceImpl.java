@@ -3,7 +3,6 @@ package com.example.tiary.category.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.tiary.category.dto.CategoryDto;
 import com.example.tiary.category.entity.Category;
 import com.example.tiary.category.repository.CategoryRepository;
 import com.example.tiary.category.service.CategoryService;
@@ -18,7 +17,7 @@ public class CatecoryServiceImpl implements CategoryService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Category readCategory(String categoryCode){
+	public Category readCategory(String categoryCode) {
 		Category category = categoryRepository.findCategoryByCategoryCode(categoryCode);
 		return category;
 	}

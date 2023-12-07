@@ -30,11 +30,10 @@ public class HashtagServiceImpl implements HashtagService {
 		this.articleHashtagRepository = articleHashtagRepository;
 	}
 
-
 	// 해시태그 가공
 	@Override
 	public List<String> createHashtag(RequestArticleDto requestArticleDto) {
-		if(requestArticleDto.getHashtag() == null){
+		if (requestArticleDto.getHashtag() == null) {
 			return new ArrayList<>();
 		}
 		Pattern HASHTAG_PATTERN = Pattern.compile("#(\\S+)");
@@ -67,21 +66,21 @@ public class HashtagServiceImpl implements HashtagService {
 	@Override
 	public Boolean updateHashtag(List<String> hashList, Article article) {
 
-		for(String tag: hashList){
+		for (String tag : hashList) {
 			Hashtag hashtag = hashtagRepository.findHashtagByHashtagName(tag);
-			if(hashtag == null){
+			if (hashtag == null) {
 				hashtag = Hashtag.of(tag);
 				hashtagRepository.save(hashtag);
 			}
 			articleHashtagRepository.save(ArticleHashtag.of(article, hashtag));
 		}
-		log.info("수정 조인 테이블 확인 : {}" );
+		log.info("수정 조인 테이블 확인 : {}");
 		return true;
 	}
 
 	@Transactional
 	@Override
-	public void removeOldHashtag(Article article){
+	public void removeOldHashtag(Article article) {
 		List<ArticleHashtag> articleHashtag = articleHashtagRepository.findAllByArticle(article);
 		articleHashtagRepository.deleteAll(articleHashtag);
 	}

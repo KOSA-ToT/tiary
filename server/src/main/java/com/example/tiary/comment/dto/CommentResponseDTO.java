@@ -21,7 +21,7 @@ import lombok.ToString;
 public class CommentResponseDTO {
 	private Long id;
 	private String content;
-	private  String password;
+	private String password;
 	private String commentType;
 	private Long articleId;
 	private List<CommentResponseDTO> children;
@@ -33,17 +33,16 @@ public class CommentResponseDTO {
 	public CommentResponseDTO from(Comment comment) {
 		return
 			CommentResponseDTO.builder()
-			.id(comment.getId())
-			.content(comment.getContent())
-			.password(comment.getPassword())
-			.commentType(comment.getCommentType())
-			.articleId(comment.getArticle().getId())
-			.createdAt(comment.getCreatedAt())
-			.modifiedAt(comment.getModifiedAt())
-			.createdBy(comment.getCreatedBy())
-			.modifiedBy(comment.getModifiedBy())
-			.build();
+				.id(comment.getId())
+				.content(comment.getContent())
+				.password(comment.getPassword())
+				.commentType(comment.getCommentType())
+				.articleId(comment.getArticle().getId())
+				.createdAt(comment.getCreatedAt())
+				.modifiedAt(comment.getModifiedAt())
+				.createdBy(comment.getCreatedBy())
+				.modifiedBy(comment.getModifiedBy())
+				.build();
 	}
-
 
 }

@@ -44,16 +44,20 @@ public class Article extends AuditingFields {
 	@ToString.Exclude
 	private List<ArticleHashtag> articleHashtags = new ArrayList<>();
 
-	public static Article of(Long id, String title, String content, Long view, Category category, List<ArticleHashtag> articleHashtags) {
-		return new Article(id, title, content, view, category,articleHashtags);
+	public static Article of(Long id, String title, String content, Long view, Category category,
+		List<ArticleHashtag> articleHashtags) {
+		return new Article(id, title, content, view, category, articleHashtags);
 	}
+
 	public void updateTitle(String title) {
 		this.title = title;
 	}
+
 	public void updateContent(String content) {
 		this.content = content;
 	}
-	public void updateCategory(Category category){
+
+	public void updateCategory(Category category) {
 		this.category = category;
 	}
 }

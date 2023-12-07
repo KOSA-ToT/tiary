@@ -32,7 +32,7 @@ public class ArticleImage {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Article article;
 
-	public static ArticleImage of (String imgUrl ,Article article){
+	public static ArticleImage of(String imgUrl, Article article) {
 		return new ArticleImage(null, imgUrl, article);
 	}
 }

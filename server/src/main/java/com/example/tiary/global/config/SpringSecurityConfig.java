@@ -25,6 +25,10 @@ import com.example.tiary.users.service.UserService;
 @EnableWebSecurity
 @EnableMethodSecurity // @PreAuthorize, @PostAuthorize, @Secured 등과 같은 메소드 수준의 보안 어노테이션을 사용 가능하게 만들어줌
 public class SpringSecurityConfig {
+	private final UsersRepository userRepository;
+	private final UserService userService;
+	private final AuthenticationConfiguration authenticationConfiguration;
+	private final CorsConfig corsConfig;
 	public SpringSecurityConfig(UsersRepository userRepository, UserService userService,
 		AuthenticationConfiguration authenticationConfiguration, CorsConfig corsConfig) {
 		this.userRepository = userRepository;
@@ -32,11 +36,6 @@ public class SpringSecurityConfig {
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.corsConfig = corsConfig;
 	}
-
-	private final UsersRepository userRepository;
-	private final UserService userService;
-	private final AuthenticationConfiguration authenticationConfiguration;
-	private final CorsConfig corsConfig;
 
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -65,6 +64,8 @@ public class SpringSecurityConfig {
 			.authorizeHttpRequests(authorize -> {
 				authorize
 					.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/article/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/category/**")).permitAll();
 				authorize.anyRequest().authenticated();
 			});
 		return http.build();

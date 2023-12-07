@@ -1,11 +1,8 @@
 package com.example.tiary.global.s3;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class S3UploadService {
-	private final AmazonS3 amazonS3;
-
 	private static final int CAPACITY_LIMIT_BYTE = 1024 * 1024 * 10;
+	private final AmazonS3 amazonS3;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
@@ -44,7 +40,6 @@ public class S3UploadService {
 		}
 		return imgUrlList;
 	}*/
-
 
 	public String upload(MultipartFile multipartFile, String storeName) throws IOException {
 
@@ -76,25 +71,29 @@ public class S3UploadService {
 		} catch (SdkClientException e) {
 			e.printStackTrace();
 		}
-		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(),"utf-8");
+		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), "utf-8");
 	}
+
 	//키 값으로 url 가져오기
 	private String getS3URL(String storeName) throws UnsupportedEncodingException {
-		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(),"utf-8");
+		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), "utf-8");
 
 	}
+
 	/*  파일 이름이 이미 업로드된 파일들과 겹치지 않게 UUID를 사용한다.   */
 	private String createStoreFileName(String originalFilename) {
 		String ext = extractExt(originalFilename);
 		String uuid = UUID.randomUUID().toString();
 		return uuid + "." + ext;
 	}
+
 	/*  사용자가 업로드한 파일에서 확장자를 추출한다.   */
 	private String extractExt(String originalFilename) {
 		int pos = originalFilename.lastIndexOf(".");
 		return originalFilename.substring(pos + 1);
 	}
-	public void deleteImage(String originalFilename)  {
+
+	public void deleteImage(String originalFilename) {
 		DeleteObjectRequest request = new DeleteObjectRequest(bucket, originalFilename);
 		amazonS3.deleteObject(request);
 	}

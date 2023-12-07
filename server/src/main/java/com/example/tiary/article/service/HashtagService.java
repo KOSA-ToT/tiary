@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.entity.Article;
-import com.example.tiary.article.entity.Hashtag;
 
 public interface HashtagService {
 	@Transactional
