@@ -1,0 +1,31 @@
+server:
+  port: 8088
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://3.37.222.161:3306/tiary?characterEncoding=UTF-8
+    username: root
+    password: tiary1234
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    database: mysql
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+logging:
+  level:
+    org.hibernate: info
+
+#jwt:
+#  issuer: test@gmail.com
+#  secret_key: 2-tiary

@@ -12,11 +12,11 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
-  sql:
-    init:
-      data-locations: classpath:data.sql
-      mode: always
+  #    defer-datasource-initialization: true
+  #  sql:
+  #    init:
+  #      data-locations: classpath:data.sql
+  #      mode: always
 
   h2:
     console:
@@ -30,4 +30,4 @@ spring:
 logging:
   level:
     org:
-      hibernate : info
+      hibernate: info
