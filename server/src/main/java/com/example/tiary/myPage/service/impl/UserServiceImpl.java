@@ -1,5 +1,7 @@
 package com.example.tiary.myPage.service.impl;
 
+import com.example.tiary.myPage.dto.response.ResponseMyArticleDto;
+import com.example.tiary.myPage.dto.response.ResponseMyCommentDto;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.myPage.repository.UserRepository;
@@ -10,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -70,5 +73,20 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
         users.updateProfileImg(requestUserDto.getUserPicture());
         return userRepository.save(users);
+    }
+    //내 글 보기
+    @Transactional
+    @Override
+    public List<ResponseMyArticleDto> showMyArticle(Long userId){
+        List<ResponseMyArticleDto> myArticleList= userRepository.listMyArticle(userId);
+        return myArticleList;
+    }
+
+    //내 댓글 보기
+    @Transactional
+    @Override
+    public List<ResponseMyCommentDto> showMyComment(Long userId){
+        List<ResponseMyCommentDto> myCommentList= userRepository.listMyComment(userId);
+        return myCommentList;
     }
 }

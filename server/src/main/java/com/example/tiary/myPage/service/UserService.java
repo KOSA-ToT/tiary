@@ -1,8 +1,12 @@
 package com.example.tiary.myPage.service;
 
+import com.example.tiary.myPage.dto.response.ResponseMyArticleDto;
+import com.example.tiary.myPage.dto.response.ResponseMyCommentDto;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.myPage.dto.response.ResponseUsersDto;
 import com.example.tiary.users.entity.Users;
+
+import java.util.List;
 
 
 public interface UserService {
@@ -19,4 +23,8 @@ public interface UserService {
     boolean isNicknameDuplicate(String nickname);
     //이메일 중복 검사
     boolean isEmailDuplicate(String email);
+    //내 글 보기
+    List<ResponseMyArticleDto> showMyArticle(Long userId);
+    //내 댓글 보기
+    List<ResponseMyCommentDto> showMyComment(Long userId);
 }

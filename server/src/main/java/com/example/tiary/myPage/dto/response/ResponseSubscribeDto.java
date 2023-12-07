@@ -22,6 +22,3 @@ public class ResponseSubscribeDto {
                 .build();
     }
 }
-=======
-}
->>>>>>> 790e6cf ([SCRUM-27]-feat: 내 정보 수정)

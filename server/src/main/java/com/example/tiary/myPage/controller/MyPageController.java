@@ -36,8 +36,9 @@ public class MyPageController {
     @GetMapping("/{userId}/posts")
     public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
         try{
-            return ResponseEntity.ok("*나중에 추가*");
+            return ResponseEntity.ok(userService.showMyArticle(userId));
         }catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
         }
     }
@@ -46,7 +47,7 @@ public class MyPageController {
     @GetMapping("/{userId}/comments")
     public ResponseEntity viewMyComments(@PathVariable("userId") Long userId){
         try{
-            return ResponseEntity.ok("*나중에 추가*");
+            return ResponseEntity.ok(userService.showMyComment(userId));
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 댓글 조회에 실패했습니다.");
         }
@@ -116,4 +117,10 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구독 작가 조회에 실패했습니다.");
         }
     }
+
+    //유저 INACTIVE 상태 만들기
+//    @PatchMapping("/{userId}/inactive")
+//    public ResponseEntity inactiveUser(@PathVariable("userId") Long userId){
+//
+//    }
 }
