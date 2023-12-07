@@ -15,8 +15,8 @@ import com.example.tiary.article.dto.response.ResponseArticleDto;
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.ArticleHashtag;
 import com.example.tiary.article.entity.ArticleImage;
-import com.example.tiary.article.repository.ArticleImageRepository;
 import com.example.tiary.article.repository.ArticleHashtagRepository;
+import com.example.tiary.article.repository.ArticleImageRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.article.service.HashtagService;
@@ -38,7 +38,6 @@ public class ArticleServiceImpl implements ArticleService {
 	private final HashtagService hashtagService;
 	private final CategoryService categoryService;
 	private final S3UploadService s3UploadService;
-
 
 	// 게시물 조회
 	@Transactional(readOnly = true)
@@ -65,7 +64,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<ArticleHashtag> articleHashtag = articleHashtagRepository.findAllByHashtag_HashtagName(hashtag);
 		List<ResponseArticleDto> responseArticleDtoList = new ArrayList<>();
 
-		for(ArticleHashtag a : articleHashtag){
+		for (ArticleHashtag a : articleHashtag) {
 			responseArticleDtoList.add(ResponseArticleDto.from(a.getArticle()));
 		}
 
@@ -75,7 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
 	//카테고리로 조회
 	@Transactional(readOnly = true)
 	@Override
-	public List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode){
+	public List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode) {
 		return articleRepository.findAllByCategory_CategoryCode(categoryCode)
 			.stream().map(ResponseArticleDto::from).toList();
 
@@ -91,9 +90,9 @@ public class ArticleServiceImpl implements ArticleService {
 		Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
 		Article article = articleRepository.save(requestArticleDto.toEntity(category));
 
-		for(MultipartFile image : multipartFiles){
+		for (MultipartFile image : multipartFiles) {
 			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
-			s3UploadService.upload(image,storeName);
+			s3UploadService.upload(image, storeName);
 
 			ArticleImage articleImage = ArticleImage.of(storeName, article);
 			articleImageRepository.save(articleImage);
@@ -114,19 +113,19 @@ public class ArticleServiceImpl implements ArticleService {
 		Optional.ofNullable(requestArticleDto.getTitle()).ifPresent(article::updateTitle);
 		Optional.ofNullable(requestArticleDto.getContent()).ifPresent(article::updateContent);
 
-		if(requestArticleDto.getCategoryCode() != null){
+		if (requestArticleDto.getCategoryCode() != null) {
 			Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
 			article.updateCategory(category);
 		}
 
 		List<ArticleImage> oldImage = articleImageRepository.findAllByArticleId(articleId);
-		for(ArticleImage image : oldImage){
+		for (ArticleImage image : oldImage) {
 			s3UploadService.deleteImage(image.getImgUrl());
 		}
 
-		for(MultipartFile image : multipartFiles){
+		for (MultipartFile image : multipartFiles) {
 			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
-			s3UploadService.upload(image,storeName);
+			s3UploadService.upload(image, storeName);
 
 			ArticleImage articleImage = ArticleImage.of(storeName, article);
 			articleImageRepository.save(articleImage);
@@ -146,7 +145,7 @@ public class ArticleServiceImpl implements ArticleService {
 			.orElseThrow(() -> new EntityNotFoundException("게시물이 이미 삭제 되었습니다."));
 
 		List<ArticleImage> articleImage = articleImageRepository.findAllByArticleId(articleId);
-		for(ArticleImage a : articleImage){
+		for (ArticleImage a : articleImage) {
 			s3UploadService.deleteImage(a.getImgUrl());
 		}
 		articleRepository.delete(article);

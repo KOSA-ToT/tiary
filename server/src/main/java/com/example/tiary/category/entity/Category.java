@@ -1,14 +1,10 @@
 package com.example.tiary.category.entity;
 
-import com.example.tiary.article.entity.Article;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +25,7 @@ public class Category {
 	@Column(length = 50)
 	private String categoryName;
 
-	public static Category of(Long id, String categoryCode, String categoryName){
+	public static Category of(Long id, String categoryCode, String categoryName) {
 		return new Category(id, categoryCode, categoryName);
 	}
 }

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ResponseHashtagDto {
 	private String hashtagName;
 
-	public static ResponseHashtagDto from(ArticleHashtag articleHashtag){
+	public static ResponseHashtagDto from(ArticleHashtag articleHashtag) {
 		return ResponseHashtagDto.builder()
 			.hashtagName(articleHashtag.getHashtag().getHashtagName())
 			.build();

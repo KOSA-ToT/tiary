@@ -35,6 +35,7 @@ public class Hashtag {
 	public static Hashtag of(Long id, String hashtagName, List<ArticleHashtag> articleHashtags) {
 		return new Hashtag(null, hashtagName, articleHashtags);
 	}
+
 	public static Hashtag of(String hashtagName) {
 		return new Hashtag(null, hashtagName, null);
 	}

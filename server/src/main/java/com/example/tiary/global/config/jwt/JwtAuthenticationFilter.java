@@ -25,10 +25,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-	@Autowired
-	private CustomAuthenticationProvider customAuthenticationProvider;
 	private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER =
 		new AntPathRequestMatcher("/auth/login", "POST");
+	@Autowired
+	private CustomAuthenticationProvider customAuthenticationProvider;
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
 		super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);

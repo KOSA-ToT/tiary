@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.service.ArticleLikesService;
 import com.example.tiary.article.service.ArticleService;
+import com.example.tiary.users.dto.UserDto;
 
 @RestController
 @RequestMapping("/article")
@@ -37,7 +39,7 @@ public class ArticleController {
 	@GetMapping
 	public ResponseEntity getArticleList(@RequestParam(value = "hashtag", required = false) String hashtag) {
 
-		if(hashtag != null){
+		if (hashtag != null) {
 			return new ResponseEntity(articleService.readArticleFromHashtag(hashtag), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(articleService.readArticleList(), HttpStatus.OK);
@@ -50,18 +52,23 @@ public class ArticleController {
 	}
 
 	//게시물 등록
-	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity postArticle(
 		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
-		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList) throws
+		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
+		@AuthenticationPrincipal UserDto user) throws
 		IOException {
-		return new ResponseEntity<>(articleService.createArticle(requestArticleDto,multipartFileList), HttpStatus.CREATED);
+
+		return new ResponseEntity<>(articleService.createArticle(requestArticleDto, multipartFileList),
+			HttpStatus.CREATED);
 	}
+
 	//게시물 수정
-	@PatchMapping(value = "/{article-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PatchMapping(value = "/{article-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,
+		MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity patchArticle(@PathVariable("article-id") Long articleId,
 		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
-		@RequestPart(value = "images",required = false) List<MultipartFile> multipartFileList) throws IOException {
+		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList) throws IOException {
 		return new ResponseEntity<>(articleService.updateArticle(articleId, requestArticleDto, multipartFileList),
 			HttpStatus.RESET_CONTENT);
 	}
@@ -73,9 +80,15 @@ public class ArticleController {
 	}
 
 	@GetMapping("/{article-id}/likes")
-	public ResponseEntity pushLikesArticle(@PathVariable("article-id") Long articleId){
-		articleLikesService.choiceLikes(articleId);
-		return new ResponseEntity(HttpStatus.OK
-		);
+	public ResponseEntity pushLikesArticle(@PathVariable("article-id") Long articleId,
+		@AuthenticationPrincipal UserDto users,
+		@RequestParam("check") String check) {
+
+		if (check.equals("likes")) {
+			articleLikesService.choiceLikes(articleId, users.getUsers().getId());
+		} else {
+			articleLikesService.cancleLikes(articleId, users.getUsers().getId());
+		}
+		return new ResponseEntity(HttpStatus.OK);
 	}
 }

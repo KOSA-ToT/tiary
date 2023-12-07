@@ -20,7 +20,7 @@ public class CategoryController {
 
 	@GetMapping
 	public ResponseEntity getArticleListFromCategory(@RequestParam("category") String categoryCode) {
-		if(categoryCode != null){
+		if (categoryCode != null) {
 			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
 		}
 		return null;
