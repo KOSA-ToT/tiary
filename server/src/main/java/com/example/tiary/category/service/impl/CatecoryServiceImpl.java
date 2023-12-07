@@ -18,7 +18,6 @@ public class CatecoryServiceImpl implements CategoryService {
 	@Transactional(readOnly = true)
 	@Override
 	public Category readCategory(String categoryCode) {
-		Category category = categoryRepository.findCategoryByCategoryCode(categoryCode);
-		return category;
+		return categoryRepository.findCategoryByCategoryCode(categoryCode);
 	}
 }
