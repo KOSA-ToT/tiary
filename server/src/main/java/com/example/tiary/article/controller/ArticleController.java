@@ -59,7 +59,7 @@ public class ArticleController {
 		@AuthenticationPrincipal UserDto user) throws
 		IOException {
 
-		return new ResponseEntity<>(articleService.createArticle(requestArticleDto, multipartFileList),
+		return new ResponseEntity<>(articleService.createArticle(user.getUsers().getId(), requestArticleDto, multipartFileList),
 			HttpStatus.CREATED);
 	}
 
@@ -68,9 +68,10 @@ public class ArticleController {
 		MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity patchArticle(@PathVariable("article-id") Long articleId,
 		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
-		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList) throws IOException {
-		return new ResponseEntity<>(articleService.updateArticle(articleId, requestArticleDto, multipartFileList),
-			HttpStatus.RESET_CONTENT);
+		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
+		@AuthenticationPrincipal UserDto user) throws IOException {
+		return new ResponseEntity<>(articleService.updateArticle(user.getUsers().getId(), articleId, requestArticleDto, multipartFileList),
+			HttpStatus.OK);
 	}
 
 	//게시물 삭제
