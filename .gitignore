@@ -239,4 +239,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Batch Server  - 배치 서버 구현 전에 ignore 추가
+.batch
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,java,visualstudiocode,intellij+all,vuejs
