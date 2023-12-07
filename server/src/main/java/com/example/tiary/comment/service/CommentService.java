@@ -15,6 +15,8 @@ import com.example.tiary.comment.dto.CommentRequestDTO;
 import com.example.tiary.comment.dto.CommentResponseDTO;
 import com.example.tiary.comment.entity.Comment;
 import com.example.tiary.comment.repository.CommentRepository;
+import com.example.tiary.global.exception.BusinessLogicException;
+import com.example.tiary.global.exception.ExceptionCode;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -32,7 +34,7 @@ public class CommentService {
 	@Transactional
 	public Comment create(CommentRequestDTO commentRequestDTO, Long articleId) {
 		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		Comment comment = commentRequestDTO.toEntity(article);
 		Comment parentComment;
 		// 부모 댓글이 있을 경우

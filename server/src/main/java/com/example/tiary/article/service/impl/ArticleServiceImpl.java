@@ -22,9 +22,10 @@ import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.article.service.HashtagService;
 import com.example.tiary.category.entity.Category;
 import com.example.tiary.category.service.CategoryService;
+import com.example.tiary.global.exception.BusinessLogicException;
+import com.example.tiary.global.exception.ExceptionCode;
 import com.example.tiary.global.s3.S3UploadService;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,8 +53,8 @@ public class ArticleServiceImpl implements ArticleService {
 	public ResponseArticleDto readArticle(Long articleId) {
 
 		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
-
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+		updateView(article.getId());
 		return ResponseArticleDto.from(article);
 	}
 
@@ -108,7 +109,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<MultipartFile> multipartFiles) throws
 		IOException {
 		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 
 		Optional.ofNullable(requestArticleDto.getTitle()).ifPresent(article::updateTitle);
 		Optional.ofNullable(requestArticleDto.getContent()).ifPresent(article::updateContent);
@@ -142,7 +143,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public String deleteArticle(Long articleId) {
 		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 이미 삭제 되었습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_ALREADY_DELETE));
 
 		List<ArticleImage> articleImage = articleImageRepository.findAllByArticleId(articleId);
 		for (ArticleImage a : articleImage) {
@@ -150,5 +151,9 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		articleRepository.delete(article);
 		return "삭제 완료";
+	}
+	@Override
+	public int updateView(Long articleId){
+		return articleRepository.updateViews(articleId);
 	}
 }
