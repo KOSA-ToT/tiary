@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tiary.comment.dto.CommentRequestDTO;
-import com.example.tiary.comment.dto.CommentResponseDTO;
+import com.example.tiary.comment.dto.request.CommentRequestDTO;
+import com.example.tiary.comment.dto.response.CommentResponseDTO;
 import com.example.tiary.comment.service.CommentService;
+import com.example.tiary.users.dto.UserDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,11 +34,22 @@ public class CommentController {
 	// 댓글 등록
 	@PostMapping("/{article-id}")
 	public ResponseEntity create(@PathVariable("article-id") Long articleId,
-		@RequestBody CommentRequestDTO commentRequestDTO) {
-		return new ResponseEntity<>(commentService.create(commentRequestDTO, articleId), HttpStatus.OK);
+		@RequestBody CommentRequestDTO commentRequestDTO,
+		@AuthenticationPrincipal UserDto users) {
+		CommentResponseDTO commentResponseDTO = CommentResponseDTO.from(
+			commentService.create(commentRequestDTO, articleId, users.getUsers().getId()));
+
+		return new ResponseEntity<>(commentResponseDTO,HttpStatus.OK);
 	}
 
-	// 전체 댓글 가져오기
+	//  비회원 댓글 등록
+	@PostMapping("/guest/{article-id}")
+	public ResponseEntity guestCreate(@PathVariable("article-id") Long articleId,
+		@RequestBody CommentRequestDTO commentRequestDTO) {
+		return new ResponseEntity<>(commentService.guestCreate(commentRequestDTO, articleId), HttpStatus.OK);
+	}
+
+	// 전체 댓글 읽기
 	@GetMapping("/{article-id}")
 	public ResponseEntity<List<CommentResponseDTO>> readCommentList(@PathVariable("article-id") Long articleId) {
 		List<CommentResponseDTO> commentResponseDTOList = commentService.readCommentList(articleId);
@@ -54,7 +67,7 @@ public class CommentController {
 		}
 	}
 
-	// 회원 댓글 수정
+	// 댓글 수정
 	@PatchMapping("/{comment-id}")
 	public ResponseEntity<CommentResponseDTO> updateComment(
 		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
