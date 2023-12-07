@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
+import com.example.tiary.article.service.ArticleLikesService;
 import com.example.tiary.article.service.ArticleService;
 
 @RestController
@@ -26,9 +26,11 @@ import com.example.tiary.article.service.ArticleService;
 public class ArticleController {
 
 	private final ArticleService articleService;
+	private final ArticleLikesService articleLikesService;
 
-	public ArticleController(ArticleService articleService) {
+	public ArticleController(ArticleService articleService, ArticleLikesService articleLikesService) {
 		this.articleService = articleService;
+		this.articleLikesService = articleLikesService;
 	}
 
 	//게시물 리스트 조회
@@ -55,7 +57,7 @@ public class ArticleController {
 		IOException {
 		return new ResponseEntity<>(articleService.createArticle(requestArticleDto,multipartFileList), HttpStatus.CREATED);
 	}
-
+	//게시물 수정
 	@PatchMapping(value = "/{article-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity patchArticle(@PathVariable("article-id") Long articleId,
 		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
@@ -68,5 +70,12 @@ public class ArticleController {
 	@DeleteMapping("/{article-id}")
 	public ResponseEntity deleteArticle(@PathVariable("article-id") Long articleId) {
 		return new ResponseEntity<>(articleService.deleteArticle(articleId), HttpStatus.RESET_CONTENT);
+	}
+
+	@GetMapping("/{article-id}/likes")
+	public ResponseEntity pushLikesArticle(@PathVariable("article-id") Long articleId){
+		articleLikesService.choiceLikes(articleId);
+		return new ResponseEntity(HttpStatus.OK
+		);
 	}
 }

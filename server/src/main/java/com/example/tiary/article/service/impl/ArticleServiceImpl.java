@@ -15,7 +15,7 @@ import com.example.tiary.article.dto.response.ResponseArticleDto;
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.ArticleHashtag;
 import com.example.tiary.article.entity.ArticleImage;
-import com.example.tiary.article.entity.ArticleImageRepository;
+import com.example.tiary.article.repository.ArticleImageRepository;
 import com.example.tiary.article.repository.ArticleHashtagRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleService;

@@ -53,7 +53,6 @@ public class Article extends AuditingFields {
 	public void updateContent(String content) {
 		this.content = content;
 	}
-
 	public void updateCategory(Category category){
 		this.category = category;
 	}

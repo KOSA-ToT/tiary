@@ -4,6 +4,7 @@ import static jakarta.persistence.FetchType.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -48,7 +49,8 @@ public class Comment extends AuditingFields {
 	@Column(name = "comment_type")
 	private String commentType;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "article_id")
 	private Article article;
 
 	@ColumnDefault("FALSE")
