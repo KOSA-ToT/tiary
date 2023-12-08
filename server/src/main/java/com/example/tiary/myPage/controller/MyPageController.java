@@ -3,10 +3,16 @@ package com.example.tiary.myPage.controller;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.myPage.service.SubscribeService;
 import com.example.tiary.myPage.service.UserService;
+import com.example.tiary.users.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -85,18 +91,6 @@ public class MyPageController {
         }
     }
 
-    //내 정보 수정(프로필 이미지)
-    @PatchMapping("/{userId}/updateProfileImg")
-    public ResponseEntity updateProfileImg(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
-        try{
-            return new ResponseEntity<>(userService.editProfileImg(requestUserDto,userId),HttpStatus.RESET_CONTENT);
-//            return ResponseEntity.created(URI.create("/users/"+userId)).body("수정완료했습니다.");
-        }catch(Exception e){
-            log.error("에러 : ",e);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로필 이미지 수정에 실패했습니다.");
-        }
-    }
-
     //구독자 보기 (닉네임,프로필 이미지)
     @GetMapping("/{userId}/subscriber")
     public ResponseEntity listSubscriber(@PathVariable("userId") Long writerId){
@@ -127,5 +121,14 @@ public class MyPageController {
             log.error("에러 : ",e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("탈퇴에 실패했습니다.");
         }
+    }
+    //프로필 이미지 등록
+    @PostMapping(value = "/{userId}/uploadProfileImg", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity uploadProfilImg(@PathVariable("userId") Integer userId,
+                                          @RequestParam(value="profileImg") MultipartFile imgFile,
+                                          @AuthenticationPrincipal UserDto user) throws
+        IOException {
+            return new ResponseEntity<>(userService.uploadProfileImg(user.getUsers().getId(), imgFile),
+                    HttpStatus.CREATED);
     }
 }
