@@ -48,7 +48,7 @@ public class CommentService {
 		Comment parentComment;
 		if (commentRequestDTO.getParentId() != null) { // 부모 댓글이 있을 경우
 			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
-				.orElseThrow(() -> new EntityNotFoundException("없는 commentid입니다." + commentRequestDTO.getParentId()));
+				.orElseThrow(() -> new EntityNotFoundException(new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
 			comment.updateParent(parentComment);
 		}
 		return CommentResponseDTO.from(commentRepository.save(comment));
@@ -63,7 +63,7 @@ public class CommentService {
 		Comment parentComment;
 		if (commentRequestDTO.getParentId() != null) {	// 부모 댓글이 있을 경우
 			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
-				.orElseThrow(() -> new EntityNotFoundException("없는 commentid입니다." + commentRequestDTO.getParentId()));
+				.orElseThrow(() ->  new EntityNotFoundException(new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
 			comment.updateParent(parentComment);
 		}
 		return CommentResponseDTO.from(commentRepository.save(comment));
@@ -103,7 +103,8 @@ public class CommentService {
 	// 수정
 	@Transactional
 	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO) {
-		Comment comment = commentRepository.findById(commentId).get();
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
 		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
@@ -112,7 +113,7 @@ public class CommentService {
 	@Transactional
 	public String delete(Long commentId) {
 		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new EntityNotFoundException("댓글이 이미 삭제되었습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_ALREADY_DELETE));
 		commentRepository.deleteById(commentId);
 		return "삭제 완료";
 	}

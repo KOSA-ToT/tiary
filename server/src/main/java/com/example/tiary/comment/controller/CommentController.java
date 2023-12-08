@@ -43,13 +43,11 @@ public class CommentController {
 	@PostMapping("/guest/{article-id}")
 	public ResponseEntity guestCreate(@PathVariable("article-id") Long articleId,
 		@RequestBody CommentRequestDTO commentRequestDTO) {
-		System.out.println("비회원 댓글 등록 컨트롤러");
-		System.out.println(commentRequestDTO);
 		return new ResponseEntity<>(commentService.guestCreate(commentRequestDTO, articleId), HttpStatus.OK);
 	}
 
 	// 전체 댓글 읽기
-	@GetMapping("/read/{article-id}")
+	@GetMapping("/{article-id}")
 	public ResponseEntity<List<CommentResponseDTO>> readCommentList(@PathVariable("article-id") Long articleId) {
 		List<CommentResponseDTO> commentResponseDTOList = commentService.readCommentList(articleId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(commentResponseDTOList);
@@ -73,6 +71,7 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.RESET_CONTENT)
 			.body(commentService.update(commentId, commentRequestDTO));
 	}
+
 	// 비회원 댓글 수정
 	@PatchMapping("/guest/{comment-id}")
 	public ResponseEntity<CommentResponseDTO> guestUpdateComment(
