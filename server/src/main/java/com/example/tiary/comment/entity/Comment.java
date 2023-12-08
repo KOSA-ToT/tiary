@@ -67,9 +67,10 @@ public class Comment extends AuditingFields {
 	@ToString.Exclude
 	private List<Comment> children = new ArrayList<>();
 
-	@ManyToOne
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
 	private Users users;
+
 
 	public void setParent(Comment parent) {
 		this.parent = parent;

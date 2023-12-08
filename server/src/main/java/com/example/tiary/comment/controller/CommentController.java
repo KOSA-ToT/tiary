@@ -49,7 +49,7 @@ public class CommentController {
 	}
 
 	// 전체 댓글 읽기
-	@GetMapping("/{article-id}")
+	@GetMapping("/read/{article-id}")
 	public ResponseEntity<List<CommentResponseDTO>> readCommentList(@PathVariable("article-id") Long articleId) {
 		List<CommentResponseDTO> commentResponseDTOList = commentService.readCommentList(articleId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(commentResponseDTOList);
@@ -69,6 +69,13 @@ public class CommentController {
 	// 댓글 수정
 	@PatchMapping("/{comment-id}")
 	public ResponseEntity<CommentResponseDTO> updateComment(
+		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
+		return ResponseEntity.status(HttpStatus.RESET_CONTENT)
+			.body(commentService.update(commentId, commentRequestDTO));
+	}
+	// 비회원 댓글 수정
+	@PatchMapping("/guest/{comment-id}")
+	public ResponseEntity<CommentResponseDTO> guestUpdateComment(
 		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
 		return ResponseEntity.status(HttpStatus.RESET_CONTENT)
 			.body(commentService.update(commentId, commentRequestDTO));

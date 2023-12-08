@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +37,7 @@ public class CommentService {
 		this.usersRepository = usersRepository;
 	}
 
-	// 회원 댓글 저장
+	// 회원 댓글 등록
 	@Transactional
 	public CommentResponseDTO create(CommentRequestDTO commentRequestDTO, Long articleId, Long userId) {
 		Users users = usersRepository.findById(userId)
@@ -52,7 +54,7 @@ public class CommentService {
 		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
-	// 비회원 댓글 저장
+	// 비회원 댓글 등록
 	@Transactional
 	public CommentResponseDTO guestCreate(CommentRequestDTO commentRequestDTO, Long articleId) {
 		Article article = articleRepository.findById(articleId)
@@ -93,8 +95,9 @@ public class CommentService {
 
 	// 익명 댓글 비밀번호 확인
 	public boolean confirmPassword(Long commentId, String password) {
-		String commentPassword = commentRepository.findById(commentId).get().getPassword();
-		return commentPassword.equals(password);
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+		return comment.getPassword().equals(password);
 	}
 
 	// 수정
@@ -102,8 +105,7 @@ public class CommentService {
 	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO) {
 		Comment comment = commentRepository.findById(commentId).get();
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
-		CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
-		return commentResponseDTO.from(commentRepository.save(comment));
+		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
 	// 삭제
