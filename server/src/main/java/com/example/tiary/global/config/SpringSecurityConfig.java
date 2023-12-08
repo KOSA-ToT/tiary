@@ -66,6 +66,8 @@ public class SpringSecurityConfig {
 					.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
 				authorize.requestMatchers(new AntPathRequestMatcher("/article/**")).permitAll();
 				authorize.requestMatchers(new AntPathRequestMatcher("/category/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/comment/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll();
 				authorize.anyRequest().authenticated();
 			});
 		return http.build();
