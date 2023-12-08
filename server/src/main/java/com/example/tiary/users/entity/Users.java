@@ -108,4 +108,7 @@ public class Users implements UserDetails {
 	public void updateProfileImg(String userPicture) {
 		this.userPicture = userPicture;
 	}
+	public void updateStatus(UserStatus userStatus) {
+		this.userStatus = userStatus;
+	}
 }

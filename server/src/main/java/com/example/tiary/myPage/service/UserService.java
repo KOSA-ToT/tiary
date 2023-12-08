@@ -27,4 +27,6 @@ public interface UserService {
     List<ResponseMyArticleDto> showMyArticle(Long userId);
     //내 댓글 보기
     List<ResponseMyCommentDto> showMyComment(Long userId);
+    //유저 inactive하기
+    Users accountCancellation(RequestUserDto requestUserDto, Long userId);
 }

@@ -2,6 +2,7 @@ package com.example.tiary.myPage.service.impl;
 
 import com.example.tiary.myPage.dto.response.ResponseMyArticleDto;
 import com.example.tiary.myPage.dto.response.ResponseMyCommentDto;
+import com.example.tiary.users.constant.UserStatus;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.myPage.repository.UserRepository;
@@ -88,5 +89,15 @@ public class UserServiceImpl implements UserService {
     public List<ResponseMyCommentDto> showMyComment(Long userId){
         List<ResponseMyCommentDto> myCommentList= userRepository.listMyComment(userId);
         return myCommentList;
+    }
+
+    //유저 inactive만들기
+    @Transactional
+    @Override
+    public Users accountCancellation(RequestUserDto requestUserDto, Long userId){
+        Users users = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
+        users.updateStatus(UserStatus.INACTIVE);
+        return userRepository.save(users);
     }
 }

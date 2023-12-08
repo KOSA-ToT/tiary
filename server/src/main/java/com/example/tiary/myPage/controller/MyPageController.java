@@ -119,8 +119,13 @@ public class MyPageController {
     }
 
     //유저 INACTIVE 상태 만들기
-//    @PatchMapping("/{userId}/inactive")
-//    public ResponseEntity inactiveUser(@PathVariable("userId") Long userId){
-//
-//    }
+    @PatchMapping("/{userId}/inactive")
+    public ResponseEntity inactiveUser(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
+        try{
+            return new ResponseEntity<>(userService.accountCancellation(requestUserDto,userId),HttpStatus.RESET_CONTENT);
+        }catch(Exception e){
+            log.error("에러 : ",e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("탈퇴에 실패했습니다.");
+        }
+    }
 }
