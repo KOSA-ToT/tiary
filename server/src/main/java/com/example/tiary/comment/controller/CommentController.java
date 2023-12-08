@@ -36,16 +36,15 @@ public class CommentController {
 	public ResponseEntity create(@PathVariable("article-id") Long articleId,
 		@RequestBody CommentRequestDTO commentRequestDTO,
 		@AuthenticationPrincipal UserDto users) {
-		CommentResponseDTO commentResponseDTO = CommentResponseDTO.from(
-			commentService.create(commentRequestDTO, articleId, users.getUsers().getId()));
-
-		return new ResponseEntity<>(commentResponseDTO,HttpStatus.OK);
+		return new ResponseEntity<>(commentService.create(commentRequestDTO, articleId, users.getUsers().getId()), HttpStatus.OK);
 	}
 
 	//  비회원 댓글 등록
 	@PostMapping("/guest/{article-id}")
 	public ResponseEntity guestCreate(@PathVariable("article-id") Long articleId,
 		@RequestBody CommentRequestDTO commentRequestDTO) {
+		System.out.println("비회원 댓글 등록 컨트롤러");
+		System.out.println(commentRequestDTO);
 		return new ResponseEntity<>(commentService.guestCreate(commentRequestDTO, articleId), HttpStatus.OK);
 	}
 
@@ -57,7 +56,7 @@ public class CommentController {
 	}
 
 	// 익명 댓글 비밀번호 확인
-	@PostMapping("/password-confirm/{comment-id}")
+	@PostMapping("/guest/password-confirm/{comment-id}")
 	public ResponseEntity confirmPassword(@PathVariable("comment-id") Long commentId,
 		@RequestBody CommentRequestDTO commentRequestDTO) {
 		if (commentService.confirmPassword(commentId, commentRequestDTO.getPassword())) {

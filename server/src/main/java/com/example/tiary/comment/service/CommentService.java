@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,7 @@ public class CommentService {
 
 	// 회원 댓글 저장
 	@Transactional
-	public Comment create(CommentRequestDTO commentRequestDTO, Long articleId, Long userId) {
+	public CommentResponseDTO create(CommentRequestDTO commentRequestDTO, Long articleId, Long userId) {
 		Users users = usersRepository.findById(userId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
@@ -50,12 +49,12 @@ public class CommentService {
 				.orElseThrow(() -> new EntityNotFoundException("없는 commentid입니다." + commentRequestDTO.getParentId()));
 			comment.updateParent(parentComment);
 		}
-		return commentRepository.save(comment);
+		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
 	// 비회원 댓글 저장
 	@Transactional
-	public Comment guestCreate(CommentRequestDTO commentRequestDTO, Long articleId) {
+	public CommentResponseDTO guestCreate(CommentRequestDTO commentRequestDTO, Long articleId) {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		Comment comment = commentRequestDTO.toEntityGuest(article);
@@ -65,7 +64,7 @@ public class CommentService {
 				.orElseThrow(() -> new EntityNotFoundException("없는 commentid입니다." + commentRequestDTO.getParentId()));
 			comment.updateParent(parentComment);
 		}
-		return commentRepository.save(comment);
+		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
 	// 전체 댓글
