@@ -2,6 +2,7 @@ package com.example.tiary.myPage.dto.response;
 
 import com.example.tiary.users.constant.Role;
 
+import com.example.tiary.users.constant.UserStatus;
 import com.example.tiary.users.entity.Users;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,14 +22,14 @@ public class ResponseUsersDto {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String userPicture;
-    private String userStatus;
+    private UserStatus userStatus;
     public static ResponseUsersDto from(Users users) {
         return ResponseUsersDto.builder()
                 .nickname(users.getNickname())
                 .email(users.getEmail())
                 //role?
                 .userPicture(users.getUserPicture())
-//                .userStatus(user.getUserStatus())
+                .userStatus(users.getUserStatus())
                 .build();
     }
 }
