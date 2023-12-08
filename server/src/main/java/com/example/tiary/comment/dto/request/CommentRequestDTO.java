@@ -1,7 +1,10 @@
-package com.example.tiary.comment.dto;
+package com.example.tiary.comment.dto.request;
+
+import org.apache.catalina.User;
 
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.comment.entity.Comment;
+import com.example.tiary.users.entity.Users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +25,22 @@ public class CommentRequestDTO {
 	private String commentType;
 	private Long parentId;
 
-	public Comment toEntity(Article article) {
+	public Comment toEntityUser(Article article, Users users) {
 		return Comment.builder()
 			.content(content)
 			.password(password)
 			.commentType(commentType)
 			.article(article)
+			.users(users)
+			.build();
+	}
+	public Comment toEntityGuest(Article article) {
+		return Comment.builder()
+			.content(content)
+			.password(password)
+			.commentType(commentType)
+			.article(article)
+			.users(null)
 			.build();
 	}
 }

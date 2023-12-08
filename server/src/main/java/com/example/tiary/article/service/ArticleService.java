@@ -23,10 +23,10 @@ public interface ArticleService {
 
 	// 게시물 생성
 	//TODO DB 최적화 고민
-	Article createArticle(RequestArticleDto requestArticleDto, List<MultipartFile> multipartFiles) throws IOException;
+	Article createArticle(Long usersId, RequestArticleDto requestArticleDto, List<MultipartFile> multipartFiles) throws IOException;
 
 	// 게시물 수정
-	Article updateArticle(Long articleId, RequestArticleDto requestArticleDto,
+	Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto,
 		List<MultipartFile> multipartFiles) throws
 		IOException;
 

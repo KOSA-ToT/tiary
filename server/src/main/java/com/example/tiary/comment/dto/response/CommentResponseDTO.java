@@ -1,4 +1,4 @@
-package com.example.tiary.comment.dto;
+package com.example.tiary.comment.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +30,7 @@ public class CommentResponseDTO {
 	private String createdBy;
 	private String modifiedBy;
 
-	public CommentResponseDTO from(Comment comment) {
+	public static CommentResponseDTO from(Comment comment) {
 		return
 			CommentResponseDTO.builder()
 				.id(comment.getId())
