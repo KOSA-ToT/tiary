@@ -45,7 +45,11 @@ public class SpringSecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring()
-			.requestMatchers(new AntPathRequestMatcher("/h2/**"));
+			.requestMatchers(new AntPathRequestMatcher("/h2/**"))
+		.requestMatchers(new AntPathRequestMatcher("/comment/guest/**"))
+		// .requestMatchers(new AntPathRequestMatcher("/comment/read/**"))
+		.requestMatchers(new AntPathRequestMatcher("/comment/guest/password-confirm/**"));
+
 	}
 
 	@Bean
@@ -66,6 +70,8 @@ public class SpringSecurityConfig {
 					.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
 				authorize.requestMatchers(new AntPathRequestMatcher("/article/**")).permitAll();
 				authorize.requestMatchers(new AntPathRequestMatcher("/category/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/comment/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll();
 				authorize.anyRequest().authenticated();
 			});
 		return http.build();
