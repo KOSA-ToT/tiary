@@ -131,4 +131,27 @@ public class MyPageController {
             return new ResponseEntity<>(userService.uploadProfileImg(user.getUsers().getId(), imgFile),
                     HttpStatus.CREATED);
     }
+
+    //구독하기
+    @GetMapping("/{userId}/subscribe")
+    public ResponseEntity subscribeWriter(@PathVariable("userId") Long writerId, @AuthenticationPrincipal UserDto user){
+        try{
+            return new ResponseEntity<>(subscribeService.addSubscribe(writerId,user.getUsers().getId()),
+                    HttpStatus.CREATED);
+        }catch(Exception e){
+            log.error("에러 : "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구독 실패했습니다.");
+        }
+    }
+    //구독 취소하기
+    @GetMapping("/{userId}/cancelSubscribe")
+    public ResponseEntity cancelSubscribeWriter(@PathVariable("userId") Long writerId, @AuthenticationPrincipal UserDto user){
+        try{
+            return new ResponseEntity<>(subscribeService.cancelSubscribe(writerId,user.getUsers().getId()),
+                    HttpStatus.GONE);
+        }catch(Exception e){
+            log.error("에러 : "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구독 취소 실패했습니다.");
+        }
+    }
 }
