@@ -1,6 +1,5 @@
 package com.example.tiary.global.config.auth;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,14 +20,9 @@ public class CustomAuthenticationProvider
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String email = authentication.getName();
-
 		Users users = userService.loadUserByUsername(email);
 
-		if (users != null) {
-			return new UsernamePasswordAuthenticationToken(users, null, users.getAuthorities());
-		} else {
-			throw new BadCredentialsException("회원 정보가 없습니다.");
-		}
+		return new UsernamePasswordAuthenticationToken(users, null, users.getAuthorities());
 	}
 
 	@Override

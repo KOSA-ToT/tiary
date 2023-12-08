@@ -29,6 +29,7 @@ public class SpringSecurityConfig {
 	private final UserService userService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final CorsConfig corsConfig;
+
 	public SpringSecurityConfig(UsersRepository userRepository, UserService userService,
 		AuthenticationConfiguration authenticationConfiguration, CorsConfig corsConfig) {
 		this.userRepository = userRepository;
@@ -74,7 +75,7 @@ public class SpringSecurityConfig {
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 		System.out.println("인증 필터 등록");
-		return new JwtAuthenticationFilter(authenticationManagerBean());
+		return new JwtAuthenticationFilter(authenticationManagerBean(), userService);
 	}
 
 	@Bean

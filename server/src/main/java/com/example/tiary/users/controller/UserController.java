@@ -50,18 +50,17 @@ public class UserController {
 		return ResponseEntity.ok("가입되었습니다.");
 	}
 
-	// 이메일 존재 여부 체크
-	@GetMapping("/chk-email")
-	public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
-		System.out.println(email);
-		return userService.existsEmail(email)
-			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
-			: ResponseEntity.ok("사용 가능한 이메일입니다.");
-	}
+	// // 이메일 존재 여부 체크
+	// @GetMapping("/chk-email")
+	// public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
+	// 		return userService.existsEmail(email)
+	// 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
+	// 			: ResponseEntity.ok("사용 가능한 이메일입니다.");
+	// }
 
 	// 닉네임 존재 여부 체크
 	@GetMapping("/chk-nickname")
-	public ResponseEntity<String> checkDupNickname(@RequestParam("nickname") String nickname) {
+	public ResponseEntity checkDupNickname(@RequestParam("nickname") String nickname) {
 		return userService.existsNickname(nickname)
 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.")
 			: ResponseEntity.ok("사용 가능한 닉네임입니다.");
@@ -77,11 +76,11 @@ public class UserController {
 
 	// 인증 확인
 	@GetMapping("/verify-email")
-	public ResponseEntity<String> verifiedEmail(@RequestParam("link") String encodedKey) {
+	public ResponseEntity verifiedEmail(@RequestParam("link") String encodedKey) {
 		String result = redisUtil.getData(encodedKey);
 		redisUtil.deleteData(encodedKey);
 		return result != null
-			? ResponseEntity.ok("이메일 인증 완료")
+			? ResponseEntity.status(HttpStatus.ACCEPTED).body("이메일 인증 완료")
 			: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("제한시간이 초과되었습니다.");
 	}
 }

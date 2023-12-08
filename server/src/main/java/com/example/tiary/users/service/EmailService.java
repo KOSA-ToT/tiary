@@ -15,16 +15,15 @@ public class EmailService {
 
 	@Value("${mail.username}")
 	private String senderEmail;
+	@Value("${spring.mail.verify-link}")
+	private String verifyLink;
 
-	//TODO localhost 수정필요
 	public void sendMail(String receiver, String encodedKey) {
-		String verifyLink = "http://localhost:8088/auth/verify-email?link=" + encodedKey;
-
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(senderEmail);
 		message.setTo(receiver);
 		message.setSubject("[Tiary] 계정 인증을 위한 이메일 링크 🔐");
-		message.setText("\n계정을 인증하려면 아래 링크를 5분 이내에 클릭하세요: \n\n" + verifyLink);
+		message.setText("\n계정을 인증하려면 아래 링크를 5분 이내에 클릭하세요: \n\n" + verifyLink + encodedKey);
 		mailSender.send(message);
 	}
 
