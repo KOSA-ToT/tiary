@@ -18,6 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.example.tiary.global.config.auth.CustomAuthenticationProvider;
 import com.example.tiary.global.config.jwt.JwtAuthenticationFilter;
 import com.example.tiary.global.config.jwt.JwtAuthorizationFilter;
+import com.example.tiary.global.config.jwt.TokenService;
 import com.example.tiary.users.repository.UsersRepository;
 import com.example.tiary.users.service.UserService;
 
@@ -29,12 +30,15 @@ public class SpringSecurityConfig {
 	private final UserService userService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final CorsConfig corsConfig;
+	private final TokenService tokenService;
+
 	public SpringSecurityConfig(UsersRepository userRepository, UserService userService,
-		AuthenticationConfiguration authenticationConfiguration, CorsConfig corsConfig) {
+		AuthenticationConfiguration authenticationConfiguration, CorsConfig corsConfig, TokenService tokenService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.corsConfig = corsConfig;
+		this.tokenService = tokenService;
 	}
 
 	@Bean
@@ -46,9 +50,9 @@ public class SpringSecurityConfig {
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring()
 			.requestMatchers(new AntPathRequestMatcher("/h2/**"))
-		.requestMatchers(new AntPathRequestMatcher("/comment/guest/**"))
-		// .requestMatchers(new AntPathRequestMatcher("/comment/read/**"))
-		.requestMatchers(new AntPathRequestMatcher("/comment/guest/password-confirm/**"));
+			.requestMatchers(new AntPathRequestMatcher("/comment/guest/**"))
+			// .requestMatchers(new AntPathRequestMatcher("/comment/read/**"))
+			.requestMatchers(new AntPathRequestMatcher("/comment/guest/password-confirm/**"));
 
 	}
 
@@ -80,13 +84,13 @@ public class SpringSecurityConfig {
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 		System.out.println("인증 필터 등록");
-		return new JwtAuthenticationFilter(authenticationManagerBean());
+		return new JwtAuthenticationFilter(authenticationManagerBean(), tokenService);
 	}
 
 	@Bean
 	public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
 		System.out.println("인가 필터 등록");
-		return new JwtAuthorizationFilter(authenticationManagerBean(), userRepository);
+		return new JwtAuthorizationFilter(authenticationManagerBean(), userRepository, tokenService);
 	}
 
 	@Bean
