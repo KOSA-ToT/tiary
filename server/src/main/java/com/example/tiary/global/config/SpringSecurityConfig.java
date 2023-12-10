@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -62,11 +63,14 @@ public class SpringSecurityConfig {
 			.addFilterBefore(jwtAuthenticationFilter(),
 				UsernamePasswordAuthenticationFilter.class)
 			.addFilter(jwtAuthorizationFilter())
+			.addFilterBefore(anonymousAuthenticationFilter(), JwtAuthenticationFilter.class)
 			.authorizeHttpRequests(authorize -> {
 				authorize
 					.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
 				authorize.requestMatchers(new AntPathRequestMatcher("/article/**")).permitAll();
 				authorize.requestMatchers(new AntPathRequestMatcher("/category/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/comment/**")).permitAll();
+				authorize.requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll();
 				authorize.anyRequest().authenticated();
 			});
 		return http.build();
@@ -82,6 +86,11 @@ public class SpringSecurityConfig {
 	public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
 		System.out.println("인가 필터 등록");
 		return new JwtAuthorizationFilter(authenticationManagerBean(), userRepository);
+	}
+
+	@Bean
+	public AnonymousAuthenticationFilter anonymousAuthenticationFilter() {
+		return new AnonymousAuthenticationFilter("anonymousUser");
 	}
 
 	@Bean

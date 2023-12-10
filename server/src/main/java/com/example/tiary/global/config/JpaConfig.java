@@ -29,9 +29,11 @@ public class JpaConfig {
 			.map(SecurityContext::getAuthentication)
 			.filter(Authentication::isAuthenticated)
 			.map(Authentication::getPrincipal)
+			.map(principal -> principal instanceof UserDto ? (UserDto)principal : null)
 			.map(UserDto.class::cast)
 			.map(UserDto::getUsers)
 			.map(Users.class::cast)
-			.map(Users::getNickname);
+			.map(Users::getNickname)
+			.orElse("anonymousUser").describeConstable();
 	}
 }
