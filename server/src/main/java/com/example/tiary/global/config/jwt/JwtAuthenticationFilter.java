@@ -15,6 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.tiary.global.config.auth.CustomAuthenticationProvider;
+import com.example.tiary.global.exception.ExceptionCode;
 import com.example.tiary.users.dto.LoginDto;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.service.UserService;
@@ -49,11 +50,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				new UsernamePasswordAuthenticationToken(loginDto.getEmail(), "");
 			return customAuthenticationProvider.authenticate(authenticationToken);
 		} catch (UnrecognizedPropertyException e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.setStatus(ExceptionCode.BAD_REQUEST.getStatus());
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 
-			String errorMsg = om.writeValueAsString(Map.of("error", "잘못된 요청입니다."));
+			String errorMsg = om.writeValueAsString(Map.of("error", ExceptionCode.BAD_REQUEST.getMessage()));
 
 			response.getWriter().write(errorMsg);
 			return null;
@@ -81,7 +82,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException {
 		logger.info("인증 실패: unsuccessfulAuthentication");
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setStatus(ExceptionCode.UNAUTHORIZED.getStatus());
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 
