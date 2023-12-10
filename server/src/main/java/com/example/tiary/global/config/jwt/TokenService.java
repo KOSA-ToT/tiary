@@ -22,7 +22,7 @@ public class TokenService {
 		this.secretKey = secretKey;
 	}
 
-	public String createAccessToken(Long id, String email, Duration expireTime) {
+	public String createToken(Long id, String email, Duration expireTime) {
 		return JWT.create()
 			.withSubject(email)
 			.withExpiresAt(new Date(System.currentTimeMillis()

@@ -101,7 +101,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		// 리프레시 토큰이 유효하면 액세스 토큰 발급
 		Users user = usersRepository.findByEmail(email)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-		return tokenService.createAccessToken(
+		return tokenService.createToken(
 			user.getId(),
 			user.getEmail(),
 			JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());

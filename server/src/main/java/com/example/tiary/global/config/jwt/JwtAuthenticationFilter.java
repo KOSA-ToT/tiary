@@ -56,31 +56,23 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		System.out.println("successfulAuthentication");
 		Users principalDetails = (Users)authResult.getPrincipal();
 
-		String accessToken = tokenService.createAccessToken(
+		String accessToken = tokenService.createToken(
 			principalDetails.getId(),
 			principalDetails.getEmail(),
 			JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
 
-		String refreshToken = tokenService.createAccessToken(
+		String refreshToken = tokenService.createToken(
 			principalDetails.getId(),
 			principalDetails.getEmail(),
 			JwtProperties.getREFRESH_TOKEN_EXPIRE_DURATION());
-		createRefreshCookie(request, response, refreshToken);
 
-		response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + accessToken);
-	}
-
-	public void createRefreshCookie(HttpServletRequest request, HttpServletResponse response, String refreshToken) {
-		// TODO 승희 : 이 코드 필요한가? 아래 코드로 대체 가능한가?
-		CookieUtil.deleteCookie(
-			request,
-			response,
-			JwtProperties.getREFRESH_TOKEN_COOKIE_NAME());
-
+		// 쿠키에 Refresh Token 저장
 		CookieUtil.createCookie(
 			response,
 			JwtProperties.getREFRESH_TOKEN_COOKIE_NAME(),
 			refreshToken,
 			JwtProperties.getREFRESH_TOKEN_EXPIRE_DURATION());
+
+		response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + accessToken);
 	}
 }
