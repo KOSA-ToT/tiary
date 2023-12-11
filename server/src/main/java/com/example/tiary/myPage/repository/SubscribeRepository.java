@@ -20,4 +20,5 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     //구독 작가 조회
     @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseSubscribeDto(s.userId, s.writerId, u.nickname, u.userPicture) FROM Subscribe s LEFT JOIN Users u ON s.writerId = u.id WHERE s.userId = :userId")
     List<ResponseSubscribeDto> showSubscribedWriterList(@Param("userId") Long userId);
+
 }
