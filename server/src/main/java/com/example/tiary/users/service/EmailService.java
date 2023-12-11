@@ -26,8 +26,8 @@ public class EmailService {
 
 		String linkButton = getString(encodedKey);
 
-		String greetingMsg = "안녕하세요! T o T 입니다.<br>" 
-			+ "사이트를 찾아 주셔서 감사합니다. 여러분의 소중한 시간을 함께 할 수 있어 기쁩니다.<br>"
+		String greetingMsg = "<br>안녕하세요! T o T 입니다.<br>"
+			+ "사이트를 찾아 주셔서 감사합니다. 여러분의 소중한 시간을 함께 할 수 있어 기쁩니다.<br><br>"
 			+ "컨텐츠 이용을 위해 계정을 인증하려면 아래 버튼을 5분 이내에 클릭하세요: <br><br>";
 
 		helper.setFrom(senderEmail);
