@@ -46,6 +46,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    //메일발송
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //jwt
     implementation 'com.auth0:java-jwt:4.3.0'
     //h2 DB
     runtimeOnly 'com.h2database:h2'

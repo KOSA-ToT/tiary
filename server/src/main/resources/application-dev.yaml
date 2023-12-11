@@ -17,6 +17,23 @@ spring:
     init:
       data-locations: classpath:data.sql
       mode: always
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail.username}
+    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+  #redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   h2:
     console:
@@ -30,5 +47,5 @@ spring:
 logging:
   level:
     org:
-      hibernate : info
+      hibernate: info
 

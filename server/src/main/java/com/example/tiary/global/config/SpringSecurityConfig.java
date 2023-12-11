@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -29,6 +30,7 @@ public class SpringSecurityConfig {
 	private final UserService userService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final CorsConfig corsConfig;
+
 	public SpringSecurityConfig(UsersRepository userRepository, UserService userService,
 		AuthenticationConfiguration authenticationConfiguration, CorsConfig corsConfig) {
 		this.userRepository = userRepository;
@@ -62,6 +64,7 @@ public class SpringSecurityConfig {
 			.addFilterBefore(jwtAuthenticationFilter(),
 				UsernamePasswordAuthenticationFilter.class)
 			.addFilter(jwtAuthorizationFilter())
+			.addFilterBefore(anonymousAuthenticationFilter(), JwtAuthenticationFilter.class)
 			.authorizeHttpRequests(authorize -> {
 				authorize
 					.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
@@ -77,13 +80,18 @@ public class SpringSecurityConfig {
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 		System.out.println("인증 필터 등록");
-		return new JwtAuthenticationFilter(authenticationManagerBean());
+		return new JwtAuthenticationFilter(authenticationManagerBean(), userService);
 	}
 
 	@Bean
 	public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
 		System.out.println("인가 필터 등록");
 		return new JwtAuthorizationFilter(authenticationManagerBean(), userRepository);
+	}
+
+	@Bean
+	public AnonymousAuthenticationFilter anonymousAuthenticationFilter() {
+		return new AnonymousAuthenticationFilter("anonymousUser");
 	}
 
 	@Bean
