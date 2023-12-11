@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.ArticleLikes;
+import com.example.tiary.article.entity.ArticleUsersForLikes;
 import com.example.tiary.article.repository.ArticleLikesRepository;
 import com.example.tiary.article.repository.ArticleRepository;
 import com.example.tiary.article.service.ArticleLikesService;
@@ -12,8 +13,6 @@ import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UsersRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ArticleLikesServiceImpl implements ArticleLikesService {
@@ -35,7 +34,10 @@ public class ArticleLikesServiceImpl implements ArticleLikesService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-		ArticleLikes articleLikes = new ArticleLikes(null, article, users);
+
+		ArticleUsersForLikes articleUsersForLikes = ArticleUsersForLikes.of(users.getId(), article.getId());
+		ArticleLikes articleLikes = ArticleLikes.of(articleUsersForLikes);
+
 		articleLikesRepository.save(articleLikes);
 		return true;
 	}
@@ -47,7 +49,14 @@ public class ArticleLikesServiceImpl implements ArticleLikesService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-		articleLikesRepository.deleteArticleLikesByArticleIdAndUsersId(article.getId(), users.getId());
+		articleLikesRepository.deleteArticleLikesByArticleUsersForLikes(ArticleUsersForLikes.of(users.getId(),article.getId()));
+		return true;
+	}
+
+	@Transactional
+	@Override
+	public boolean deleteLikes(Long articleId ){
+		articleLikesRepository.deleteAllByArticleUsersForLikes_ArticleId(articleId);
 		return true;
 	}
 }
