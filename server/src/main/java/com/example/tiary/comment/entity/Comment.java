@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.global.audit.AuditingFields;
+import com.example.tiary.users.entity.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -66,13 +67,14 @@ public class Comment extends AuditingFields {
 	@ToString.Exclude
 	private List<Comment> children = new ArrayList<>();
 
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "user_id")
+	private Users users;
+
+
 	public void setParent(Comment parent) {
 		this.parent = parent;
 	}
-
-	//    @ManyToOne
-	//    @JoinColumn(name = "us!er_id")
-	//    private Users users;
 
 	public void updateContent(String content) {
 		this.content = content;

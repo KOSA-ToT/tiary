@@ -15,16 +15,16 @@ import com.example.tiary.users.entity.Users;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @EnableJpaAuditing
 @RequiredArgsConstructor
 @Configuration
+@Slf4j
 public class JpaConfig {
 	private final HttpSession session;
-
 	@Bean
 	public AuditorAware<String> auditorAware() {
-		//시큐리티 적용
 		return () -> Optional.ofNullable(SecurityContextHolder.getContext())
 			.map(SecurityContext::getAuthentication)
 			.filter(Authentication::isAuthenticated)

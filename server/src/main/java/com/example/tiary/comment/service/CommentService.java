@@ -6,17 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.repository.ArticleRepository;
-import com.example.tiary.comment.dto.CommentRequestDTO;
-import com.example.tiary.comment.dto.CommentResponseDTO;
+import com.example.tiary.comment.dto.request.CommentRequestDTO;
+import com.example.tiary.comment.dto.response.CommentResponseDTO;
 import com.example.tiary.comment.entity.Comment;
 import com.example.tiary.comment.repository.CommentRepository;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
+import com.example.tiary.users.entity.Users;
+import com.example.tiary.users.repository.UsersRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -24,26 +28,45 @@ import jakarta.persistence.EntityNotFoundException;
 public class CommentService {
 	private final CommentRepository commentRepository;
 	private final ArticleRepository articleRepository;
+	private final UsersRepository usersRepository;
 
-	public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository) {
+	public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository,
+		UsersRepository usersRepository) {
 		this.commentRepository = commentRepository;
 		this.articleRepository = articleRepository;
+		this.usersRepository = usersRepository;
 	}
 
-	//저장
+	// 회원 댓글 등록
 	@Transactional
-	public Comment create(CommentRequestDTO commentRequestDTO, Long articleId) {
+	public CommentResponseDTO create(CommentRequestDTO commentRequestDTO, Long articleId, Long userId) {
+		Users users = usersRepository.findById(userId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-		Comment comment = commentRequestDTO.toEntity(article);
+		Comment comment = commentRequestDTO.toEntityUser(article, users);
 		Comment parentComment;
-		// 부모 댓글이 있을 경우
-		if (commentRequestDTO.getParentId() != null) {
+		if (commentRequestDTO.getParentId() != null) { // 부모 댓글이 있을 경우
 			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
-				.orElseThrow(() -> new EntityNotFoundException("없는 commentid입니다." + commentRequestDTO.getParentId()));
+				.orElseThrow(() -> new EntityNotFoundException(new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
 			comment.updateParent(parentComment);
 		}
-		return commentRepository.save(comment);
+		return CommentResponseDTO.from(commentRepository.save(comment));
+	}
+
+	// 비회원 댓글 등록
+	@Transactional
+	public CommentResponseDTO guestCreate(CommentRequestDTO commentRequestDTO, Long articleId) {
+		Article article = articleRepository.findById(articleId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+		Comment comment = commentRequestDTO.toEntityGuest(article);
+		Comment parentComment;
+		if (commentRequestDTO.getParentId() != null) {	// 부모 댓글이 있을 경우
+			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
+				.orElseThrow(() ->  new EntityNotFoundException(new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
+			comment.updateParent(parentComment);
+		}
+		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
 	// 전체 댓글
@@ -59,13 +82,11 @@ public class CommentService {
 			// 부모 댓글이 있는 경우(부모 댓글 id를 가진 댓글 children에 넣음
 			if (comment.getParent() != null) {
 				CommentResponseDTO parentDTO = commentResponseDTOMap.get(comment.getParent().getId());
-				if (parentDTO.getChildren() == null) {
-					// 부모 댓글의 children 리스트가 null인 경우 새로운 리스트를 할당
+				if (parentDTO.getChildren() == null) {    // 부모 댓글의 children 리스트가 null인 경우 새로운 리스트를 할당
 					parentDTO.setChildren(new ArrayList<>());
 				}
 				parentDTO.getChildren().add(commentResponseDTO);
-			} else {
-				// 최상위 부모 댓글의 경우
+			} else { // 최상위 부모 댓글의 경우
 				commentResponseDTOList.add(commentResponseDTO);
 			}
 		});
@@ -74,24 +95,25 @@ public class CommentService {
 
 	// 익명 댓글 비밀번호 확인
 	public boolean confirmPassword(Long commentId, String password) {
-		String commentPassword = commentRepository.findById(commentId).get().getPassword();
-		return commentPassword.equals(password);
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+		return comment.getPassword().equals(password);
 	}
 
 	// 수정
 	@Transactional
 	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO) {
-		Comment comment = commentRepository.findById(commentId).get();
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
-		CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
-		return commentResponseDTO.from(commentRepository.save(comment));
+		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
 	// 삭제
 	@Transactional
 	public String delete(Long commentId) {
 		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new EntityNotFoundException("댓글이 이미 삭제되었습니다."));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_ALREADY_DELETE));
 		commentRepository.deleteById(commentId);
 		return "삭제 완료";
 	}
