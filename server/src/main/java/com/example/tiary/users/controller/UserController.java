@@ -17,6 +17,7 @@ import com.example.tiary.users.service.EmailService;
 import com.example.tiary.users.service.RedisUtil;
 import com.example.tiary.users.service.UserService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -68,7 +69,7 @@ public class UserController {
 
 	// 인증 이메일 전송
 	@PostMapping("/send-email")
-	public ResponseEntity sendEmail(@RequestParam("email") String email) {
+	public ResponseEntity sendEmail(@RequestParam("email") String email) throws MessagingException {
 		String encodedKey = redisUtil.setDataExpire(email);
 		emailService.sendMail(email, encodedKey);
 		return ResponseEntity.ok("인증 이메일 전송 완료 / 테스트 키: " + redisUtil.setDataExpire(email));
