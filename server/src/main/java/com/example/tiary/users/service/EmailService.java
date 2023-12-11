@@ -24,6 +24,20 @@ public class EmailService {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
+		String linkButton = getString(encodedKey);
+
+		String greetingMsg = "안녕하세요! T o T 입니다.<br>" 
+			+ "사이트를 찾아 주셔서 감사합니다. 여러분의 소중한 시간을 함께 할 수 있어 기쁩니다.<br>"
+			+ "컨텐츠 이용을 위해 계정을 인증하려면 아래 버튼을 5분 이내에 클릭하세요: <br><br>";
+
+		helper.setFrom(senderEmail);
+		helper.setTo(receiver);
+		helper.setSubject("[Tiary] 계정 인증을 위한 이메일 링크 🔐");
+		helper.setText(greetingMsg + linkButton, true);
+		mailSender.send(message);
+	}
+
+	private String getString(String encodedKey) {
 		String linkButtonStyle = "display:inline-block; background:#f2f4f6; color:#4e5968; "
 			+ "font-family:Toss Product Sans OTF, SF Pro KR, SF Pro Display, SF Pro Icons, -apple-system, "
 			+ "BlinkMacSystemFont, Basier Square, Apple SD Gothic Neo, Roboto, Noto Sans KR, Noto Sans, "
@@ -34,15 +48,7 @@ public class EmailService {
 		String linkButton = "<a href=\"" + verifyLink + encodedKey + "\" "
 			+ "style=\"" + linkButtonStyle + "\" target=\"_blank\">"
 			+ "이메일 인증하기</a>";
-
-		String greetingMsg = "안녕하세요! T o T 입니다. <br>"
-			+ "컨텐츠 이용을 위해 계정을 인증하려면 아래 버튼을 5분 이내에 클릭하세요: <br><br>";
-
-		helper.setFrom(senderEmail);
-		helper.setTo(receiver);
-		helper.setSubject("[Tiary] 계정 인증을 위한 이메일 링크 🔐");
-		helper.setText(greetingMsg + linkButton, true);
-		mailSender.send(message);
+		return linkButton;
 	}
 
 }
