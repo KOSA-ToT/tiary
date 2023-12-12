@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.users.dto.UserDto;
+import com.example.tiary.users.service.EmailService;
+import com.example.tiary.users.service.RedisUtil;
 import com.example.tiary.users.service.UserService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
+	private final EmailService emailService;
+	private final RedisUtil redisUtil;
 
 	@GetMapping("/home")
 	public String home() {
@@ -46,20 +51,37 @@ public class UserController {
 		return ResponseEntity.ok("가입되었습니다.");
 	}
 
-	// 이메일 존재 여부 체크
-	@GetMapping("/chk-email")
-	public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
-		System.out.println(email);
-		return userService.existsEmail(email)
-			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
-			: ResponseEntity.ok("사용 가능한 이메일입니다.");
-	}
+	// // 이메일 존재 여부 체크
+	// @GetMapping("/chk-email")
+	// public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
+	// 		return userService.existsEmail(email)
+	// 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
+	// 			: ResponseEntity.ok("사용 가능한 이메일입니다.");
+	// }
 
 	// 닉네임 존재 여부 체크
 	@GetMapping("/chk-nickname")
-	public ResponseEntity<String> checkDupNickname(@RequestParam("nickname") String nickname) {
+	public ResponseEntity checkDupNickname(@RequestParam("nickname") String nickname) {
 		return userService.existsNickname(nickname)
 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.")
 			: ResponseEntity.ok("사용 가능한 닉네임입니다.");
+	}
+
+	// 인증 이메일 전송
+	@PostMapping("/send-email")
+	public ResponseEntity sendEmail(@RequestParam("email") String email) throws MessagingException {
+		String encodedKey = redisUtil.setDataExpire(email);
+		emailService.sendMail(email, encodedKey);
+		return ResponseEntity.ok("인증 이메일 전송 완료 / 테스트 키: " + redisUtil.setDataExpire(email));
+	}
+
+	// 인증 확인
+	@GetMapping("/verify-email")
+	public ResponseEntity verifiedEmail(@RequestParam("link") String encodedKey) {
+		String result = redisUtil.getData(encodedKey);
+		redisUtil.deleteData(encodedKey);
+		return result != null
+			? ResponseEntity.status(HttpStatus.ACCEPTED).body("이메일 인증 완료")
+			: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("제한시간이 초과되었습니다.");
 	}
 }

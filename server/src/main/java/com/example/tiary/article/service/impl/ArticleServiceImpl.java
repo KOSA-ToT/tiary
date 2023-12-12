@@ -24,6 +24,7 @@ import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.article.service.HashtagService;
 import com.example.tiary.category.entity.Category;
 import com.example.tiary.category.service.CategoryService;
+import com.example.tiary.global.batch.BatchService;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
 import com.example.tiary.global.s3.S3UploadService;
@@ -45,6 +46,7 @@ public class ArticleServiceImpl implements ArticleService {
 	private final CategoryService categoryService;
 	private final S3UploadService s3UploadService;
 	private final ArticleLikesService articleLikesService;
+	private final BatchService batchService;
 
 	// 게시물 조회
 	@Transactional(readOnly = true)
@@ -106,6 +108,7 @@ public class ArticleServiceImpl implements ArticleService {
 			articleImageRepository.save(articleImage);
 		}
 		hashtagService.saveHashtag(requestArticleDto, article);
+		batchService.updateRecommendationsAsync(article.getId());
 		return article;
 	}
 

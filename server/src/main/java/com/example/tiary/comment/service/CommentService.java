@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +46,8 @@ public class CommentService {
 		Comment parentComment;
 		if (commentRequestDTO.getParentId() != null) { // 부모 댓글이 있을 경우
 			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
-				.orElseThrow(() -> new EntityNotFoundException(new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
+				.orElseThrow(() -> new EntityNotFoundException(
+					new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
 			comment.updateParent(parentComment);
 		}
 		return CommentResponseDTO.from(commentRepository.save(comment));
@@ -61,9 +60,10 @@ public class CommentService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		Comment comment = commentRequestDTO.toEntityGuest(article);
 		Comment parentComment;
-		if (commentRequestDTO.getParentId() != null) {	// 부모 댓글이 있을 경우
+		if (commentRequestDTO.getParentId() != null) {    // 부모 댓글이 있을 경우
 			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
-				.orElseThrow(() ->  new EntityNotFoundException(new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
+				.orElseThrow(() -> new EntityNotFoundException(
+					new BusinessLogicException(ExceptionCode.PARENT_COMMENTS_NOT_FOUND)));
 			comment.updateParent(parentComment);
 		}
 		return CommentResponseDTO.from(commentRepository.save(comment));
@@ -100,21 +100,48 @@ public class CommentService {
 		return comment.getPassword().equals(password);
 	}
 
-	// 수정
+	// 회원 수정
 	@Transactional
-	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO) {
-		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO, Long articleId, Long userId) {
+		Users users
+			= usersRepository.findById(userId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		Article article = articleRepository.findById(articleId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+		Comment comment = commentRequestDTO.toEntityUser(article, users);
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
 		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
 
-	// 삭제
+	// 비회원 수정
 	@Transactional
-	public String delete(Long commentId) {
+	public CommentResponseDTO guestUpdate(Long commentId, Long articleId, CommentRequestDTO commentRequestDTO) {
+		Article article = articleRepository.findById(articleId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+		Comment comment = commentRequestDTO.toEntityGuest(article);
+		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
+		return CommentResponseDTO.from(commentRepository.save(comment));
+	}
+
+
+	// 회원 댓글 삭제
+	@Transactional
+	public String delete(Long commentId, Long articleId, Long userId) {
+		Users users
+			= usersRepository.findById(userId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		Article article = articleRepository.findById(articleId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+		commentRepository.deleteById(commentId);
+		return "회원 댓글 삭제 완료";
+	}
+
+	// 비회원 삭제
+	@Transactional
+	public String guestDelete(Long commentId) {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_ALREADY_DELETE));
 		commentRepository.deleteById(commentId);
-		return "삭제 완료";
+		return "비회원 댓글 삭제 완료";
 	}
 }

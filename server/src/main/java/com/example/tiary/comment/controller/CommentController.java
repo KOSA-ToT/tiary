@@ -65,24 +65,30 @@ public class CommentController {
 	}
 
 	// 댓글 수정
-	@PatchMapping("/{comment-id}")
+	@PatchMapping("/{article-id}/{comment-id}")
 	public ResponseEntity<CommentResponseDTO> updateComment(
-		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
+		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO, @PathVariable("article-id") Long articleId,  @AuthenticationPrincipal UserDto users) {
 		return ResponseEntity.status(HttpStatus.RESET_CONTENT)
-			.body(commentService.update(commentId, commentRequestDTO));
+			.body(commentService.update(commentId, commentRequestDTO, articleId, users.getUsers().getId()));
 	}
 
 	// 비회원 댓글 수정
-	@PatchMapping("/guest/{comment-id}")
+	@PatchMapping("/guest/{article-id}/{comment-id}")
 	public ResponseEntity<CommentResponseDTO> guestUpdateComment(
-		@PathVariable("comment-id") Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
+		@PathVariable("comment-id") Long commentId,@PathVariable("article-id") Long articleId,  @RequestBody CommentRequestDTO commentRequestDTO) {
 		return ResponseEntity.status(HttpStatus.RESET_CONTENT)
-			.body(commentService.update(commentId, commentRequestDTO));
+			.body(commentService.guestUpdate(commentId, articleId, commentRequestDTO));
 	}
 
-	// 댓글 삭제
-	@DeleteMapping("/{comment-id}")
-	public ResponseEntity deleteComment(@PathVariable("comment-id") Long commentId) {
-		return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(commentService.delete(commentId));
+	// 회원 댓글 삭제
+	@DeleteMapping("/{article-id}/{comment-id}")
+	public ResponseEntity deleteComment(@PathVariable("comment-id") Long commentId,  @PathVariable("article-id") Long articleId,  @AuthenticationPrincipal UserDto users) {
+		return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(commentService.delete(commentId, articleId, users.getUsers().getId()));
+	}
+
+	// 비회원 댓글 삭제
+	@DeleteMapping("/guest/{article-id}/{comment-id}")
+	public ResponseEntity guestDeleteComment(@PathVariable("comment-id") Long commentId) {
+		return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(commentService.guestDelete(commentId));
 	}
 }

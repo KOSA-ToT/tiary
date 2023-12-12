@@ -14,7 +14,9 @@ import com.example.tiary.users.entity.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -50,7 +52,7 @@ public class Comment extends AuditingFields {
 	private String commentType;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "article_id")
+	@JoinColumn(name = "article_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))// 제약키 없이 사용
 	private Article article;
 
 	@ColumnDefault("FALSE")

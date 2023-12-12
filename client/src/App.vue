@@ -1,19 +1,11 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-
 </script>
 
 <template>
-  <header>
-  </header>
-
-  <main>
-    <router-view />
-  </main>
+  <router-view />
 </template>
 
-<style scoped>
+<!-- <style scoped>
 header {
   line-height: 1.5;
 }
@@ -40,4 +32,4 @@ header {
     flex-wrap: wrap;
   }
 }
-</style>
+</style> -->
