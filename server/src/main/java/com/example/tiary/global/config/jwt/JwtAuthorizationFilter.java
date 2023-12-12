@@ -1,8 +1,6 @@
 package com.example.tiary.global.config.jwt;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,63 +40,44 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	혹은 또 어떤 다른 것들을 넣어줄 수 있음
 	 */
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws
-		IOException,
-		ServletException {
-
-		// 인증 제외 경로 확인
-		if (isUriExemptFromAuthorization(request.getRequestURI())) {
-			chain.doFilter(request, response);
-			return;
-		}
-
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+		throws IOException, ServletException {
 		// Header 에서 토큰 추출
 		String accessToken = tokenService.getTokenFromHeader(request);
-
-		// 액세스 토큰이 빈 값이거나(OAuth2를 위함) 만료된 토큰일 경우
-		// 리프레시 토큰 확인 후, 유효하면 액세스 토큰 발급
-		String email = tokenService.validateAndExtractSubjectFromToken(accessToken);
-		if (email == null) {
-			String newAccessToken = renewAccessTokenIfNecessary(request);
-			response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + newAccessToken);
+		if (accessToken == null) {
 			chain.doFilter(request, response);
 			return;
 		}
+		try {
+			// 액세스 토큰 유효성 검사 후, 만료되었으면 리프레시 토큰 검사
+			String email = tokenService.validateAndExtractSubjectFromToken(accessToken);
+			if (email.equals("EXPIRE")) {
+				String newAccessToken = renewAccessTokenIfNecessary(request);
+				response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + newAccessToken);
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+			Users user = usersRepository.findByEmail(email)
+				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+			UserDto principalDetails = new UserDto(user);
 
-		Users user = usersRepository.findByEmail(email)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-		UserDto principalDetails = new UserDto(user);
-		System.out.println(principalDetails.getUsers().getAuthorities());
-
-		Authentication authentication =
-			new UsernamePasswordAuthenticationToken(
+			Authentication authentication = new UsernamePasswordAuthenticationToken(
 				principalDetails,
 				null,
 				principalDetails.getUsers().getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		chain.doFilter(request, response);
-	}
-
-	public boolean isUriExemptFromAuthorization(String uri) {
-		// TODO 승희 : 인증 제외 경로를 구분하는 좋은 방법을 구상해야 함
-		List<String> patterns = Arrays.asList("/auth", "/article", "/category", "/comment", "/users");
-		for (String pattern : patterns) {
-			if (uri.startsWith(pattern)) {
-				return true;
-			}
+			chain.doFilter(request, response);
+		} catch (BusinessLogicException e) {
+			System.out.println("AuthorizationFilter: " + e.getMessage());
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
-		return false;
 	}
 
 	public String renewAccessTokenIfNecessary(HttpServletRequest request) {
-		// 리프레시 토큰이 없으면 인증 실패
+		// 리프레시 토큰이 없으면 인증 실패, 유효하면 액세스 토큰 발급
 		String refreshToken = CookieUtil.getValueFromCookie(request, JwtProperties.getREFRESH_TOKEN_COOKIE_NAME());
 		String email = tokenService.validateAndExtractSubjectFromToken(refreshToken);
-		if (email == null) {
-			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-		}
-		// 리프레시 토큰이 유효하면 액세스 토큰 발급
 		Users user = usersRepository.findByEmail(email)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		return tokenService.createToken(
