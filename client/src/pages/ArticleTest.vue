@@ -7,31 +7,24 @@
       v-for="comment in commentList.value"
       :key="comment.id"
       :commentData="{
+        id: comment.id,
         articleId: comment.articleId,
         commentType: comment.commentType,
+        children: comment.children,
         content: comment.content,
         createdAt: comment.createdAt,
         createdBy: comment.createdBy,
       }"
     >
     </CommentCard>
-    <!-- 작성폼 -->
-    <div class="w-full px-3 mb-2 mt-6">
-      <textarea
-        class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-        name="body"
-        placeholder="Comment" id="commentForm"
-        required
-      ></textarea>
+
+    <!-- 댓글 작성폼
+    회원일 경우 - 입력 폼만 / 비회원일 경우 - 입력폼 + 비밀번호  -->
+    <div v-if="userId">
+      <UserCommentInput></UserCommentInput>
     </div>
-    <!-- 등록버튼 -->
-    <div class="w-full flex justify-end px-3 my-3" id="submitBtn">
-      <input
-        type="submit"
-        class="px-2.5 py-1.5 rounded-md text-white text-sm bg-indigo-500 text-lg"
-        value="Post Comment" 
-        @click="createComment"
-      />
+    <div v-else>
+      <GuestCommentInput></GuestCommentInput>
     </div>
   </div>
 </template>
@@ -39,9 +32,16 @@
 <script setup>
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
+import UserCommentInput from "@/components/comment/UserCommentInput.vue";
+import GuestCommentInput from "@/components/comment/GuestCommentInput.vue";
 import { onMounted, reactive, ref } from "vue";
 
+let userId = sessionStorage.getItem("user");
 let commentList = reactive([]);
+let commentRequestDTO = ref({
+  content: "",
+  password: "",
+});
 
 onMounted(async () => {
   await getCommentList();
@@ -57,13 +57,15 @@ async function getCommentList() {
     console.log(err);
   }
 }
-
 // 댓글 등록
-function createComment(){
-
+function createComment() {
+  axios
+    .post("http://localhost:8088/comment/guest/1014", commentRequestDTO.value)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => console.log(err));
 }
-
-
 </script>
 
 <style scoped></style>
