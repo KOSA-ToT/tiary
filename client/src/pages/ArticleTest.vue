@@ -24,7 +24,7 @@
       <UserCommentInput></UserCommentInput>
     </div>
     <div v-else>
-      <GuestCommentInput></GuestCommentInput>
+      <GuestCommentInput></GuestCommentInput> 
     </div>
   </div>
 </template>
@@ -37,6 +37,7 @@ import GuestCommentInput from "@/components/comment/GuestCommentInput.vue";
 import { onMounted, reactive, ref } from "vue";
 
 let userId = sessionStorage.getItem("user");
+
 let commentList = reactive([]);
 let commentRequestDTO = ref({
   content: "",
@@ -57,6 +58,7 @@ async function getCommentList() {
     console.log(err);
   }
 }
+
 // 댓글 등록
 function createComment() {
   axios
