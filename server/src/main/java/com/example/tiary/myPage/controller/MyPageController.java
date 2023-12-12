@@ -16,6 +16,7 @@ import java.io.IOException;
 
 @RestController
 @Slf4j
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/users")
 public class MyPageController {
 
