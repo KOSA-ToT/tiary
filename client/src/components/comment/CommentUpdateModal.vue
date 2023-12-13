@@ -9,7 +9,8 @@
           type="text"
           class="border rounded-lg w-5/6 h-20"
           v-model="content"
-        ></textarea>
+          ></textarea
+        >
       </div>
 
       <div class="flex justify-end items-center mt-3">

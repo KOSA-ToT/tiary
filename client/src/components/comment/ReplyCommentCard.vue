@@ -28,18 +28,17 @@
           class="text-sm text-gray-400 font-normal cursor-pointer"
           @click="openModal"
         >
-          수정&nbsp;&nbsp;
+          edit&nbsp;&nbsp;
         </span>
         <span
           class="text-sm text-gray-400 font-normal cursor-pointer"
           @click="deleteComment"
         >
-          삭제</span
+          delete</span
         >
       </div>
     </div>
   </div>
-  <!-- END Reply Container  -->
 </template>
 
 <script setup>
@@ -55,7 +54,6 @@ function formatCreatedAt(createdAt) {
     date.getSeconds()
   )}`;
 }
-
 function padZero(num) {
   return num.toString().padStart(2, "0");
 }

@@ -39,13 +39,13 @@
                 class="text-sm text-gray-400 font-normal cursor-pointer"
                 @click="openModal"
               >
-                수정&nbsp;&nbsp;
+                edit&nbsp;&nbsp;
               </span>
               <span
                 class="text-sm text-gray-400 font-normal cursor-pointer"
                 @click="deleteComment"
               >
-                삭제</span
+                delete</span
               >
             </div>
             <!-- 대댓글 표시 -->
@@ -107,8 +107,6 @@ function replyToComment() {
 
 // 대댓글 등록
 function createReplyComment(replyComment) {
-  console.log(replyComment.content);
-  console.log(replyComment.password);
   commentRequestDTO.value.content = replyComment.content;
   commentRequestDTO.value.password = replyComment.password;
   commentRequestDTO.value.parentId = commentData.id;
@@ -123,15 +121,17 @@ function createReplyComment(replyComment) {
     })
     .catch((err) => console.log(err));
 }
+function openUpdateModal() {
+  isUpdateModalOpen.value = true;
+}
 
 /** 수정 모달창 열기 */
 function openModal() {
-  // 회원인지 비회원인지 처리해서 회원이면 수정폼 / 비회원이면 비밀번호 인증폼
   // 회원
-  isUpdateModalOpen.value = true;
+  // isUpdateModalOpen.value = true;
 
   // 비회원
-  // isPasswordModalOpen.value = true;
+  isPasswordModalOpen.value = true;
 }
 
 /** 모달창 닫기 */
@@ -140,9 +140,7 @@ function closeModal() {
   isUpdateModalOpen.value = false;
 }
 
-/** 비밀번호확인 + 수정 */
-// 익명댓글인지 회원댓글인지 구분
-// 익명댓글
+/**  익명댓글 비밀번호 확인, 수정*/
 function checkPasswordAndEditComment(password) {
   commentRequestDTO.value.password = password;
   console.log("비밀번호", commentRequestDTO.value.password);
@@ -152,19 +150,13 @@ function checkPasswordAndEditComment(password) {
       commentRequestDTO.value
     )
     .then((response) => {
-      confirmPassword.value = true;
-      if (response.status == 200) {
-        // 비밀번호가 일치하면 댓글을 수정할 수 있는 함수 호출
-        loadComment();
-        // editComment();
-        closePasswordModal();
-      } else {
-        console.error("Incorrect password");
-      }
+      closeModal();
+      openUpdateModal();
     })
     .catch((error) => {
-      console.error("Error confirming password", error);
-      // 적절한 에러 처리
+      alert("비밀번호가 일치하지 않습니다.");
+      closeModal();
+      console.log("Error confirming password", error);
     });
 }
 
@@ -196,7 +188,6 @@ function deleteComment() {
       .delete(`http://localhost:8088/comment/guest/1014/${commentData.id}`)
       .then((response) => {
         alert("성공적으로 삭제되었습니다.");
-        console.log("댓글이 성공적으로 삭제되었습니다.", response);
         router.push("/article-test");
       })
       .catch((error) => console.error("Error deleting comment", error));
@@ -213,23 +204,6 @@ function formatCreatedAt(createdAt) {
 }
 function padZero(num) {
   return num.toString().padStart(2, "0");
-}
-
-/** 댓글 내용 불러오기 */
-function loadComment() {
-  // 비밀번호가 일치하면 해당 댓글의 내용을 불러온다.
-  axios
-    .get(`http://localhost:8088/comment/${commentData.id}`)
-    .then((response) => {
-      const comment = response.data;
-      // 불러온 내용을 commentRequestDTO에 채워준다.
-      commentRequestDTO.value.content = comment.content;
-      // 불러온 내용을 모달 창에 표시할 수 있도록 구현
-      // (모달 창에 댓글 내용을 표시할 수 있는 프로퍼티 추가 필요)
-    })
-    .catch((error) => {
-      console.error("Error loading comment", error);
-    });
 }
 </script>
 

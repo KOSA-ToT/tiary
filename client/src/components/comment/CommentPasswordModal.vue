@@ -45,7 +45,7 @@
 <script setup>
 import { ref } from "vue";
 
-const props = defineProps(["closeModal", "submitPassword"]);
+// const props = defineProps(["closeModal", "submitPassword"]);
 defineEmits(["closeModal", "submitPassword"]);
 
 const password = ref("");
