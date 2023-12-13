@@ -24,14 +24,16 @@
       <UserCommentInput></UserCommentInput>
     </div>
     <div v-else>
-      <GuestCommentInput></GuestCommentInput> 
+      <GuestCommentInput></GuestCommentInput>
     </div>
+
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
+import CommentPasswordModal from "@/components/comment/CommentPasswordModal.vue";
 import UserCommentInput from "@/components/comment/UserCommentInput.vue";
 import GuestCommentInput from "@/components/comment/GuestCommentInput.vue";
 import { onMounted, reactive, ref } from "vue";

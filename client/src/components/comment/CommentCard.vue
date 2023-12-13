@@ -1,10 +1,8 @@
 <template>
   <div>
-    <!-- <div class="flex flex-col gap-5 m-3"> -->
     <div class="gap-100 m-3">
-      <!-- Comment Container -->
       <div>
-        <div class="w-full border rounded-md">
+        <div class="w-full border rounded-md mb-3">
           <div class="p-3">
             <div class="flex gap-3 items-center">
               <img
@@ -31,15 +29,14 @@
                 v-for="(replyComment, index) in commentData.children"
                 :replyCommentData="commentData.children[index]"
               ></ReplyCommentCard>
-              <!-- {{ commentData.children }} -->
             </div>
 
             <button class="text-left text-blue-500">Reply</button>
-            <!-- 수정, 삭제 작성자만 보이도록 + 익명댓글은 항상 보이도록 -->
             <div class="text-right">
+              <!-- 수정버튼 클릭 시 회원이면 수정폼 / 비회원이면 비밀번호 인증폼 -->
               <span
                 class="text-sm text-gray-400 font-normal cursor-pointer"
-                @click="updateComment"
+                @click="openModal"
               >
                 수정&nbsp;&nbsp;
               </span>
@@ -50,9 +47,25 @@
                 삭제</span
               >
             </div>
-            <!-- 대댓글 표시 -->
           </div>
         </div>
+      </div>
+      <div class="my-0">
+        <CommentPasswordModal
+          v-if="isPasswordModalOpen"
+          @closeModal="closeModal"
+          @submitPassword="checkPasswordAndEditComment"
+        ></CommentPasswordModal>
+
+        <CommentUpdateModal
+          v-if="isUpdateModalOpen"
+          @closeModal="closeModal"
+          @updateContent="checkPasswordAndEditComment"
+          :commentContent="{
+            content: commentData.content,
+          }"
+        >
+        </CommentUpdateModal>
       </div>
     </div>
   </div>
@@ -61,6 +74,8 @@
 import axios from "axios";
 import { defineProps, ref } from "vue";
 import ReplyCommentCard from "../comment/ReplyCommentCard.vue";
+import CommentPasswordModal from "../comment/CommentPasswordModal.vue";
+import CommentUpdateModal from "../comment/CommentUpdateModal.vue";
 const { commentData } = defineProps(["commentData"]);
 
 let commentRequestDTO = ref({
@@ -68,6 +83,104 @@ let commentRequestDTO = ref({
   password: "",
 });
 
+let isPasswordModalOpen = ref(false);
+let isUpdateModalOpen = ref(false);
+
+/** 수정 모달창 열기 */
+function openModal() {
+  // 회원인지 비회원인지 처리해서 회원이면 수정폼 / 비회원이면 비밀번호 인증폼
+  // 회원
+  isUpdateModalOpen.value = true;
+
+  // 비회원
+  // isPasswordModalOpen.value = true;
+}
+
+/** 모달창 닫기 */
+function closeModal() {
+  isPasswordModalOpen.value = false;
+  isUpdateModalOpen.value = false;
+}
+
+/** 비밀번호확인 + 수정 */
+// 익명댓글인지 회원댓글인지 구분
+// 익명댓글
+function checkPasswordAndEditComment(password) {
+  commentRequestDTO.value.password = password;
+  console.log("비밀번호", commentRequestDTO.value.password);
+  axios
+    .post(
+      `http://localhost:8088/comment/guest/password-confirm/${commentData.id}`,
+      commentRequestDTO.value
+    )
+    .then((response) => {
+      confirmPassword.value = true;
+      if (response.status == 200) {
+        // 비밀번호가 일치하면 댓글을 수정할 수 있는 함수 호출
+        loadComment();
+        // editComment();
+        closePasswordModal();
+      } else {
+        console.error("Incorrect password");
+      }
+    })
+    .catch((error) => {
+      console.error("Error confirming password", error);
+      // 적절한 에러 처리
+    });
+}
+
+/** 댓글 내용 불러오기 */
+function loadComment() {
+  // 비밀번호가 일치하면 해당 댓글의 내용을 불러온다.
+  axios
+    .get(`http://localhost:8088/comment/${commentData.id}`)
+    .then((response) => {
+      const comment = response.data;
+      // 불러온 내용을 commentRequestDTO에 채워준다.
+      commentRequestDTO.value.content = comment.content;
+      // 불러온 내용을 모달 창에 표시할 수 있도록 구현
+      // (모달 창에 댓글 내용을 표시할 수 있는 프로퍼티 추가 필요)
+    })
+    .catch((error) => {
+      console.error("Error loading comment", error);
+      // 적절한 에러 처리
+    });
+}
+
+/** 비밀번호 일치 시 댓글 수정 */
+function editComment() {
+  axios
+    .patch(`http://localhost:8088/comment/${commentData.id}`, {
+      content: commentRequestDTO.value.content,
+    })
+    .then((response) => {
+      console.log("Comment updated successfully", response);
+      // 적절한 처리 (예: 모달 닫기 등)
+    })
+    .catch((error) => {
+      console.error("Error updating comment", error);
+      // 적절한 에러 처리
+    });
+}
+
+/** 댓글 삭제 */
+function deleteComment() {
+  // 익명댓글인지 회원댓글인지 구분
+  //비회원 댓글 삭제
+  console.log(commentData.id);
+  let result = confirm("정말 삭제하시겠습니까?");
+  if (result) {
+    axios
+      .delete(`http://localhost:8088/comment/guest/1014/${commentData.id}`)
+      .then((response) => {
+        alert("성공적으로 삭제되었습니다.");
+        console.log("댓글이 성공적으로 삭제되었습니다.", response);
+      })
+      .catch((error) => console.error("Error deleting comment", error));
+  }
+}
+/** 등록 시간 포맷 */
 function formatCreatedAt(createdAt) {
   const date = new Date(createdAt);
   return `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(
@@ -78,28 +191,6 @@ function formatCreatedAt(createdAt) {
 }
 function padZero(num) {
   return num.toString().padStart(2, "0");
-}
-// 익명댓글인지 회원댓글인지 구분
-// 익명댓글
-async function updateComment() {
-  try {
-    commentRequestDTO.value.password = prompt("비밀번호를 입력하세요");
-    if (commentRequestDTO.value.password) {
-      console.log("password 보냄");
-      console.log(commentRequestDTO.value.password);
-      const response = await axios.post(
-        "http://localhost:8088/comment/guest/password-confirm/26",
-        commentRequestDTO.value
-      );
-      console.log(response);
-      
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
-function deleteComment() {
-  // 익명댓글인지 회원댓글인지 구분
 }
 </script>
 
