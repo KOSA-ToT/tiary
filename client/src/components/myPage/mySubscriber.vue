@@ -37,7 +37,7 @@
 </template>
 <script setup>
 import SubscribeTab from '@/components/myPage/subscribeTab.vue';
-import { onMounted, ref,watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import axios from "axios";
 import { appStore } from '@/stores/store';
 import { storeToRefs } from 'pinia'
@@ -51,33 +51,33 @@ const props = defineProps({
 });
 const subscriberList = ref([]);
 const listSubscriber = async () => {
-    if(store.dataFromChild=='구독자'){
+    if (store.dataFromChild == '구독자') {
         await axios.get('http://localhost:8088/users/1/subscriber')
-        .then(response => {
-            // 성공 처리
-            subscriberList.value = response.data;
-            console.log(subscriberList.value);
-            console.log("구독자 불러오기 완료");
-        })
-        .catch(error => {
-            // 에러 처리
-            console.log(error);
-        });
+            .then(response => {
+                // 성공 처리
+                subscriberList.value = response.data;
+                console.log(subscriberList.value);
+                console.log("구독자 불러오기 완료");
+            })
+            .catch(error => {
+                // 에러 처리
+                console.log(error);
+            });
     }
-    else if(store.dataFromChild=='구독작가'){
+    else if (store.dataFromChild == '구독작가') {
         await axios.get('http://localhost:8088/users/1/subscribedWriter')
-        .then(response => {
-            // 성공 처리
-            subscriberList.value = response.data;
-            console.log(subscriberList.value);
-            console.log("구독 작가 불러오기 완료");
-        })
-        .catch(error => {
-            // 에러 처리
-            console.log(error);
-        });
+            .then(response => {
+                // 성공 처리
+                subscriberList.value = response.data;
+                console.log(subscriberList.value);
+                console.log("구독 작가 불러오기 완료");
+            })
+            .catch(error => {
+                // 에러 처리
+                console.log(error);
+            });
     }
-    
+
 };
 const subscribe = async (userId) => {
     await axios.get(`http://localhost:8088/users/${userId}/subscribe`)
@@ -93,6 +93,6 @@ const subscribe = async (userId) => {
 };
 watch(() => store.dataFromChild, listSubscriber);
 onMounted(() => {
-	listSubscriber();
+    listSubscriber();
 });
 </script>

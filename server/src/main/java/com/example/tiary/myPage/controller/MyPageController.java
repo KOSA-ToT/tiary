@@ -1,5 +1,7 @@
 package com.example.tiary.myPage.controller;
 //import com.example.tiary.myPage.service.UserService;
+import com.example.tiary.article.service.ArticleLikesService;
+import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.myPage.service.SubscribeService;
 import com.example.tiary.myPage.service.UserService;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.tiary.article.service.ArticleService;
 
 import java.io.IOException;
 
@@ -22,10 +25,12 @@ public class MyPageController {
 
     private final UserService userService;
     private final SubscribeService subscribeService;
+    private final ArticleService articleService;
 
-    public MyPageController(UserService userService, SubscribeService subscribeService) {
+    public MyPageController(UserService userService, SubscribeService subscribeService, ArticleService articleService) {
         this.userService = userService;
         this.subscribeService = subscribeService;
+        this.articleService =articleService;
     }
 
 

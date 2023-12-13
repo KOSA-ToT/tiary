@@ -5,93 +5,177 @@
         <section class="mb-32 text-center md:text-left">
             <h2 class="mb-12 text-lg font-bold text-zinc-600">작성글</h2>
 
-            <div class="flex flex-wrap mb-6">
-                <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
-                    <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
-                        data-te-ripple-init data-te-ripple-color="light">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/018.jpg" class="w-full" alt="Louvre" />
-                        <a href="#!">
-                            <div
-                                class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
-                            </div>
-                        </a>
+            <div class="flex flex-wrap mb-6" v-for="post in postList">
+                <input type="checkbox" :id="'react-option-' + post.id">
+                    <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
+                        <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
+                            data-te-ripple-init data-te-ripple-color="light">
+                            <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/018.jpg" class="w-full" alt="Louvre" />
+                            <a href="#!">
+                                <div
+                                    class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-
                 <div class="w-full px-3 mb-6 mr-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-9/12 xl:w-7/12">
-                    <h5 class="mb-3 text-lg font-bold">Welcome to California</h5>
+                    <h5 class="mb-3 text-lg font-bold">{{ post.title }}</h5>
                     <div
                         class="flex items-center justify-center mb-3 text-sm font-medium text-danger dark:text-danger-500 md:justify-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-5 h-5 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 01-1.161.886l-.143.048a1.107 1.107 0 00-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 01-1.652.928l-.679-.906a1.125 1.125 0 00-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 00-8.862 12.872M12.75 3.031a9 9 0 016.69 14.036m0 0l-.177-.529A2.25 2.25 0 0017.128 15H16.5l-.324-.324a1.453 1.453 0 00-2.328.377l-.036.073a1.586 1.586 0 01-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 01-5.276 3.67m0 0a9 9 0 01-10.275-4.835M15.75 9c0 .896-.393 1.7-1.016 2.25" />
+                        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" v-if="post.categoryId == 1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 64 64"
+                            enable-background="new 0 0 64 64" xml:space="preserve" fill="#000000">
+
+                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                            <g id="SVGRepo_iconCarrier">
+                                <g>
+                                    <path fill="#394240"
+                                        d="M56,46V12c0-0.553-0.447-1-1-1H9c-0.553,0-1,0.447-1,1v34c0,0.553,0.447,1,1,1h46 C55.553,47,56,46.553,56,46z M54,45H10V13h44V45z" />
+                                    <path fill="#394240"
+                                        d="M63,49h-3V11c0-2.211-1.789-4-4-4H8c-2.211,0-4,1.789-4,4v38H1c-0.553,0-1,0.447-1,1v3c0,2.211,1.789,4,4,4 h56c2.211,0,4-1.789,4-4v-3C64,49.447,63.553,49,63,49z M6,11c0-1.104,0.896-2,2-2h48c1.104,0,2,0.896,2,2v38H36 c-0.553,0-1,0.447-1,1v1h-6v-1c0-0.553-0.447-1-1-1H6V11z M62,53c0,1.104-0.896,2-2,2H4c-1.104,0-2-0.896-2-2v-2h25v1 c0,0.553,0.447,1,1,1h8c0.553,0,1-0.447,1-1v-1h25V53z" />
+                                    <g>
+                                        <path fill="#F9EBB2"
+                                            d="M37,51v1c0,0.553-0.447,1-1,1h-8c-0.553,0-1-0.447-1-1v-1H2v2c0,1.104,0.896,2,2,2h56c1.104,0,2-0.896,2-2 v-2H37z" />
+                                        <path fill="#F9EBB2"
+                                            d="M29,50v1h6v-1c0-0.553,0.447-1,1-1h22V11c0-1.104-0.896-2-2-2H8c-1.104,0-2,0.896-2,2v38h22 C28.553,49,29,49.447,29,50z M8,46V12c0-0.553,0.447-1,1-1h46c0.553,0,1,0.447,1,1v34c0,0.553-0.447,1-1,1H9 C8.447,47,8,46.553,8,46z" />
+                                    </g>
+                                    <rect x="10" y="13" fill="#45AAB8" width="44" height="32" />
+                                </g>
+                            </g>
+
                         </svg>
-                        Travels
+                        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" v-if="post.categoryId == 2"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 64 64"
+                            enable-background="new 0 0 64 64" xml:space="preserve" fill="#000000">
+
+                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                            <g id="SVGRepo_iconCarrier">
+                                <g>
+                                    <g>
+                                        <path fill="#506C7F"
+                                            d="M15,2C9.477,2,5,6.477,5,12s4.477,10,10,10s10-4.477,10-10S20.523,2,15,2z M10,13c-0.553,0-1-0.447-1-1 s0.447-1,1-1s1,0.447,1,1S10.553,13,10,13z M15,18c-0.553,0-1-0.447-1-1s0.447-1,1-1s1,0.447,1,1S15.553,18,15,18z M15,8 c-0.553,0-1-0.447-1-1s0.447-1,1-1s1,0.447,1,1S15.553,8,15,8z M20,13c-0.553,0-1-0.447-1-1s0.447-1,1-1s1,0.447,1,1 S20.553,13,20,13z" />
+                                        <path fill="#506C7F"
+                                            d="M37,2c-5.523,0-10,4.477-10,10s4.477,10,10,10s10-4.477,10-10S42.523,2,37,2z M32,13c-0.553,0-1-0.447-1-1 s0.447-1,1-1s1,0.447,1,1S32.553,13,32,13z M37,18c-0.553,0-1-0.447-1-1s0.447-1,1-1s1,0.447,1,1S37.553,18,37,18z M37,8 c-0.553,0-1-0.447-1-1s0.447-1,1-1s1,0.447,1,1S37.553,8,37,8z M42,13c-0.553,0-1-0.447-1-1s0.447-1,1-1s1,0.447,1,1 S42.553,13,42,13z" />
+                                    </g>
+                                    <path fill="#45AAB8"
+                                        d="M50,60c0,1.104-0.896,2-2,2H4c-1.104,0-2-0.896-2-2V26c0-1.104,0.896-2,2-2h44c1.104,0,2,0.896,2,2V60z" />
+                                    <g>
+                                        <polygon fill="#F9EBB2" points="52,51.279 58,53.279 58,32.721 52,34.72 " />
+                                        <polygon fill="#F9EBB2" points="60,32.055 60,53.945 62,54.612 62,31.388 " />
+                                    </g>
+                                    <path fill="#394240"
+                                        d="M39,12c0,1.656,1.344,3,3,3s3-1.344,3-3s-1.344-3-3-3S39,10.344,39,12z M42,11c0.553,0,1,0.447,1,1 s-0.447,1-1,1s-1-0.447-1-1S41.447,11,42,11z" />
+                                    <path fill="#394240"
+                                        d="M37,10c1.656,0,3-1.344,3-3s-1.344-3-3-3s-3,1.344-3,3S35.344,10,37,10z M37,6c0.553,0,1,0.447,1,1 s-0.447,1-1,1s-1-0.447-1-1S36.447,6,37,6z" />
+                                    <path fill="#394240"
+                                        d="M37,14c-1.656,0-3,1.344-3,3s1.344,3,3,3s3-1.344,3-3S38.656,14,37,14z M37,18c-0.553,0-1-0.447-1-1 s0.447-1,1-1s1,0.447,1,1S37.553,18,37,18z" />
+                                    <path fill="#394240"
+                                        d="M35,12c0-1.656-1.344-3-3-3s-3,1.344-3,3s1.344,3,3,3S35,13.656,35,12z M31,12c0-0.553,0.447-1,1-1 s1,0.447,1,1s-0.447,1-1,1S31,12.553,31,12z" />
+                                    <path fill="#394240"
+                                        d="M23,12c0-1.656-1.344-3-3-3s-3,1.344-3,3s1.344,3,3,3S23,13.656,23,12z M20,13c-0.553,0-1-0.447-1-1 s0.447-1,1-1s1,0.447,1,1S20.553,13,20,13z" />
+                                    <path fill="#394240"
+                                        d="M15,10c1.656,0,3-1.344,3-3s-1.344-3-3-3s-3,1.344-3,3S13.344,10,15,10z M15,6c0.553,0,1,0.447,1,1 s-0.447,1-1,1s-1-0.447-1-1S14.447,6,15,6z" />
+                                    <path fill="#394240"
+                                        d="M15,14c-1.656,0-3,1.344-3,3s1.344,3,3,3s3-1.344,3-3S16.656,14,15,14z M15,18c-0.553,0-1-0.447-1-1 s0.447-1,1-1s1,0.447,1,1S15.553,18,15,18z" />
+                                    <path fill="#394240"
+                                        d="M13,12c0-1.656-1.344-3-3-3s-3,1.344-3,3s1.344,3,3,3S13,13.656,13,12z M10,13c-0.553,0-1-0.447-1-1 s0.447-1,1-1s1,0.447,1,1S10.553,13,10,13z" />
+                                    <g>
+                                        <path fill="#394240"
+                                            d="M63.585,29.188c-0.262-0.188-0.598-0.241-0.901-0.137L52,32.612V26c0-2.211-1.789-4-4-4h-4.372 C46.864,19.852,49,16.177,49,12c0-6.629-5.374-12-12-12c-4.923,0-9.149,2.968-11,7.211C24.149,2.968,19.923,0,15,0 C8.374,0,3,5.371,3,12c0,4.177,2.136,7.852,5.372,10H4c-2.211,0-4,1.789-4,4v34c0,2.211,1.789,4,4,4h44c2.211,0,4-1.789,4-4 v-6.613l10.684,3.562C62.787,56.983,62.894,57,63,57c0.207,0,0.412-0.064,0.585-0.188C63.846,56.623,64,56.321,64,56V30 C64,29.679,63.846,29.377,63.585,29.188z M37,2c5.523,0,10,4.477,10,10s-4.477,10-10,10s-10-4.477-10-10S31.477,2,37,2z M30.372,22h-8.744c1.916-1.272,3.443-3.08,4.372-5.211C26.929,18.92,28.456,20.728,30.372,22z M5,12C5,6.477,9.477,2,15,2 s10,4.477,10,10s-4.477,10-10,10S5,17.523,5,12z M50,60c0,1.104-0.896,2-2,2H4c-1.104,0-2-0.896-2-2V26c0-1.104,0.896-2,2-2h44 c1.104,0,2,0.896,2,2V60z M58,53.279l-6-2V34.72l6-1.999V53.279z M62,54.612l-2-0.667V32.055l2-0.667V54.612z" />
+                                        <path fill="#394240"
+                                            d="M36,36H16c-0.553,0-1,0.448-1,1v12c0,0.552,0.447,1,1,1h20c0.553,0,1-0.448,1-1V37 C37,36.448,36.553,36,36,36z M35,48H17V38h18V48z" />
+                                    </g>
+                                    <polygon opacity="0.15" points="62,54.612 60,53.945 60,32.055 62,31.388 " />
+                                    <rect x="17" y="38" opacity="0.2" fill="#FFFFFF" width="18" height="10" />
+                                </g>
+                            </g>
+
+                        </svg>
+                        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" v-if="post.categoryId == 3"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 64 64"
+                            enable-background="new 0 0 64 64" xml:space="preserve" fill="#000000">
+
+                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                            <g id="SVGRepo_iconCarrier">
+                                <g>
+                                    <path fill="#F76D57"
+                                        d="M58.714,29.977c0,0-0.612,0.75-1.823,1.961S33.414,55.414,33.414,55.414C33.023,55.805,32.512,56,32,56 s-1.023-0.195-1.414-0.586c0,0-22.266-22.266-23.477-23.477s-1.823-1.961-1.823-1.961C3.245,27.545,2,24.424,2,21 C2,13.268,8.268,7,16,7c3.866,0,7.366,1.566,9.899,4.101l0.009-0.009l4.678,4.677c0.781,0.781,2.047,0.781,2.828,0l4.678-4.677 l0.009,0.009C40.634,8.566,44.134,7,48,7c7.732,0,14,6.268,14,14C62,24.424,60.755,27.545,58.714,29.977z" />
+                                    <path fill="#F76D57"
+                                        d="M58.714,29.977c0,0-0.612,0.75-1.823,1.961S33.414,55.414,33.414,55.414C33.023,55.805,32.512,56,32,56 s-1.023-0.195-1.414-0.586c0,0-22.266-22.266-23.477-23.477s-1.823-1.961-1.823-1.961C3.245,27.545,2,24.424,2,21 C2,13.268,8.268,7,16,7c3.866,0,7.366,1.566,9.899,4.101l0.009-0.009l4.678,4.677c0.781,0.781,2.047,0.781,2.828,0l4.678-4.677 l0.009,0.009C40.634,8.566,44.134,7,48,7c7.732,0,14,6.268,14,14C62,24.424,60.755,27.545,58.714,29.977z" />
+                                    <g>
+                                        <path fill="#394240"
+                                            d="M48,5c-4.418,0-8.418,1.791-11.313,4.687l-3.979,3.961c-0.391,0.391-1.023,0.391-1.414,0 c0,0-3.971-3.97-3.979-3.961C24.418,6.791,20.418,5,16,5C7.163,5,0,12.163,0,21c0,3.338,1.024,6.436,2.773,9 c0,0,0.734,1.164,1.602,2.031s24.797,24.797,24.797,24.797C29.953,57.609,30.977,58,32,58s2.047-0.391,2.828-1.172 c0,0,23.93-23.93,24.797-24.797S61.227,30,61.227,30C62.976,27.436,64,24.338,64,21C64,12.163,56.837,5,48,5z M58.714,29.977 c0,0-0.612,0.75-1.823,1.961S33.414,55.414,33.414,55.414C33.023,55.805,32.512,56,32,56s-1.023-0.195-1.414-0.586 c0,0-22.266-22.266-23.477-23.477s-1.823-1.961-1.823-1.961C3.245,27.545,2,24.424,2,21C2,13.268,8.268,7,16,7 c3.866,0,7.366,1.566,9.899,4.101l0.009-0.009l4.678,4.677c0.781,0.781,2.047,0.781,2.828,0l4.678-4.677l0.009,0.009 C40.634,8.566,44.134,7,48,7c7.732,0,14,6.268,14,14C62,24.424,60.755,27.545,58.714,29.977z" />
+                                        <path fill="#394240"
+                                            d="M48,11c-0.553,0-1,0.447-1,1s0.447,1,1,1c4.418,0,8,3.582,8,8c0,0.553,0.447,1,1,1s1-0.447,1-1 C58,15.478,53.522,11,48,11z" />
+                                    </g>
+                                </g>
+                            </g>
+
+                        </svg>
+                        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" v-if="post.categoryId == 4"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 64 64"
+                            enable-background="new 0 0 64 64" xml:space="preserve" fill="#000000">
+
+                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                            <g id="SVGRepo_iconCarrier">
+                                <g>
+                                    <g>
+                                        <path fill="#F9EBB2"
+                                            d="M62,60c0,1.104-0.896,2-2,2H4c-1.104,0-2-0.896-2-2V4c0-1.104,0.896-2,2-2h56c1.104,0,2,0.896,2,2V60z" />
+                                        <g>
+                                            <path fill="#394240"
+                                                d="M60,0H4C1.789,0,0,1.789,0,4v56c0,2.211,1.789,4,4,4h56c2.211,0,4-1.789,4-4V4C64,1.789,62.211,0,60,0z M62,60c0,1.104-0.896,2-2,2H4c-1.104,0-2-0.896-2-2V4c0-1.104,0.896-2,2-2h56c1.104,0,2,0.896,2,2V60z" />
+                                            <path fill="#394240"
+                                                d="M35,8h-6c-0.553,0-1,0.447-1,1v47h8V9C36,8.447,35.553,8,35,8z M34,54h-4V40h4V54z M34,38h-4V10h4V38z" />
+                                            <path fill="#394240"
+                                                d="M25,16h-6c-0.553,0-1,0.447-1,1v39h8V17C26,16.447,25.553,16,25,16z M24,54h-4V44h4V54z M24,42h-4V18h4 V42z" />
+                                            <path fill="#394240"
+                                                d="M55,24h-6c-0.553,0-1,0.447-1,1v31h8V25C56,24.447,55.553,24,55,24z M54,54h-4V44h4V54z M54,42h-4V26h4 V42z" />
+                                            <path fill="#394240"
+                                                d="M45,32h-6c-0.553,0-1,0.447-1,1v23h8V33C46,32.447,45.553,32,45,32z M44,54h-4v-6h4V54z M44,46h-4V34h4 V46z" />
+                                            <path fill="#394240"
+                                                d="M15,24H9c-0.553,0-1,0.447-1,1v31h8V25C16,24.447,15.553,24,15,24z M14,54h-4v-6h4V54z M14,46h-4V26h4V46 z" />
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <rect x="10" y="26" fill="#B4CCB9" width="4" height="20" />
+                                        <rect x="20" y="18" fill="#45AAB8" width="4" height="24" />
+                                        <rect x="40" y="34" fill="#F76D57" width="4" height="12" />
+                                        <rect x="30" y="40" fill="#45AAB8" width="4" height="14" />
+                                        <rect x="50" y="26" fill="#B4CCB9" width="4" height="16" />
+                                        <rect x="30" y="10" fill="#45AAB8" width="4" height="28" />
+                                        <rect x="10" y="48" fill="#B4CCB9" width="4" height="6" />
+                                        <rect x="40" y="48" fill="#F76D57" width="4" height="6" />
+                                        <rect x="50" y="44" fill="#B4CCB9" width="4" height="10" />
+                                        <rect x="20" y="44" fill="#45AAB8" width="4" height="10" />
+                                    </g>
+                                    <g opacity="0.2">
+                                        <rect x="30" y="40" width="4" height="14" />
+                                        <rect x="10" y="48" width="4" height="6" />
+                                        <rect x="40" y="48" width="4" height="6" />
+                                        <rect x="50" y="44" width="4" height="10" />
+                                        <rect x="20" y="44" width="4" height="10" />
+                                    </g>
+                                </g>
+                            </g>
+
+                        </svg>
+                        {{ post.categoryName }}
                     </div>
                     <p class="mb-6 text-neutral-500 dark:text-neutral-300">
-                        <small>작성일자: 2022.01.13</small>
-                    </p>
-
-                </div>
-            </div>
-
-            <div class="flex flex-wrap mb-6">
-                <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
-                    <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
-                        data-te-ripple-init data-te-ripple-color="light">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/032.jpg" class="w-full" alt="Louvre" />
-                        <a href="#!">
-                            <div
-                                class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="w-full px-3 mb-6 mr-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-9/12 xl:w-7/12">
-                    <h5 class="mb-3 text-lg font-bold">Exhibition in Paris</h5>
-                    <div
-                        class="flex items-center justify-center mb-3 text-sm font-medium text-primary dark:text-primary-400 md:justify-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-4 h-4 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-                        </svg>
-                        Art
-                    </div>
-                    <p class="mb-6 text-neutral-500 dark:text-neutral-300">
-                        <small>작성일자: 2022.01.12</small>
-                    </p>
-
-                </div>
-            </div>
-
-            <div class="flex flex-wrap mb-6">
-                <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
-                    <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
-                        data-te-ripple-init data-te-ripple-color="light">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/059.jpg" class="w-full" alt="Louvre" />
-                        <a href="#!">
-                            <div
-                                class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="w-full px-3 mb-6 mr-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-9/12 xl:w-7/12">
-                    <h5 class="mb-3 text-lg font-bold">Stock market boom</h5>
-                    <div class="flex items-center justify-center mb-3 text-sm font-medium text-yellow-600 md:justify-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-5 h-5 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                        </svg>
-                        Business
-                    </div>
-                    <p class="mb-6 text-neutral-500 dark:text-neutral-300">
-                        <small>작성일자: 2022.01.10</small>
+                        <small>작성일시 : {{ formatCreatedAt(post.createdAt) }}</small>
                     </p>
 
                 </div>
@@ -101,3 +185,89 @@
     </div>
     <!-- Container for demo purpose -->
 </template>
+<script setup>
+import { defineProps, onMounted, ref, computed } from 'vue';
+import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
+const postList = ref([]);
+const userId = ref();
+const Url = ref('');
+const props = defineProps({
+    user: {
+        type: Object,
+        required: true,
+    },
+});
+const Post = {
+    title: ref(),
+    content: ref()
+}
+// const { user } = props;
+// const user = (props) => {
+//   // props.user는 부모 컴포넌트에서 전달한 객체
+//   const userId = ref(props.user.id);
+//   const userNickname = ref(props.user.nickname);
+//   // ... (다른 프로퍼티도 필요에 따라 추가)
+
+//   onMounted(() => {
+//     // 컴포넌트가 마운트된 후 실행되는 로직
+//     console.log('UserComponent 마운트됨');
+//     console.log('userId:', userId.value);
+//     console.log('userNickname:', userNickname.value);
+//     // ... (다른 프로퍼티도 필요에 따라 출력)
+//   });
+// };
+// Url.value = `http://localhost:8088/${userId.value}/posts`;
+// async function listMyPost() {
+//     userId.value = props.user.id.value;
+//     console.log("props.user.id : " + props.user.nickname.value);
+//     console.log("props.user : " + props.user);
+//     try {
+//         const response = await axios.get(`http://localhost:8088/users/${userId}/posts`);
+//         console.log("userId : " + userId);
+//         if (response.status === 200) {
+//             postList.value = response.data;
+//             console.log(postList.value);
+//         }
+//     } catch (error) {
+//         // 에러 처리
+//         console.log(error);
+//     }
+// }
+const listMyPost = async () => {
+    // console.log(props.user.id.value);
+    // console.log(props.user);
+    // userId.value = props.user.id.value;
+    await axios.get(`http://localhost:8088/users/1/posts`)
+        .then(response => {
+            // 성공 처리
+            // subscriberList.value = response.data;
+            // console.log(subscriberList.value);
+            // console.log("Url.value : "+Url.value);
+            postList.value = response.data;
+            // Post.title.value = data.title;
+            // Post.content.value = data.content;
+            // console.log("response.data : "+response.data);
+            console.log("불러오기 완료" + postList.value);
+        })
+        .catch(error => {
+            // 에러 처리
+            console.log(error);
+        });
+
+};
+const formatCreatedAt = (createdAt) => {
+    // createdAt이 문자열인 경우 Date 객체로 변환
+    const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
+
+    // Date 객체를 원하는 형식으로 변환
+    const formattedDate = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ` +
+        `${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`;
+
+    return formattedDate;
+};
+onMounted(() => {
+    // userId.value = props.user.id.value;
+    listMyPost();
+});
+</script>

@@ -42,7 +42,7 @@
 
                     <span>내가 쓴 글</span>
                 </router-link>
-                <a href="/"
+                <router-link to="/mypage/comment/1"
                     class="flex items-center w-full px-4 py-3 space-x-3 leading-6 text-gray-600 rounded-md text-md focus:outline-none hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6">
@@ -51,7 +51,21 @@
                     </svg>
 
                 <span>내가 쓴 댓글</span>
-            </a>
+            </router-link>
         </nav>
     </div>
 </div></template>
+<script setup>
+import { ref } from 'vue'
+const isClick = ref(false);
+const mypageButton = () => {
+    isClick.value = true;
+};
+</script>
+<style>
+.tab[aria-current="page"] {
+    background-color: #ffeefb;
+    /* 현재 페이지 버튼의 배경색을 변경 */
+    color: #c03ac5;
+    /* 현재 페이지 버튼의 텍스트 색상을 변경 */
+}</style>
