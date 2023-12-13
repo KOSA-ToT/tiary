@@ -1,6 +1,7 @@
 package com.example.tiary.global.util;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,11 +32,14 @@ public class CookieUtil {
 
 	public static String getValueFromCookie(HttpServletRequest request, String name) {
 		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(name)) {
-				return cookie.getValue();
-			}
-		}
-		return "";
+		return Optional.ofNullable(cookies)
+				.map(cookie -> {
+					for (Cookie c : cookie) {
+						if (c.getName().equals(name)) {
+							return c.getValue();
+						}
+					}
+					return "";
+				}).orElse("");
 	}
 }
