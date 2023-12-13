@@ -5,9 +5,15 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
+import com.example.tiary.article.dto.response.ResponseHashtagDto;
 import com.example.tiary.article.entity.Article;
+import com.example.tiary.article.entity.Hashtag;
 
 public interface HashtagService {
+	// 해시태그 조회
+	@Transactional(readOnly = true)
+	List<ResponseHashtagDto> readHashtag();
+
 	@Transactional
 	List<String> createHashtag(RequestArticleDto requestArticleDto);
 

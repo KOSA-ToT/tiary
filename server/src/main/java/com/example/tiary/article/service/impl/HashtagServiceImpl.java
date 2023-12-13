@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
+import com.example.tiary.article.dto.response.ResponseHashtagDto;
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.ArticleHashtag;
 import com.example.tiary.article.entity.Hashtag;
@@ -28,6 +29,13 @@ public class HashtagServiceImpl implements HashtagService {
 	public HashtagServiceImpl(HashtagRepository hashtagRepository, ArticleHashtagRepository articleHashtagRepository) {
 		this.hashtagRepository = hashtagRepository;
 		this.articleHashtagRepository = articleHashtagRepository;
+	}
+	// 해시태그 조회
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseHashtagDto> readHashtag(){
+
+		return hashtagRepository.findAll().stream().map(ResponseHashtagDto::from).toList();
 	}
 
 	// 해시태그 가공
@@ -59,7 +67,6 @@ public class HashtagServiceImpl implements HashtagService {
 	@Override
 	public Boolean updateHashtag(List<String> hashList, Article article) {
 		checkHashtagExistAndSave(article, hashList);
-		log.info("수정 조인 테이블 확인 : {}");
 		return true;
 	}
 
