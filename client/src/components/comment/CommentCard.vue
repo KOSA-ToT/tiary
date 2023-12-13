@@ -30,7 +30,9 @@
                 :replyCommentData="commentData.children[index]"
               ></ReplyCommentCard>
             </div>
-            <button class="text-left text-blue-500" @click="">Reply</button>
+            <button class="text-left text-blue-500" @click="replyToComment">
+              Reply
+            </button>
             <div class="text-right">
               <!-- 수정버튼 클릭 시 회원이면 수정폼 / 비회원이면 비밀번호 인증폼 -->
               <span
@@ -66,6 +68,12 @@
           }"
         >
         </CommentUpdateModal>
+
+        <ReplyInputModal
+          v-if="isReplyModalOpen"
+          @closeModal="closeModal"
+          @createReplyComment="createReplyComment"
+        ></ReplyInputModal>
       </div>
     </div>
   </div>
@@ -76,15 +84,45 @@ import { defineProps, ref } from "vue";
 import ReplyCommentCard from "../comment/ReplyCommentCard.vue";
 import CommentPasswordModal from "../comment/CommentPasswordModal.vue";
 import CommentUpdateModal from "../comment/CommentUpdateModal.vue";
+import ReplyInputModal from "./ReplyInputModal.vue";
+import router from "@/router";
+
 const { commentData } = defineProps(["commentData"]);
 
 let commentRequestDTO = ref({
   content: "",
   password: "",
+  parentId: "",
 });
+let commentId = ref(commentData.id);
 
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
+let isReplyModalOpen = ref(false);
+
+/** 대댓글 */
+function replyToComment() {
+  isReplyModalOpen.value = true;
+}
+
+// 대댓글 등록
+function createReplyComment(replyComment) {
+  console.log(replyComment.content);
+  console.log(replyComment.password);
+  commentRequestDTO.value.content = replyComment.content;
+  commentRequestDTO.value.password = replyComment.password;
+  commentRequestDTO.value.parentId = commentData.id;
+
+  // 비회원일 경우
+  axios
+    .post(`http://localhost:8088/comment/guest/1014`, commentRequestDTO.value)
+    .then((response) => {
+      console.log(response);
+      commentRequestDTO.value.content = "";
+      commentRequestDTO.value.password = "";
+    })
+    .catch((err) => console.log(err));
+}
 
 /** 수정 모달창 열기 */
 function openModal() {
@@ -159,6 +197,7 @@ function deleteComment() {
       .then((response) => {
         alert("성공적으로 삭제되었습니다.");
         console.log("댓글이 성공적으로 삭제되었습니다.", response);
+        router.push("/article-test");
       })
       .catch((error) => console.error("Error deleting comment", error));
   }

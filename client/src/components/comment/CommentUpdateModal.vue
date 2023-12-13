@@ -37,17 +37,6 @@ import { defineProps, ref } from "vue";
 const content = ref("");
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
 
-// const props = defineProps({
-//   userName: {
-//     type: String,
-//     required: true,
-//   },
-//   age: {
-//     type: Number,
-//     required: true,
-//   }
-// })
-
 defineEmits(["closeModal", "updateContent"]);
 </script>
 <style scoped></style>

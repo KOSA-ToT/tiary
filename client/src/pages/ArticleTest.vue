@@ -15,26 +15,25 @@
         createdAt: comment.createdAt,
         createdBy: comment.createdBy,
       }"
+      @replyToComment="handleReplyToComment"
     >
     </CommentCard>
 
-    <!-- 로그인 한 경우 입력폼 -->
-    <div v-if="userId">
+    <CommentInput></CommentInput>
+    <!-- <div v-if="userId">
       <UserCommentInput></UserCommentInput>
-      </div>
-      <!-- 비회원인 경우 입력폼 -->
-      <div v-else>
-        <GuestCommentInput></GuestCommentInput>
     </div>
+    <div v-else>
+      <GuestCommentInput></GuestCommentInput>
+    </div> -->
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
-import UserCommentInput from "@/components/comment/UserCommentInput.vue";
-import GuestCommentInput from "@/components/comment/GuestCommentInput.vue";
-import { onMounted, reactive, ref } from "vue";
+import CommentInput from "@/components/comment/CommentInput.vue";
+import { onMounted, reactive, ref, watch, watchSyncEffect } from "vue";
 
 let userId = sessionStorage.getItem("user");
 
@@ -50,14 +49,14 @@ onMounted(async () => {
 });
 
 // comment 불러오기
-async function getCommentList() {
+watch(async function getCommentList() {
   try {
     const response = await axios.get("http://localhost:8088/comment/1014");
     commentList.value = response.data;
   } catch (err) {
     console.log(err);
   }
-}
+});
 </script>
 
 <style scoped></style>

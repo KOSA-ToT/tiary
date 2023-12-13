@@ -19,6 +19,24 @@
       <p class="text-gray-600 mt-2">
         {{ replyCommentData.content }}
       </p>
+      <button class="text-left text-blue-500" @click="replyToComment">
+        Reply
+      </button>
+      <div class="text-right">
+        <!-- 수정버튼 클릭 시 회원이면 수정폼 / 비회원이면 비밀번호 인증폼 -->
+        <span
+          class="text-sm text-gray-400 font-normal cursor-pointer"
+          @click="openModal"
+        >
+          수정&nbsp;&nbsp;
+        </span>
+        <span
+          class="text-sm text-gray-400 font-normal cursor-pointer"
+          @click="deleteComment"
+        >
+          삭제</span
+        >
+      </div>
     </div>
   </div>
   <!-- END Reply Container  -->
