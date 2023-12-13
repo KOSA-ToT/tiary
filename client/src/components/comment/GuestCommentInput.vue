@@ -7,7 +7,6 @@
       placeholder="Password"
       type="password"
       v-model="commentRequestDTO.password"
-      required
     />
   </div>
   <!-- 내용 입력폼 -->

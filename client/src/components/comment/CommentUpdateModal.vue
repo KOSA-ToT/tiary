@@ -5,7 +5,11 @@
       <div class="ml-3">
         <h2 class="font-semibold text-gray-800">댓글 내용 수정</h2>
         <br />
-        <textarea type="text" class="border rounded-lg w-5/6 h-20"></textarea>
+        <textarea
+          type="text"
+          class="border rounded-lg w-5/6 h-20"
+          v-model="content"
+        ></textarea>
       </div>
 
       <div class="flex justify-end items-center mt-3">
@@ -27,10 +31,23 @@
 </template>
 
 <script setup>
-import { defineProps, ref, onMounted } from "vue";
+import { defineProps, ref } from "vue";
 
-const content = ref();
+// const content = ref(props.commentContent.content);
+const content = ref("");
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
+
+// const props = defineProps({
+//   userName: {
+//     type: String,
+//     required: true,
+//   },
+//   age: {
+//     type: Number,
+//     required: true,
+//   }
+// })
+
 defineEmits(["closeModal", "updateContent"]);
 </script>
 <style scoped></style>

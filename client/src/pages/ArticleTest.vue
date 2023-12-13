@@ -18,22 +18,20 @@
     >
     </CommentCard>
 
-    <!-- 댓글 작성폼
-    회원일 경우 - 입력 폼만 / 비회원일 경우 - 입력폼 + 비밀번호  -->
+    <!-- 로그인 한 경우 입력폼 -->
     <div v-if="userId">
       <UserCommentInput></UserCommentInput>
+      </div>
+      <!-- 비회원인 경우 입력폼 -->
+      <div v-else>
+        <GuestCommentInput></GuestCommentInput>
     </div>
-    <div v-else>
-      <GuestCommentInput></GuestCommentInput>
-    </div>
-
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
-import CommentPasswordModal from "@/components/comment/CommentPasswordModal.vue";
 import UserCommentInput from "@/components/comment/UserCommentInput.vue";
 import GuestCommentInput from "@/components/comment/GuestCommentInput.vue";
 import { onMounted, reactive, ref } from "vue";
@@ -59,16 +57,6 @@ async function getCommentList() {
   } catch (err) {
     console.log(err);
   }
-}
-
-// 댓글 등록
-function createComment() {
-  axios
-    .post("http://localhost:8088/comment/guest/1014", commentRequestDTO.value)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((err) => console.log(err));
 }
 </script>
 

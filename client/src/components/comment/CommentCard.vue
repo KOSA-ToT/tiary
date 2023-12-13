@@ -30,8 +30,7 @@
                 :replyCommentData="commentData.children[index]"
               ></ReplyCommentCard>
             </div>
-
-            <button class="text-left text-blue-500">Reply</button>
+            <button class="text-left text-blue-500" @click="">Reply</button>
             <div class="text-right">
               <!-- 수정버튼 클릭 시 회원이면 수정폼 / 비회원이면 비밀번호 인증폼 -->
               <span
@@ -47,6 +46,7 @@
                 삭제</span
               >
             </div>
+            <!-- 대댓글 표시 -->
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
         <CommentUpdateModal
           v-if="isUpdateModalOpen"
           @closeModal="closeModal"
-          @updateContent="checkPasswordAndEditComment"
+          @updateContent="editComment"
           :commentContent="{
             content: commentData.content,
           }"
@@ -130,37 +130,20 @@ function checkPasswordAndEditComment(password) {
     });
 }
 
-/** 댓글 내용 불러오기 */
-function loadComment() {
-  // 비밀번호가 일치하면 해당 댓글의 내용을 불러온다.
+/**  댓글 수정 */
+function editComment(content) {
+  commentRequestDTO.value.content = content;
   axios
-    .get(`http://localhost:8088/comment/${commentData.id}`)
-    .then((response) => {
-      const comment = response.data;
-      // 불러온 내용을 commentRequestDTO에 채워준다.
-      commentRequestDTO.value.content = comment.content;
-      // 불러온 내용을 모달 창에 표시할 수 있도록 구현
-      // (모달 창에 댓글 내용을 표시할 수 있는 프로퍼티 추가 필요)
-    })
-    .catch((error) => {
-      console.error("Error loading comment", error);
-      // 적절한 에러 처리
-    });
-}
-
-/** 비밀번호 일치 시 댓글 수정 */
-function editComment() {
-  axios
-    .patch(`http://localhost:8088/comment/${commentData.id}`, {
-      content: commentRequestDTO.value.content,
-    })
+    .patch(
+      `http://localhost:8088/comment/guest/1014/${commentData.id}`,
+      commentRequestDTO.value
+    )
     .then((response) => {
       console.log("Comment updated successfully", response);
-      // 적절한 처리 (예: 모달 닫기 등)
+      closeModal();
     })
     .catch((error) => {
       console.error("Error updating comment", error);
-      // 적절한 에러 처리
     });
 }
 
@@ -191,6 +174,23 @@ function formatCreatedAt(createdAt) {
 }
 function padZero(num) {
   return num.toString().padStart(2, "0");
+}
+
+/** 댓글 내용 불러오기 */
+function loadComment() {
+  // 비밀번호가 일치하면 해당 댓글의 내용을 불러온다.
+  axios
+    .get(`http://localhost:8088/comment/${commentData.id}`)
+    .then((response) => {
+      const comment = response.data;
+      // 불러온 내용을 commentRequestDTO에 채워준다.
+      commentRequestDTO.value.content = comment.content;
+      // 불러온 내용을 모달 창에 표시할 수 있도록 구현
+      // (모달 창에 댓글 내용을 표시할 수 있는 프로퍼티 추가 필요)
+    })
+    .catch((error) => {
+      console.error("Error loading comment", error);
+    });
 }
 </script>
 

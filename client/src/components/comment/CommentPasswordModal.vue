@@ -49,6 +49,5 @@ const props = defineProps(["closeModal", "submitPassword"]);
 defineEmits(["closeModal", "submitPassword"]);
 
 const password = ref("");
-const commentContent = ref("");
 </script>
 <style scoped></style>
