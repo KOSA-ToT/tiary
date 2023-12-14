@@ -27,7 +27,7 @@ import com.example.tiary.category.service.CategoryService;
 import com.example.tiary.global.batch.BatchService;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
-import com.example.tiary.global.s3.service.S3UploadService;
+import com.example.tiary.global.s3.S3UploadService;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UsersRepository;
 
