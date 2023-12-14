@@ -2,6 +2,7 @@ package com.example.tiary.article.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,12 +31,41 @@ public class HashtagServiceImpl implements HashtagService {
 		this.hashtagRepository = hashtagRepository;
 		this.articleHashtagRepository = articleHashtagRepository;
 	}
-	// 해시태그 조회
+
+	// 해시태그 조회 아티클의 해시태그를 기준으로
 	@Transactional(readOnly = true)
 	@Override
-	public List<ResponseHashtagDto> readHashtag(){
+	public List<ResponseHashtagDto> readHashtag(String categoryCode){
+		List<ResponseHashtagDto> allResponseHashtagDto = readAllHashtag(categoryCode);
 
-		return hashtagRepository.findAll().stream().map(ResponseHashtagDto::from).toList();
+		return getRandomHashtag(allResponseHashtagDto,6);
+	}
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseHashtagDto> readAllHashtag(String categoryCode) {
+		return articleHashtagRepository
+			.findDistinctHashtagsByCategoryCode(categoryCode)
+			.stream()
+			.map(ResponseHashtagDto::from)
+			.toList();
+	}
+
+	private List<ResponseHashtagDto> getRandomHashtag(List<ResponseHashtagDto> responseHashtagDtoList, int count){
+		if(responseHashtagDtoList.size() <= count){
+			return responseHashtagDtoList;
+		}
+		List<ResponseHashtagDto> selectHashtag = new ArrayList<>();
+		Random random = new Random();
+
+		while(selectHashtag.size() < count){
+			int randomIndex = random.nextInt(responseHashtagDtoList.size());
+			ResponseHashtagDto responseHashtagDto = responseHashtagDtoList.get(randomIndex);
+
+			if(!selectHashtag.contains(responseHashtagDto)){
+				selectHashtag.add(responseHashtagDto);
+			}
+		}
+		return selectHashtag;
 	}
 
 	// 해시태그 가공
