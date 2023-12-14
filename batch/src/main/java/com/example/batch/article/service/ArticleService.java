@@ -1,6 +1,8 @@
 package com.example.batch.article.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -27,14 +29,35 @@ public class ArticleService {
 	}
 
 	public ResponseArticleDto getRelatedArticle(Long articleId) {
-
 		Article article = articleRepository.findById(articleId).orElseThrow();
+		List<RelatedArticle> allRelatedArticles = article.getRelatedArticleList();
 
-		List<RelatedArticle> relatedArticleList = article.getRelatedArticleList();
+		// 랜덤으로 6개의 연관 게시물 선택
+		List<RelatedArticle> selectedRelatedArticles = getRandomRelatedArticles(allRelatedArticles, 6);
 
-		return ResponseArticleDto.of(article, relatedArticleList);
+		return ResponseArticleDto.of(article, selectedRelatedArticles);
 	}
 
+	private List<RelatedArticle> getRandomRelatedArticles(List<RelatedArticle> allRelatedArticles, int count) {
+		if (allRelatedArticles.size() <= count) {
+			return allRelatedArticles; // 연관 게시물이 요청한 개수보다 적을 경우 전체 반환
+		}
+
+		List<RelatedArticle> selectedRelatedArticles = new ArrayList<>();
+		Random random = new Random();
+
+		while (selectedRelatedArticles.size() < count) {
+			int randomIndex = random.nextInt(allRelatedArticles.size());
+			RelatedArticle randomRelatedArticle = allRelatedArticles.get(randomIndex);
+
+			// 중복된 게시물이 추가되지 않도록 체크
+			if (!selectedRelatedArticles.contains(randomRelatedArticle)) {
+				selectedRelatedArticles.add(randomRelatedArticle);
+			}
+		}
+
+		return selectedRelatedArticles;
+	}
 	public void doRecommend() {
 		articleRepository.findAll().forEach(
 			article -> recommendationService.calculateAndCacheRecommendations(article.getId())

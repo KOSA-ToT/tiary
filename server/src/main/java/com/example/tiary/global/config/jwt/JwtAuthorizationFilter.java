@@ -25,23 +25,23 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	private final TokenService tokenService;
 
 	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UsersRepository usersRepository,
-		TokenService tokenService) {
+			TokenService tokenService) {
 		super(authenticationManager);
 		this.usersRepository = usersRepository;
 		this.tokenService = tokenService;
 	}
 
-	//TODO : 민지님 authentication 객체 확인 해보기 getPrincipal()
+	// TODO : 민지님 authentication 객체 확인 해보기 getPrincipal()
 	/*
-	Principal 객체는 임의로 안의 값을 설정할 수 있음
-	e.g
-	유저 PK id 를 넣어줄 지
-	유저 이름, 이메일 등등 이런거를 넣어주고
-	혹은 또 어떤 다른 것들을 넣어줄 수 있음
+	 * Principal 객체는 임의로 안의 값을 설정할 수 있음
+	 * e.g
+	 * 유저 PK id 를 넣어줄 지
+	 * 유저 이름, 이메일 등등 이런거를 넣어주고
+	 * 혹은 또 어떤 다른 것들을 넣어줄 수 있음
 	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-		throws IOException, ServletException {
+			throws IOException, ServletException {
 		// Header 에서 토큰 추출
 		String accessToken = tokenService.getTokenFromHeader(request);
 		if (accessToken == null) {
@@ -58,13 +58,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				return;
 			}
 			Users user = usersRepository.findByEmail(email)
-				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+					.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 			UserDto principalDetails = new UserDto(user);
 
 			Authentication authentication = new UsernamePasswordAuthenticationToken(
-				principalDetails,
-				null,
-				principalDetails.getUsers().getAuthorities());
+					principalDetails,
+					null,
+					principalDetails.getUsers().getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			chain.doFilter(request, response);
 		} catch (BusinessLogicException e) {
@@ -81,11 +81,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		String refreshToken = CookieUtil.getValueFromCookie(request, JwtProperties.getREFRESH_TOKEN_COOKIE_NAME());
 		String email = tokenService.validateAndExtractEmailFromToken(refreshToken);
 		Users user = usersRepository.findByEmail(email)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		return tokenService.createToken(
-			user.getId(),
-			user.getEmail(),
-			JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
+				user.getId(),
+				user.getEmail(),
+				JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
 	}
 }
-
