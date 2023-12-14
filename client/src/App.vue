@@ -2,34 +2,26 @@
 </script>
 
 <template>
-  <router-view />
+  <div :class="{ dark: isDarkMode, light: !isDarkMode }">
+    <router-view />
+  </div>
 </template>
+<script setup>
+import {ref , watch} from 'vue';
 
-<!-- <style scoped>
-header {
-  line-height: 1.5;
+const isDarkMode = ref(false);
+watch(
+  () => window.matchMedia('(prefers-color-scheme: dark)').matches,
+  (dark) => {
+    isDarkMode.value = dark;
+  },
+  { immediate: true }
+);
+
+</script>
+<style scoped>
+.dark {
+  background-color: #F2F2F2;
+  color: #000000;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style> -->
+</style>

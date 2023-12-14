@@ -1,5 +1,7 @@
 package com.example.tiary.article.dto.request;
 
+import java.util.List;
+
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.category.entity.Category;
 import com.example.tiary.users.entity.Users;
@@ -21,8 +23,9 @@ public class RequestArticleDto {
 	@NotNull
 	private String content;
 	private String hashtag;
-
 	private String categoryCode;
+
+	private List<String> storeName;
 
 	public Article toEntity(Category category, Users users) {
 		return Article.of(
