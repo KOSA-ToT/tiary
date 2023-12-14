@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,7 +44,7 @@ public class RecommendationService {
 
 	@CacheEvict(cacheNames = RECOMMENDATIONS_CACHE_NAME, key = "#aritcleId")
 	public void evictRecommendationsCache(Long articleId) {
-
+		// 호출하면 알아서 작동하는 메서드
 	}
 
 	public List<RelatedArticle> calculateAndCacheRecommendations(Long articleId){
@@ -79,6 +80,7 @@ public class RecommendationService {
 	}
 
 	void cacheRecommendations(Long articleId, List<RelatedArticle> relatedArticles){
+		// 호출만 해도 알아서 작동하는 메서드
 	}
 
 	// 게시물의 단어 빈도수를 가져오는 추가 메서드
@@ -86,7 +88,9 @@ public class RecommendationService {
 		// 게시물의 단어 빈도수를 계산하는 로직을 구현
 		// AssociationCalculator와 유사한 방법을 사용할 수 있습니다
 		Map<String, Integer> wordFrequencies = new HashMap<>();
-		String[] words = article.getContent().split("\\s+");
+		String[] words = Optional.ofNullable(article.getContent())
+			.map(content -> content.split("\\s+"))
+			.orElse(new String[0]);
 		for (String word : words) {
 			wordFrequencies.put(word, wordFrequencies.getOrDefault(word, 0) + 1);
 		}
