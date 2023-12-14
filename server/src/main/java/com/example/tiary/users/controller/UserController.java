@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.tiary.global.config.jwt.JwtProperties;
+import com.example.tiary.global.config.jwt.TokenService;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.users.dto.UserDto;
 import com.example.tiary.users.service.EmailService;
@@ -18,6 +21,7 @@ import com.example.tiary.users.service.RedisUtil;
 import com.example.tiary.users.service.UserService;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
+	private final TokenService tokenService;
 	private final EmailService emailService;
 	private final RedisUtil redisUtil;
 
@@ -83,5 +88,18 @@ public class UserController {
 		return result != null
 			? ResponseEntity.status(HttpStatus.ACCEPTED).body("이메일 인증 완료")
 			: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("제한시간이 초과되었습니다.");
+	}
+
+	@PostMapping("/oauth2/access-token")
+	public ResponseEntity<Object> getAccessToken(@CookieValue("refreshToken") String refreshToken,
+		HttpServletResponse response) {
+		// TODO 승희: 반복되는 코드 처리
+		String email = tokenService.validateAndExtractEmailFromToken(refreshToken);
+		String accessToken = tokenService.createToken(
+			userService.loadUserByUsername(email).getId(),
+			email,
+			JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
+		response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + accessToken);
+		return ResponseEntity.status(HttpStatus.CREATED).body("accessToken 발급 완료");
 	}
 }
