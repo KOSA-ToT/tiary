@@ -8,21 +8,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.article.service.ArticleService;
+import com.example.tiary.category.service.CategoryService;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 	private final ArticleService articleService;
+	private final CategoryService categoryService;
 
-	public CategoryController(ArticleService articleService) {
+	public CategoryController(ArticleService articleService, CategoryService categoryService) {
 		this.articleService = articleService;
+		this.categoryService = categoryService;
 	}
 
 	@GetMapping
-	public ResponseEntity getArticleListFromCategory(@RequestParam("category") String categoryCode) {
+	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "category" , required = false) String categoryCode) {
 		if (categoryCode != null) {
 			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity(categoryService.readAllCategory(),HttpStatus.OK);
 	}
 }
