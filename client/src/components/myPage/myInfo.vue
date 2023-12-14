@@ -149,9 +149,6 @@ const route = useRoute();
 const router = useRouter();
 const previewImage = ref(null);
 
-// function modalOpen() {
-//     modalCheck = !modalCheck;
-// }
 async function editEmail() {
     await axios
         .patch("http://localhost:8088/users/1/updateEmail", {

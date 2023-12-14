@@ -47,27 +47,27 @@ public class MyPageController {
         }
     }
 
-//    //내 글 보기
-//    @GetMapping("/{userId}/posts")
-//    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId,Pageable pageable){
-//        try{
-//            Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
-//            return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
-//        }catch(Exception e){
-//            log.error(e.getMessage());
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
-//        }
-//    }
     //내 글 보기
     @GetMapping("/{userId}/posts")
-    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
+    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId,Pageable pageable){
         try{
-            return ResponseEntity.ok(userService.showMyArticle(userId));
+            Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
+            return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
         }catch(Exception e){
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
         }
     }
+//    //내 글 보기
+//    @GetMapping("/{userId}/posts")
+//    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
+//        try{
+//            return ResponseEntity.ok(userService.showMyArticle(userId));
+//        }catch(Exception e){
+//            log.error(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
+//        }
+//    }
     //내 댓글 보기
     @GetMapping("/{userId}/comments")
     public ResponseEntity viewMyComments(@PathVariable("userId") Long userId){
