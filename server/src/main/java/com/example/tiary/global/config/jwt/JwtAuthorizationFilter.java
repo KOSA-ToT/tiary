@@ -50,7 +50,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		}
 		try {
 			// 액세스 토큰 유효성 검사 후, 만료되었으면 리프레시 토큰 검사
-			String email = tokenService.validateAndExtractSubjectFromToken(accessToken);
+			String email = tokenService.validateAndExtractEmailFromToken(accessToken);
 			if (email.equals("EXPIRE")) {
 				String newAccessToken = renewAccessTokenIfNecessary(request);
 				response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + newAccessToken);
@@ -66,18 +66,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				null,
 				principalDetails.getUsers().getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-
 			chain.doFilter(request, response);
 		} catch (BusinessLogicException e) {
 			System.out.println("AuthorizationFilter: " + e.getMessage());
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		} catch (Exception e) {
+			System.out.println("AuthorizationFilter: " + e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	public String renewAccessTokenIfNecessary(HttpServletRequest request) {
 		// 리프레시 토큰이 없으면 인증 실패, 유효하면 액세스 토큰 발급
 		String refreshToken = CookieUtil.getValueFromCookie(request, JwtProperties.getREFRESH_TOKEN_COOKIE_NAME());
-		String email = tokenService.validateAndExtractSubjectFromToken(refreshToken);
+		String email = tokenService.validateAndExtractEmailFromToken(refreshToken);
 		Users user = usersRepository.findByEmail(email)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		return tokenService.createToken(
