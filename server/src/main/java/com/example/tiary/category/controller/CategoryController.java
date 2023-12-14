@@ -1,5 +1,7 @@
 package com.example.tiary.category.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.article.service.ArticleService;
+import com.example.tiary.category.entity.Category;
 import com.example.tiary.category.service.CategoryService;
 
 @RestController
@@ -23,9 +26,11 @@ public class CategoryController {
 
 	@GetMapping
 	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "category" , required = false) String categoryCode) {
+		List<Category> categoryList;
 		if (categoryCode != null) {
 			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
 		}
-		return new ResponseEntity(categoryService.readAllCategory(),HttpStatus.OK);
+		categoryList = categoryService.readCategoryList();
+		return new ResponseEntity<>(categoryList,HttpStatus.OK);
 	}
 }

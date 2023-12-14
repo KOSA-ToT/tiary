@@ -16,7 +16,11 @@ public class CatecoryServiceImpl implements CategoryService {
 	public CatecoryServiceImpl(CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
 	}
-
+	@Transactional(readOnly = true)
+	@Override
+	public List<Category> readCategoryList() {
+		return categoryRepository.findAll();
+	}
 	@Transactional(readOnly = true)
 	@Override
 	public List<Category> readAllCategory(){
