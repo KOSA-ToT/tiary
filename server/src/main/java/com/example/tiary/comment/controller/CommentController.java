@@ -57,6 +57,7 @@ public class CommentController {
 	@PostMapping("/guest/password-confirm/{comment-id}")
 	public ResponseEntity confirmPassword(@PathVariable("comment-id") Long commentId,
 		@RequestBody CommentRequestDTO commentRequestDTO) {
+		System.out.println(commentRequestDTO);
 		if (commentService.confirmPassword(commentId, commentRequestDTO.getPassword())) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
