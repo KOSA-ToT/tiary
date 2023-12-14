@@ -26,5 +26,5 @@ authInstance.interceptors.request.use((config) => {
 })
 
 const getLocalStorageToken = () => {
-  return localStorage.getItem("accessToken");
+  return localStorage.getItem("Authorization");
 }

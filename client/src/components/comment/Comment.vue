@@ -43,14 +43,14 @@ onMounted(async () => {
 });
 
 // comment 불러오기
-watch(async function getCommentList() {
+async function getCommentList() {
   try {
-    const response = await axios.get("http://localhost:8088/comment/1014");
+    const response = await axios.get("http://localhost:8088/comment/2");
     commentList.value = response.data;
   } catch (err) {
     console.log(err);
   }
-});
+};
 </script>
 
 <style scoped></style>
