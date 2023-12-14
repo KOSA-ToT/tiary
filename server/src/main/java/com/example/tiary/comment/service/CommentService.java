@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -108,7 +109,12 @@ public class CommentService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-		Comment comment = commentRequestDTO.toEntityUser(article, users);
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+
+		if(!Objects.equals(userId, comment.getUsers().getId()))
+			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
 		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
@@ -118,11 +124,12 @@ public class CommentService {
 	public CommentResponseDTO guestUpdate(Long commentId, Long articleId, CommentRequestDTO commentRequestDTO) {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-		Comment comment = commentRequestDTO.toEntityGuest(article);
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
 		return CommentResponseDTO.from(commentRepository.save(comment));
 	}
-
 
 	// 회원 댓글 삭제
 	@Transactional
