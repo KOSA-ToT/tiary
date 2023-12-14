@@ -100,9 +100,11 @@ public class ArticleServiceImpl implements ArticleService {
 		Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
 		Article article = articleRepository.save(requestArticleDto.toEntity(category, user));
 
-		for (String storeName : storeNameList) {
-			ArticleImage articleImage = ArticleImage.of(storeName, article);
-			articleImageRepository.save(articleImage);
+		if (storeNameList != null) {
+			for (String storeName : storeNameList) {
+				ArticleImage articleImage = ArticleImage.of(storeName, article);
+				articleImageRepository.save(articleImage);
+			}
 		}
 
 		hashtagService.saveHashtag(requestArticleDto, article);

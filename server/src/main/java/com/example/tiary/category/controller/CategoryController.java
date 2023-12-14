@@ -1,6 +1,5 @@
 package com.example.tiary.category.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -26,13 +25,12 @@ public class CategoryController {
 	}
 
 	@GetMapping
-	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "categoryCode", required = false) String categoryCode) {
-		List<Category> categoryList;
+
+	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "categoryCode" , required = false) String categoryCode) {
 		if (categoryCode != null) {
 			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
 		}
 		categoryList = categoryService.readCategoryList();
-		return new ResponseEntity(categoryList,HttpStatus.OK);
+		return new ResponseEntity<>(categoryList,HttpStatus.OK);
 	}
 }
-/**/

@@ -35,10 +35,10 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users implements UserDetails {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 20, unique = true)
 	@Length(min = 1, max = 20, message = "이름은 20자 이하여야 합니다.")
 	@NotBlank(message = "이름은 필수 값입니다.")
 	private String nickname;
