@@ -45,12 +45,11 @@
 <script setup>
 import { defineProps, ref } from "vue";
 
-let userId = "test";
+// let userId = "test";
 const replyComment = ref({
   password: "",
   content: "",
 });
-// const props = defineProps(["closeModal", "createReplyComment"]);
 
 defineEmits(["closeModal", "createReplyComment"]);
 </script>

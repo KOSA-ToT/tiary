@@ -36,7 +36,7 @@
             <div class="text-right">
               <!-- 회원이 작성한 댓글 -->
 
-              <span
+              <!-- <span
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openUpdateModal"
               >
@@ -47,11 +47,11 @@
                 @click="deleteComment"
               >
                 delete</span
-              >
+              > -->
 
               <!-- 비회원이 작성한 댓글 -->
 
-              <!-- <span
+              <span
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openModal('edit')"
               >
@@ -62,7 +62,7 @@
                 @click="openModal('delete')"
               >
                 delete</span
-              > -->
+              >
             </div>
           </div>
         </div>
@@ -125,10 +125,6 @@ function openUpdateModal() {
 
 // 비밀번호 확인 모달창 열기
 function openModal(action) {
-  // 회원
-  // isUpdateModalOpen.value = true;
-
-  // 비회원
   mode.value = action;
   isPasswordModalOpen.value = true;
 }
@@ -169,7 +165,7 @@ function editComment(content) {
   commentRequestDTO.value.content = content;
   axios
     .patch(
-      `http://localhost:8088/comment/guest/1014/${commentData.id}`,
+      `http://localhost:8088/comment/guest/2/${commentData.id}`,
       commentRequestDTO.value
     )
     .then((response) => {
@@ -186,10 +182,9 @@ function deleteComment() {
   let result = confirm("정말 삭제하시겠습니까?");
   if (result) {
     axios
-      .delete(`http://localhost:8088/comment/guest/1014/${commentData.id}`)
+      .delete(`http://localhost:8088/comment/guest/2/${commentData.id}`)
       .then((response) => {
         alert("성공적으로 삭제되었습니다.");
-        router.push("/article-test");
       })
       .catch((error) => console.error("Error deleting comment", error));
   }
@@ -208,7 +203,7 @@ function createReplyComment(replyComment) {
 
   // 비회원일 경우
   axios
-    .post(`http://localhost:8088/comment/guest/1014`, commentRequestDTO.value)
+    .post(`http://localhost:8088/comment/guest/2`, commentRequestDTO.value)
     .then((response) => {
       console.log(response);
       commentRequestDTO.value.content = "";

@@ -33,7 +33,7 @@
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
 import CommentInput from "@/components/comment/CommentInput.vue";
-import { onMounted, reactive, ref, watch, watchSyncEffect } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 
 let userId = sessionStorage.getItem("user");
 
@@ -44,15 +44,26 @@ onMounted(async () => {
   console.log(commentList.value);
 });
 
+// watch(
+//   () => commentList.value,
+//   (newVal, oldVal) => {
+//     if (newVal !== oldVal) {
+//       getCommentList();
+//       console.log("Comment list updated:", newVal);
+//     }
+//   },
+//   { deep: true, immediate: true }
+// );
+
 // comment 불러오기
-watch(async function getCommentList() {
+async function getCommentList() {
   try {
-    const response = await axios.get("http://localhost:8088/comment/1014");
+    const response = await axios.get("http://localhost:8088/comment/2");
     commentList.value = response.data;
   } catch (err) {
     console.log(err);
   }
-});
+}
 </script>
 
 <style scoped></style>

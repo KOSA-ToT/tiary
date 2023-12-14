@@ -34,7 +34,6 @@
 <script setup>
 import { defineProps, ref } from "vue";
 
-// const content = ref(props.commentContent.content);
 const content = ref("");
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
 
