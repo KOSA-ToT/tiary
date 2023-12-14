@@ -1,6 +1,7 @@
 package com.example.tiary.article.dto.response;
 
 import com.example.tiary.article.entity.ArticleHashtag;
+import com.example.tiary.article.entity.Hashtag;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,12 @@ public class ResponseHashtagDto {
 	public static ResponseHashtagDto from(ArticleHashtag articleHashtag) {
 		return ResponseHashtagDto.builder()
 			.hashtagName(articleHashtag.getHashtag().getHashtagName())
+			.build();
+	}
+
+	public static ResponseHashtagDto from(Hashtag hashtag){
+		return ResponseHashtagDto.builder()
+			.hashtagName(hashtag.getHashtagName())
 			.build();
 	}
 }

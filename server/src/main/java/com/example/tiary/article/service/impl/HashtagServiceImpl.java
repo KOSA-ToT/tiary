@@ -2,6 +2,7 @@ package com.example.tiary.article.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.article.dto.request.RequestArticleDto;
+import com.example.tiary.article.dto.response.ResponseHashtagDto;
 import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.ArticleHashtag;
 import com.example.tiary.article.entity.Hashtag;
@@ -28,6 +30,42 @@ public class HashtagServiceImpl implements HashtagService {
 	public HashtagServiceImpl(HashtagRepository hashtagRepository, ArticleHashtagRepository articleHashtagRepository) {
 		this.hashtagRepository = hashtagRepository;
 		this.articleHashtagRepository = articleHashtagRepository;
+	}
+
+	// 해시태그 조회 아티클의 해시태그를 기준으로
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseHashtagDto> readHashtag(String categoryCode){
+		List<ResponseHashtagDto> allResponseHashtagDto = readAllHashtag(categoryCode);
+
+		return getRandomHashtag(allResponseHashtagDto,6);
+	}
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseHashtagDto> readAllHashtag(String categoryCode) {
+		return articleHashtagRepository
+			.findDistinctHashtagsByCategoryCode(categoryCode)
+			.stream()
+			.map(ResponseHashtagDto::from)
+			.toList();
+	}
+
+	private List<ResponseHashtagDto> getRandomHashtag(List<ResponseHashtagDto> responseHashtagDtoList, int count){
+		if(responseHashtagDtoList.size() <= count){
+			return responseHashtagDtoList;
+		}
+		List<ResponseHashtagDto> selectHashtag = new ArrayList<>();
+		Random random = new Random();
+
+		while(selectHashtag.size() < count){
+			int randomIndex = random.nextInt(responseHashtagDtoList.size());
+			ResponseHashtagDto responseHashtagDto = responseHashtagDtoList.get(randomIndex);
+
+			if(!selectHashtag.contains(responseHashtagDto)){
+				selectHashtag.add(responseHashtagDto);
+			}
+		}
+		return selectHashtag;
 	}
 
 	// 해시태그 가공
@@ -59,7 +97,6 @@ public class HashtagServiceImpl implements HashtagService {
 	@Override
 	public Boolean updateHashtag(List<String> hashList, Article article) {
 		checkHashtagExistAndSave(article, hashList);
-		log.info("수정 조인 테이블 확인 : {}");
 		return true;
 	}
 
