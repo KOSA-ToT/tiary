@@ -94,13 +94,14 @@ let commentRequestDTO = ref({
   password: "",
   parentId: "",
 });
+
 let commentId = ref(commentData.id);
 
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
 
-/** 대댓글 */
+// 대댓글 
 function replyToComment() {
   isReplyModalOpen.value = true;
 }
@@ -125,7 +126,7 @@ function openUpdateModal() {
   isUpdateModalOpen.value = true;
 }
 
-/** 수정 모달창 열기 */
+// 수정 모달창 열기 
 function openModal() {
   // 회원
   // isUpdateModalOpen.value = true;
@@ -134,13 +135,13 @@ function openModal() {
   isPasswordModalOpen.value = true;
 }
 
-/** 모달창 닫기 */
+// 모달창 닫기 
 function closeModal() {
   isPasswordModalOpen.value = false;
   isUpdateModalOpen.value = false;
 }
 
-/**  익명댓글 비밀번호 확인, 수정*/
+//  익명댓글 비밀번호 확인, 수정
 function checkPasswordAndEditComment(password) {
   commentRequestDTO.value.password = password;
   console.log("비밀번호", commentRequestDTO.value.password);
@@ -160,7 +161,7 @@ function checkPasswordAndEditComment(password) {
     });
 }
 
-/**  댓글 수정 */
+//  댓글 수정
 function editComment(content) {
   commentRequestDTO.value.content = content;
   axios
@@ -177,11 +178,10 @@ function editComment(content) {
     });
 }
 
-/** 댓글 삭제 */
+// 댓글 삭제 
 function deleteComment() {
   // 익명댓글인지 회원댓글인지 구분
-  //비회원 댓글 삭제
-  console.log(commentData.id);
+  // 비회원 댓글 삭제
   let result = confirm("정말 삭제하시겠습니까?");
   if (result) {
     axios
@@ -193,7 +193,8 @@ function deleteComment() {
       .catch((error) => console.error("Error deleting comment", error));
   }
 }
-/** 등록 시간 포맷 */
+
+// 등록 시간 포맷
 function formatCreatedAt(createdAt) {
   const date = new Date(createdAt);
   return `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(
