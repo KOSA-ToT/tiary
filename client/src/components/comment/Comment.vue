@@ -1,6 +1,4 @@
 <template>
-  <div>게시판 페이지 입니다~</div>
-  Comment
   <div class="w-fullbg-white rounded-lg border p-1 md:p-3 m-10">
     <h3 class="font-semibold p-1">Comment</h3>
     <CommentCard

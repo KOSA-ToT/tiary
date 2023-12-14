@@ -1,7 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '@/pages/Home.vue'
-import ArticleTest from '@/pages/ArticleTest.vue'
+import Error from '@/pages/Error.vue'
+import MypageProfile from '@/components/myPage/profile.vue'
+import MyInfoView from '@/components/myPage/myInfo.vue'
+import MyPostView from '@/components/myPage/myPost.vue'
+import MyCommentView from '@/components/myPage/myComment.vue'
+import MySubscriberView from '@/components/myPage/mySubscriber.vue'
+import Comment from '@/components/comment/Comment.vue'
+
 import ArticleList from '@/pages/ArticleList.vue'
 import ArticleCreate from '@/components/article/ArticleCreate.vue'
 import ArticleEdit from '@/components/article/ArticleEdit.vue'
@@ -9,11 +16,33 @@ import Post from '@/pages/Post.vue'
 import NickCheck from '@/pages/NickCheck.vue'
 import VerifyEmail from '@/pages/VerifyEmail.vue'
 
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {path: '/', name : 'Home', component: Home},
-         {path: '/article-test', component: ArticleTest},
+        {path: '/error', component: Error},
+        { path: '/mypage/',
+                    component: MypageProfile,
+                    children : [
+                        {
+                            path : ":id",
+                            component : MyInfoView,
+                        },
+                        {
+                            path : "post/:id",
+                            component : MyPostView,
+                        },
+                        {
+                            path : "comment/:id",
+                            component : MyCommentView,
+                        },
+                        {
+                            path: 'subscriber/:id',
+                            component:  MySubscriberView
+                        }
+                    ]},
+        {path: '/article-test', component: Comment},
         {path: '/articles', component : ArticleList},
         {path: '/article/:articleId' , name: 'Post', component : Post, props : true },
         {path: '/article-create', name:'ArticleCreate', component : ArticleCreate, props : true},

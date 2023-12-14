@@ -1,4 +1,4 @@
-package com.example.tiary.global.s3;
+package com.example.tiary.global.s3.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
