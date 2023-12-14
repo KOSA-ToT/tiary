@@ -1,17 +1,13 @@
 <template>
   <div :class="{ 'dark': isDarkMode, 'light': !isDarkMode }">
-    <div id="custom-toolbar">
-      <button onclick="customBold()">Bold</button>
-      <button onclick="customItalic()">Italic</button>
-      <!-- 필요한 다른 사용자 지정 버튼들... -->
-    </div>
     <div id="article" class="max-w-4xl mx-auto p-4 font-sans bg-white dark:bg-white-800">
       <div id="category" :class="{ 'text-white': isDarkMode, 'text-black': !isDarkMode }">
         <label for="category" class="block text-sm font-bold mb-2"></label>
-        <select v-model="categoryCode" class="w-40 p-2 border border-gray-300  dark:bg-white-300 dark:text-black">
+        <!-- 드랍다운 박스 -->
+        <select v-model="categoryCode" class="w-40 p-2 border border-gray-300 dark:bg-white-300 dark:text-black">
           <option disabled value="" selected>카테고리</option>
           <option v-for="i in categories" :key="i.categoryCode" :value="i.categoryCode"
-            class="dark:bg-gray-700 dark:text-white">
+            :selected="i.categoryCode === categoryCode" class="dark:bg-gray-700 dark:text-white">
             {{ i.categoryName }}
           </option>
         </select>
@@ -19,22 +15,21 @@
       <div id="title" class="mb-4">
         <label for="title" class="block text-sm font-bold mb-2"></label>
         <input type="text" name="title" v-model="title" placeholder="제목을 입력해주세요"
-          class="w-full p-2 border-0 border-gray-300  dark:bg-gray-300 dark:text-black">
+          class="w-full p-2 border-0 border-gray-300  dark:bg-gray-300 dark:text-black" />
       </div>
       <div id="content" ref="editor" class="mb-8 h-96">
-        <div v-html="testHtml.value"></div>
+        <div v-html="testHtml"></div>
       </div>
       <div id="hashtag" class="mb-4">
         <label for="hashtag" class="block text-sm font-bold mb-2" placeholder="#해시태그"></label>
         <input type="text" name="hashtag" v-model="hashtag" placeholder="#해시태그"
-          class="w-full p-2 border-0 border-gray-300  dark:bg-gray-300 dark:text-black">
+          class="w-full p-2 border-0 border-gray-300  dark:bg-gray-300 dark:text-black" />
       </div>
-
     </div>
     <div class="fixed bottom-0 right-0 left-0 flex justify-end items-center p-4 bg-white dark:bg-gray-300">
       <button @click.prevent="postArticle"
         class="text-white py-2 px-4 bg-green-500 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
-        작성
+        수정하기
       </button>
       <button
         class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
@@ -45,10 +40,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, onUnmounted } from 'vue';
+import { onMounted, ref, watch, onUnmounted, nextTick } from 'vue';
 import axios from 'axios';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
+import router from '@/router';
 
 //컬러
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -60,13 +56,7 @@ import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 
-const props = defineProps({
-  modelValue: {
-    type: String,
-    required: false,
-    default: '',
-  },
-});
+const props = defineProps(['articleId']);
 
 const emit = defineEmits(['update:modelValue']);
 const editor = ref("");
@@ -79,6 +69,10 @@ const title = ref("");
 const hashtag = ref("");
 const testHtml = ref("");
 
+
+//article-update
+const content = ref("");
+
 //category
 const categories = ref([]);
 const categoryCode = ref("");
@@ -86,45 +80,59 @@ const categoryCode = ref("");
 //css
 const isDarkMode = ref(false);
 
-//마운트될때 Editor 생성
-onMounted(() => {
-  editorValid.value = new Editor({
-    el: editor.value,
-    height: 'auto',
-    usageStatistics: false,
-    hideModeSwitch: true,
-    hideToolbar : true,
-    initialEditType: 'wysiwyg',
-    plugins: [colorSyntax, codeSyntaxHighlight],
-    hooks: {
-      addImageBlobHook(blob, callback) {
-        formData.append('images', blob)
-
-        const response = axios.post('http://localhost:8088/images', formData)
-          .then((response) => {
-            const dataMap = new Map(Object.entries(response.data))
-            dataMap.forEach((value) => {
-              callback(value, "img alt attribute");
-            })
-            dataMap.forEach((value, key) => {
-              images.push(key)
-            })
-          });
-      }
-    }
-  })
-});
-
 onMounted(
   async () => {
-    const response = await axios.get('http://localhost:8088/category')
-      .then((response) => {
-        console.log(response.data);
-        categories.value = response.data;
-      })
-    console.log(categories);
+    const categoryResponse = await axios.get('http://localhost:8088/category');
+    const articleResponse = await axios.get('http://localhost:8088/article/' + props.articleId);
+
+    // 카테고리 리스트 세팅
+    categories.value = categoryResponse.data;
+
+    // 기존 데이터 초기값 세팅
+    title.value = articleResponse.data.title;
+    content.value = articleResponse.data.content;
+
+    // 카테고리 초기값 설정
+    const selectedCategory = categories.value.find(category => category.categoryCode === articleResponse.data.categoryCode);
+    if (selectedCategory) {
+      categoryCode.value = selectedCategory.categoryCode;
+    }
+
+    // 해시태그 초기값 설정
+    hashtag.value = articleResponse.data.hashtagList.map(hashtagObj => `#${hashtagObj.hashtagName}`).join(' ');
+
+    // Editor 생성
+    editorValid.value = new Editor({
+      el: editor.value,
+      initialValue: content.value,
+      height: '460px',
+      usageStatistics: false,
+      hideModeSwitch: true,
+      hideToolbar: true,
+      initialEditType: 'wysiwyg',
+      plugins: [colorSyntax, codeSyntaxHighlight],
+      hooks: {
+        addImageBlobHook(blob, callback) {
+          formData.append('images', blob)
+
+          const response = axios.post('http://localhost:8088/images', formData)
+            .then((response) => {
+              const dataMap = new Map(Object.entries(response.data))
+              dataMap.forEach((value) => {
+                callback(value, "img alt attribute");
+              })
+              dataMap.forEach((value, key) => {
+                images.push(key)
+              })
+            });
+        }
+      }
+    });
   }
-);
+)
+
+
+
 
 
 function postArticle() {
@@ -142,7 +150,7 @@ function postArticle() {
   }
   const auth = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlkIjoxLCJleHAiOjE3MDIzNjMzNzIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20ifQ.--PQsHLQ";
 
-  axios.post('http://localhost:8088/article', requestArticleDto, {
+  axios.patch('http://localhost:8088/article/' + props.articleId, requestArticleDto, {
     headers: {
       Authorization: auth
     }

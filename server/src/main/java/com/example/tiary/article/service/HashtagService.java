@@ -10,9 +10,13 @@ import com.example.tiary.article.entity.Article;
 import com.example.tiary.article.entity.Hashtag;
 
 public interface HashtagService {
+	// 해시태그 조회 아티클의 해시태그를 기준으로
+	@Transactional(readOnly = true)
+	List<ResponseHashtagDto> readHashtag(String categoryCode);
+
 	// 해시태그 조회
 	@Transactional(readOnly = true)
-	List<ResponseHashtagDto> readHashtag();
+	List<ResponseHashtagDto> readAllHashtag(String categoryCode);
 
 	@Transactional
 	List<String> createHashtag(RequestArticleDto requestArticleDto);

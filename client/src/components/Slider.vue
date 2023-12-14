@@ -1,5 +1,5 @@
 <template>
-  <div id="default-carousel" class="relative w-full" data-carousel="slide">
+  <div id="default-carousel" class="relative w-full mb-20" data-carousel="slide">
     <!-- Carousel wrapper -->
     <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
       <!-- Carousel items -->
@@ -48,7 +48,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const items = [
-  { imageSrc: "../../public/images/spring.jpg" },
+  { imageSrc: "/images/spring.jpg" },
   { imageSrc: "/docs/images/carousel/carousel-2.svg" },
   { imageSrc: "/docs/images/carousel/carousel-3.svg" },
   { imageSrc: "/docs/images/carousel/carousel-4.svg" },

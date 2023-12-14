@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class KeywordAndSimilarityService {
 			.collect(Collectors.toMap(
 				Function.identity(),
 				word -> (int) articleRepository.findAll().stream()
-					.map(Article::getContent)
+					.map(article -> Optional.ofNullable(article.getContent()).orElse(""))
 					.filter(contentText -> contentText.contains(word))
 					.count()
 			));
@@ -93,7 +94,12 @@ public class KeywordAndSimilarityService {
 	public RelatedArticle calculateAssociationScore(Article article, Map<String, Double> targetTFIDF,
 		Map<String, Integer> wordFrequencies) {
 		float score = 0;
-		String[] words = article.getContent().split("\\s+");
+		// content가 null이면 에러가 나서 해결하기 위한 방어코드
+		// content 는 @NotNull 이기 때문에 날 수 없긴 합니다.
+		String[] words = Optional.ofNullable(article.getContent())
+			.map(content -> content.split("\\s+"))
+			.orElse(new String[0]);
+
 		int totalWords = words.length;
 		int rareWordCount = 0;
 
