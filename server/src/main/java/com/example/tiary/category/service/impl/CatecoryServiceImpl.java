@@ -1,5 +1,7 @@
 package com.example.tiary.category.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,12 @@ public class CatecoryServiceImpl implements CategoryService {
 
 	public CatecoryServiceImpl(CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<Category> readAllCategory(){
+		return categoryRepository.findAll();
 	}
 
 	@Transactional(readOnly = true)
