@@ -82,7 +82,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	public boolean isUriExemptFromAuthorization(String uri) {
 		// TODO 승희 : 인증 제외 경로를 구분하는 좋은 방법을 구상해야 함
-		List<String> patterns = Arrays.asList("/auth", "/article", "/category", "/comment", "/users");
+		List<String> patterns = Arrays.asList("/auth", "/article", "/category", "/comment", "/users", "/h2");
 		for (String pattern : patterns) {
 			if (uri.startsWith(pattern)) {
 				return true;

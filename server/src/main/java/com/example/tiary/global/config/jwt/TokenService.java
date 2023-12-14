@@ -33,25 +33,20 @@ public class TokenService {
 	}
 
 	public String validateAndExtractSubjectFromToken(String token) {
-		// 액세스 토큰이 빈 값이거나(OAuth2를 위함) 만료된 토큰일 경우 null 반환
 		try {
-			if (token.isEmpty()) {
-				return null;
-			}
 			return JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token).getSubject();
 		} catch (TokenExpiredException e) {
-			return null;
+			return "EXPIRE";
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
 		}
 	}
 
 	public String getTokenFromHeader(HttpServletRequest request) {
 		String header = request.getHeader(JwtProperties.getHEADER_STRING());
-		if (header == null) {
-			return "";
-		} else if (!header.startsWith(JwtProperties.getTOKEN_PREFIX())) {
-			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+		if (header == null || !header.startsWith(JwtProperties.getTOKEN_PREFIX())) {
+			return null;
 		} else {
 			return header.replace(JwtProperties.getTOKEN_PREFIX(), "");
 		}
