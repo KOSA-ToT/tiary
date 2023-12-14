@@ -1,9 +1,8 @@
 package com.example.tiary.myPage.service.impl;
 
-import com.example.tiary.article.entity.ArticleImage;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
-import com.example.tiary.global.s3.S3UploadService;
+import com.example.tiary.global.s3.service.S3UploadService;
 import com.example.tiary.myPage.dto.response.ResponseMyArticleDto;
 import com.example.tiary.myPage.dto.response.ResponseMyCommentDto;
 import com.example.tiary.users.constant.UserStatus;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -52,14 +53,14 @@ public class ArticleController {
 	}
 
 	//게시물 등록
-	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping
 	public ResponseEntity postArticle(
-		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
-		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
+		@RequestBody RequestArticleDto requestArticleDto,
 		@AuthenticationPrincipal UserDto user) throws
 		IOException {
 
-		return new ResponseEntity<>(articleService.createArticle(user.getUsers().getId(), requestArticleDto, multipartFileList),
+		return new ResponseEntity<>(
+			articleService.createArticle(user.getUsers().getId(), requestArticleDto,requestArticleDto.getStoreName()),
 			HttpStatus.CREATED);
 	}
 
@@ -70,7 +71,8 @@ public class ArticleController {
 		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
 		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
 		@AuthenticationPrincipal UserDto user) throws IOException {
-		return new ResponseEntity<>(articleService.updateArticle(user.getUsers().getId(), articleId, requestArticleDto, multipartFileList),
+		return new ResponseEntity<>(
+			articleService.updateArticle(user.getUsers().getId(), articleId, requestArticleDto, multipartFileList),
 			HttpStatus.OK);
 	}
 

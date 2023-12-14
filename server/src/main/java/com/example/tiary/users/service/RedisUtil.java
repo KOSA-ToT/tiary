@@ -22,7 +22,7 @@ public class RedisUtil {
 		return valueOperations.get(decodedKey); // value 값인 email 반환
 	}
 
-	public String setDataExpire(String value) {
+	public String setDataExpire(String email) {
 		ValueOperations<String, String> valueOperations = template.opsForValue();
 		// 랜덤 값 생성
 		Random random = new Random();
@@ -31,7 +31,7 @@ public class RedisUtil {
 		String encodedKey = LinkEncryptionUtil.generateEncodedKey(key); // 6자리
 		// 유효기간 설정
 		Duration expireDuration = Duration.ofMinutes(5);
-		valueOperations.set(key, value, expireDuration); // 키값으로 저장
+		valueOperations.set(key, email, expireDuration); // 키값으로 저장
 		return encodedKey;
 	}
 

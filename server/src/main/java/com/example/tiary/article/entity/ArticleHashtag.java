@@ -35,4 +35,8 @@ public class ArticleHashtag {
 	public static ArticleHashtag of(Article article, Hashtag hashtag) {
 		return new ArticleHashtag(null, article, hashtag);
 	}
+
+	public Long getHashtagId() {
+		return this.id;
+	}
 }

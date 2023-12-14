@@ -1,4 +1,4 @@
-package com.example.tiary.global.s3;
+package com.example.tiary.global.s3.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -75,7 +75,7 @@ public class S3UploadService {
 	}
 
 	//키 값으로 url 가져오기
-	private String getS3URL(String storeName) throws UnsupportedEncodingException {
+	public String getS3URL(String storeName) throws UnsupportedEncodingException {
 		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), "utf-8");
 
 	}
