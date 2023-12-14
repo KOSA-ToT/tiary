@@ -18,7 +18,7 @@ onBeforeMount(() => {
 })
 
 async function getVerified(key, task) {
-  if(localStorage.getItem('authorization')) {
+  if(localStorage.getItem('Authorization')) {
     alert("이미 인증되었습니다.");
     router.push('/');
     return;
@@ -31,7 +31,7 @@ async function getVerified(key, task) {
       try { // 회원정보 있으면 로그인
         const loginDto = { email: response.data.email };
           const loginResponse = await loginReq(loginDto);
-          localStorage.setItem('authorization', loginResponse.headers.authorization)
+          localStorage.setItem('Authorization', loginResponse.headers.authorization)
           router.push('/');
       } catch (error) { // 회원정보 없으니 회원가입
         if(task === '회원가입') {
