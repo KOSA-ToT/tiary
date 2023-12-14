@@ -23,6 +23,12 @@ public class CatecoryServiceImpl implements CategoryService {
 	}
 	@Transactional(readOnly = true)
 	@Override
+	public List<Category> readAllCategory(){
+		return categoryRepository.findAll();
+	}
+
+	@Transactional(readOnly = true)
+	@Override
 	public Category readCategory(String categoryCode) {
 		return categoryRepository.findCategoryByCategoryCode(categoryCode);
 	}

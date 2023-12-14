@@ -13,6 +13,8 @@ public interface CategoryService {
 	List<Category> readCategoryList();
 
 	@Transactional(readOnly = true)
+	List<Category> readAllCategory();
+	@Transactional(readOnly = true)
 	Category readCategory(String categoryCode);
 }
 

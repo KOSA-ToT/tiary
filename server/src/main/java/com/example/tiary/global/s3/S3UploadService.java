@@ -75,7 +75,7 @@ public class S3UploadService {
 	}
 
 	//키 값으로 url 가져오기
-	private String getS3URL(String storeName) throws UnsupportedEncodingException {
+	public String getS3URL(String storeName) throws UnsupportedEncodingException {
 		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), "utf-8");
 
 	}
