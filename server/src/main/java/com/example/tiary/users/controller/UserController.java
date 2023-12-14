@@ -57,13 +57,13 @@ public class UserController {
 		return ResponseEntity.ok("가입되었습니다.");
 	}
 
-	// // 이메일 존재 여부 체크
-	// @GetMapping("/chk-email")
-	// public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
-	// 		return userService.existsEmail(email)
-	// 			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
-	// 			: ResponseEntity.ok("사용 가능한 이메일입니다.");
-	// }
+	// 이메일 존재 여부 체크
+	@GetMapping("/chk-email")
+	public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
+			return userService.existsEmail(email)
+				? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
+				: ResponseEntity.ok("사용 가능한 이메일입니다.");
+	}
 
 	// 닉네임 존재 여부 체크
 	@GetMapping("/chk-nickname")
