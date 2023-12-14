@@ -19,9 +19,9 @@
       <p class="text-gray-600 mt-2">
         {{ replyCommentData.content }}
       </p>
-      <button class="text-left text-blue-500" @click="replyToComment">
+      <!-- <button class="text-left text-blue-500" @click="replyToComment">
         Reply
-      </button>
+      </button> -->
       <div class="text-right">
         <!-- 수정버튼 클릭 시 회원이면 수정폼 / 비회원이면 비밀번호 인증폼 -->
         <span

@@ -34,21 +34,36 @@
               Reply
             </button>
             <div class="text-right">
-              <!-- 수정버튼 클릭 시 회원이면 수정폼 / 비회원이면 비밀번호 인증폼 -->
+              <!-- 회원이 작성한 댓글 -->
+
               <span
-                class="text-sm text-gray-400 font-normal cursor-pointer"
-                @click="openModal"
+                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+                @click="openUpdateModal"
               >
                 edit&nbsp;&nbsp;
               </span>
               <span
-                class="text-sm text-gray-400 font-normal cursor-pointer"
+                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="deleteComment"
               >
                 delete</span
               >
+
+              <!-- 비회원이 작성한 댓글 -->
+
+              <!-- <span
+                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+                @click="openModal('edit')"
+              >
+                edit&nbsp;&nbsp;
+              </span>
+              <span
+                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+                @click="openModal('delete')"
+              >
+                delete</span
+              > -->
             </div>
-            <!-- 대댓글 표시 -->
           </div>
         </div>
       </div>
@@ -56,7 +71,7 @@
         <CommentPasswordModal
           v-if="isPasswordModalOpen"
           @closeModal="closeModal"
-          @submitPassword="checkPasswordAndEditComment"
+          @submitPassword="checkPassword"
         ></CommentPasswordModal>
 
         <CommentUpdateModal
@@ -95,64 +110,52 @@ let commentRequestDTO = ref({
   parentId: "",
 });
 
+const mode = ref("");
+
 let commentId = ref(commentData.id);
 
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
 
-// 대댓글 
-function replyToComment() {
-  isReplyModalOpen.value = true;
-}
-
-// 대댓글 등록
-function createReplyComment(replyComment) {
-  commentRequestDTO.value.content = replyComment.content;
-  commentRequestDTO.value.password = replyComment.password;
-  commentRequestDTO.value.parentId = commentData.id;
-
-  // 비회원일 경우
-  axios
-    .post(`http://localhost:8088/comment/guest/1014`, commentRequestDTO.value)
-    .then((response) => {
-      console.log(response);
-      commentRequestDTO.value.content = "";
-      commentRequestDTO.value.password = "";
-    })
-    .catch((err) => console.log(err));
-}
+// 수정 모달창 오픈
 function openUpdateModal() {
   isUpdateModalOpen.value = true;
 }
 
-// 수정 모달창 열기 
-function openModal() {
+// 비밀번호 확인 모달창 열기
+function openModal(action) {
   // 회원
   // isUpdateModalOpen.value = true;
 
   // 비회원
+  mode.value = action;
   isPasswordModalOpen.value = true;
 }
 
-// 모달창 닫기 
+// 모달창 닫기
 function closeModal() {
   isPasswordModalOpen.value = false;
   isUpdateModalOpen.value = false;
 }
 
-//  익명댓글 비밀번호 확인, 수정
-function checkPasswordAndEditComment(password) {
+// 비밀번호 검증
+function checkPassword(password) {
   commentRequestDTO.value.password = password;
   console.log("비밀번호", commentRequestDTO.value.password);
+
   axios
     .post(
       `http://localhost:8088/comment/guest/password-confirm/${commentData.id}`,
       commentRequestDTO.value
     )
     .then((response) => {
-      closeModal();
-      openUpdateModal();
+      if (mode.value === "delete") {
+        deleteComment();
+      } else if (mode.value === "edit") {
+        closeModal();
+        openUpdateModal();
+      }
     })
     .catch((error) => {
       alert("비밀번호가 일치하지 않습니다.");
@@ -178,10 +181,8 @@ function editComment(content) {
     });
 }
 
-// 댓글 삭제 
+// 댓글 삭제
 function deleteComment() {
-  // 익명댓글인지 회원댓글인지 구분
-  // 비회원 댓글 삭제
   let result = confirm("정말 삭제하시겠습니까?");
   if (result) {
     axios
@@ -192,6 +193,28 @@ function deleteComment() {
       })
       .catch((error) => console.error("Error deleting comment", error));
   }
+}
+
+// 대댓글 모달창 오픈
+function replyToComment() {
+  isReplyModalOpen.value = true;
+}
+
+// 대댓글 등록
+function createReplyComment(replyComment) {
+  commentRequestDTO.value.content = replyComment.content;
+  commentRequestDTO.value.password = replyComment.password;
+  commentRequestDTO.value.parentId = commentData.id;
+
+  // 비회원일 경우
+  axios
+    .post(`http://localhost:8088/comment/guest/1014`, commentRequestDTO.value)
+    .then((response) => {
+      console.log(response);
+      commentRequestDTO.value.content = "";
+      commentRequestDTO.value.password = "";
+    })
+    .catch((err) => console.log(err));
 }
 
 // 등록 시간 포맷

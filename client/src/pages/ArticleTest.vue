@@ -38,10 +38,6 @@ import { onMounted, reactive, ref, watch, watchSyncEffect } from "vue";
 let userId = sessionStorage.getItem("user");
 
 let commentList = reactive([]);
-let commentRequestDTO = ref({
-  content: "",
-  password: "",
-});
 
 onMounted(async () => {
   await getCommentList();
