@@ -1,7 +1,7 @@
 <template>
     <div class="w-48 p-8 mb-5 bg-white rounded-lg shadow-md">
         <!-- Album Cover -->
-        <img src="https://telegra.ph/file/2acfcad8d39e49d95addd.jpg" alt="idk - Highvyn, Taylor Shin"
+        <img :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/'+user.userPicture.value" alt=""
             class="w-32 h-32 mx-auto mb-4 rounded-full shadow-lg shadow-teal-50">
         <!-- Song Title -->
         <h2 class="text-xl font-semibold text-center">{{ props.user.nickname.value }}</h2>

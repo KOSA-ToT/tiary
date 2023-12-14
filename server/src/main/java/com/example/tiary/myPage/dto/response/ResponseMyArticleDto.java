@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @ToString
@@ -16,5 +17,5 @@ public class ResponseMyArticleDto {
     private String content;
     private LocalDateTime createdAt;
     private String categoryName;
-
+    private String imgUrl;
 }

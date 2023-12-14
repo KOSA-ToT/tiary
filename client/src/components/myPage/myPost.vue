@@ -4,20 +4,25 @@
         <!-- Section: Design Block -->
         <section class="mb-32 text-center md:text-left">
             <h2 class="mb-12 text-lg font-bold text-zinc-600">작성글</h2>
-
-            <div class="flex flex-wrap mb-6" v-for="post in postList">
-                <input type="checkbox" :id="'react-option-' + post.id">
-                    <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
-                        <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
-                            data-te-ripple-init data-te-ripple-color="light">
-                            <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/018.jpg" class="w-full" alt="Louvre" />
-                            <a href="#!">
-                                <div
-                                    class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
-                                </div>
-                            </a>
-                        </div>
+            <button @click="deleteSelected"
+                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">삭제</button>
+            <button @click="selectAll"
+                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">전체
+                선택</button>
+            <div class="flex flex-wrap mb-6" v-for="post in postList" :key="post.id">
+                <input type="checkbox" :id="'react-option-' + post.id" :checked="allChecked" @change="handleCheckboxChange(post.id)">
+                <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
+                    <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
+                        data-te-ripple-init data-te-ripple-color="light">
+                        <img :src="post.imgUrl" class="w-full" alt="" v-if="post.imgUrl" />
+                        <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/018.jpg" class="w-full" alt="" v-else />
+                        <a href="#!">
+                            <div
+                                class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
+                            </div>
+                        </a>
                     </div>
+                </div>
                 <div class="w-full px-3 mb-6 mr-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-9/12 xl:w-7/12">
                     <h5 class="mb-3 text-lg font-bold">{{ post.title }}</h5>
                     <div
@@ -182,6 +187,7 @@
             </div>
         </section>
         <!-- Section: Design Block -->
+        
     </div>
     <!-- Container for demo purpose -->
 </template>
@@ -192,6 +198,7 @@ import { useRoute, useRouter } from 'vue-router';
 const postList = ref([]);
 const userId = ref();
 const Url = ref('');
+const allChecked = ref(false);
 const props = defineProps({
     user: {
         type: Object,
@@ -265,6 +272,30 @@ const formatCreatedAt = (createdAt) => {
         `${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초`;
 
     return formattedDate;
+};
+const deleteSelected = () => {
+    // 선택한 게시물의 ID를 서버에 전송
+    axios.delete('/{article-id}/{comment-id}', { selectedPosts: selectedPosts.value })
+        .then((response) => {
+            console.log('삭제 요청이 성공했습니다.');
+            // 성공적으로 서버에서 응답을 받으면 선택한 게시물 목록에서 제거
+            postList.value = postList.value.filter(post => !selectedPosts.value.includes(post.id));
+            // 선택한 게시물 배열 초기화
+            selectedPosts.value = [];
+        })
+        .catch((error) => {
+            console.error('삭제 요청 중 오류가 발생했습니다.', error);
+        });
+}; // 나중에 수정..
+
+const selectAll = () => {
+  allChecked.value = !allChecked.value;
+  // 전체 선택 상태에 따라 postList의 각 항목의 선택 상태를 업데이트
+  postList.value.forEach(post => (post.selected = allChecked.value));
+};
+const handleCheckboxChange = (postId) => {
+  // 개별 체크박스 상태 변경에 대한 로직 추가
+  // postId를 이용하여 해당 포스트의 선택 여부를 처리
 };
 onMounted(() => {
     // userId.value = props.user.id.value;

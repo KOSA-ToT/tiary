@@ -52,21 +52,29 @@
                 <div class="pl-3 col-span-full">
                     <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">프로필 이미지</label>
                     <div class="flex items-center mt-2 gap-x-3">
-                        <input type="file" @change="handleFileChange" style="display: none" ref="fileInput" />
-                        <div @click="$refs.fileInput.click()">
-                            <svg v-if="!previewImage" class="w-12 h-12 text-gray-300 cursor-pointer" viewBox="0 0 24 24"
-                                fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
+                        <form enctype="multipart/form-data" id="profileImgFile">
+                            <input type="file" @change="handleFileChange" style="display: none" ref="fileInput" />
+                            <div @click="$refs.fileInput.click()">
+                                <svg v-if="!previewImage && user.userPicture.value == null"
+                                    class="w-12 h-12 text-gray-300 cursor-pointer" viewBox="0 0 24 24" fill="currentColor"
+                                    aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                        d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
 
-                            <!-- 이미지 미리보기 -->
-                            <img v-else :src="previewImage" alt="Preview"
-                                class="w-12 h-12 text-gray-300 rounded-full cursor-pointer" style="object-fit: cover;" />
-                        </div>
-                        <button type="button" @click="changeProfileImg"
-                            class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">변경하기</button>
+                                <!-- 이미지 미리보기 -->
+                                <img v-else-if="previewImage" :src="previewImage" alt="Preview"
+                                    class="w-12 h-12 text-gray-300 rounded-full cursor-pointer"
+                                    style="object-fit: cover;" />
+                                <img v-else-if="!previewImage && user.userPicture.value != null"
+                                    :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + user.userPicture.value"
+                                    alt="" class="w-12 h-12 text-gray-300 rounded-full cursor-pointer"
+                                    style="object-fit: cover;" />
+                            </div>
+                            <button type="button" @click="changeProfileImg"
+                                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">변경하기</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -204,27 +212,32 @@ async function handleWithdrawal() {
     console.log('클릭 이벤트 발생!');
     router.push("/");
 };
+
 async function changeProfileImg() {
+    const profileImgForm = document.querySelector("#profileImgFile");
+    const formData = new FormData();
+
+    formData.append("profileImg", profileImgForm[0].files[0]);
+    if (profileImgForm[0].files[0] == null) {
+        alert("선택된 이미지가 없습니다.");
+        return false;
+    }
+
     await axios
-        .patch("http://localhost:8088/users/1/uploadProfileImg", {
-            nickname: props.user.nickname.value,
+        .post("http://localhost:8088/users/1/uploadProfileImg", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         })
         .then((response) => {
-            // isChangedNickname.value = true;
-            // // changedNickName.value = response.data.nickname;
-            // // console.log(changedNickName.value);
-            // if (response.status === 205) {
-            //     msgNickname.value = "변경되었습니다.";
-            // }
+            console.log("업로드 완료");
+            // props.user.profileImgUrl.value = "profile" + response.data.profileImgUrl;
+            location.reload();
         })
-        .catch(error => {
-            // if (error.response && error.response.status === 409) {
-            //     isChangedNickname.value = true;
-            //     msgNickname.value = "이미 있는 닉네임입니다.";
-            // }
+        .catch((error) => {
+            alert(error.data);
         });
-};
-
+}
 
 // 파일 선택 이벤트 핸들러
 const handleFileChange = (event) => {

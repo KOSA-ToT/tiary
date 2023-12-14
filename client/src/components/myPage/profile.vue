@@ -6,7 +6,7 @@
 			</h1>
 		</div>
 		<div class="flex px-4 py-6 max-w-7xl sm:px-6 lg:px-8 lg:block md:block ">
-			<img class="w-24 h-24 rounded-full shadow-lg" src="https://telegra.ph/file/2acfcad8d39e49d95addd.jpg" alt="">
+			<img class="w-24 h-24 rounded-full shadow-lg" :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/'+User.userPicture.value" alt="">
 		</div>
 	</div>
 	<div class="flex mx-64 min-h-screen h-[calc(100%-1rem)] w-screen pt-10">

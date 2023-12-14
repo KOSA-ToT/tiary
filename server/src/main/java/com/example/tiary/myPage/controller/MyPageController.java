@@ -7,6 +7,9 @@ import com.example.tiary.myPage.service.SubscribeService;
 import com.example.tiary.myPage.service.UserService;
 import com.example.tiary.users.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,17 @@ public class MyPageController {
         }
     }
 
+//    //내 글 보기
+//    @GetMapping("/{userId}/posts")
+//    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId,Pageable pageable){
+//        try{
+//            Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
+//            return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
+//        }catch(Exception e){
+//            log.error(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
+//        }
+//    }
     //내 글 보기
     @GetMapping("/{userId}/posts")
     public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
@@ -54,7 +68,6 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
         }
     }
-
     //내 댓글 보기
     @GetMapping("/{userId}/comments")
     public ResponseEntity viewMyComments(@PathVariable("userId") Long userId){
@@ -128,14 +141,28 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("탈퇴에 실패했습니다.");
         }
     }
+//    //프로필 이미지 등록
+//    @PostMapping(value = "/{userId}/uploadProfileImg", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity uploadProfilImg(@PathVariable("userId") Long userId,
+//                                          @RequestParam(value="profileImg") MultipartFile imgFile,
+//                                          @AuthenticationPrincipal UserDto user) throws
+////        IOException {
+////            return new ResponseEntity<>(userService.uploadProfileImg(user.getUsers().getId(), imgFile),
+////                    HttpStatus.CREATED);
+//        IOException {
+//            return new ResponseEntity<>(userService.uploadProfileImg(userId, imgFile),
+//                    HttpStatus.CREATED);
+//    }
     //프로필 이미지 등록
-    @PostMapping(value = "/{userId}/uploadProfileImg", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity uploadProfilImg(@PathVariable("userId") Integer userId,
-                                          @RequestParam(value="profileImg") MultipartFile imgFile,
-                                          @AuthenticationPrincipal UserDto user) throws
-        IOException {
-            return new ResponseEntity<>(userService.uploadProfileImg(user.getUsers().getId(), imgFile),
-                    HttpStatus.CREATED);
+    @PostMapping(value = "/{userId}/uploadProfileImg", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity uploadProfilImg(@PathVariable("userId") Long userId,
+                                          @RequestParam(value="profileImg") MultipartFile imgFile) throws
+    //        IOException {
+    //            return new ResponseEntity<>(userService.uploadProfileImg(user.getUsers().getId(), imgFile),
+    //                    HttpStatus.CREATED);
+            IOException {
+        return new ResponseEntity<>(userService.uploadProfileImg(userId, imgFile),
+                HttpStatus.RESET_CONTENT);
     }
 
     //구독하기
