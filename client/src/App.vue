@@ -21,7 +21,7 @@ watch(
 </script>
 <style scoped>
 .dark {
-  background-color: #F2F2F2;
+  background-color: #ffffff;
   color: #000000;
 }
 </style>
