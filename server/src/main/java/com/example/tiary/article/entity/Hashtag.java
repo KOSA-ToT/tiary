@@ -2,6 +2,7 @@ package com.example.tiary.article.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,4 +40,18 @@ public class Hashtag {
 	public static Hashtag of(String hashtagName) {
 		return new Hashtag(null, hashtagName, null);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Hashtag hashtag = (Hashtag) o;
+		return Objects.equals(hashtagName, hashtag.hashtagName);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(hashtagName);
+	}
+
 }
