@@ -22,7 +22,7 @@ public class CategoryController {
 	}
 
 	@GetMapping
-	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "category" , required = false) String categoryCode) {
+	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "categoryCode" , required = false) String categoryCode) {
 		if (categoryCode != null) {
 			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
 		}

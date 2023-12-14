@@ -20,7 +20,7 @@
                 </div>
                 <span>
                   <span class="ico_dot"></span>
-                  <span class="publish_time">{{ dateFormat.formatCreatedAt(item.createdAt) }}</span>
+                  <span class="publish_time">{{ item.createdAt ? dateFormat.formatCreatedAt(item.createdAt) : 'No Date Available' }}</span>
                   <span class="ico_dot"></span>
                   <span class="ico_by">by</span>
                   <span class="name_txt">{{ item.createdBy }}</span>
