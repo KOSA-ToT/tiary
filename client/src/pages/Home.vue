@@ -1,6 +1,7 @@
 <template>
-    <button @click="openModal('로그인')">로그인 버튼</button>
-    <button @click="openModal('회원가입')">회원가입 버튼</button>
+    <button @click="openModal('로그인')">로그인</button>&nbsp;
+    <button @click="openModal('회원가입')">회원가입</button>&nbsp;
+    <button @click="logout()">로그아웃</button>
   <div :class="{ dark: isDarkMode, light: !isDarkMode }">
     <Slider></Slider>
     <Category :categories="categories"></Category>
@@ -18,8 +19,6 @@
 </template>
 
 <script setup>
-import {ref } from 'vue'
-
 import Slider from '@/components/Slider.vue'
 import Footer from '@/components/Footer.vue'
 import Thumbnails from '@/components/Thumbnails.vue'
@@ -37,9 +36,15 @@ const userVars = ref({
     isShowModal: false
 })
 
-function openModal(tasks) {
+function openModal(tasks) { 
     userVars.value.task = tasks
     userVars.value.isShowModal = true;
+}
+
+function logout() {
+  if(confirm("로그아웃 하시겠습니까?")) {
+    localStorage.removeItem('authorization');
+  }
 }
 
 const categories = ref([])
