@@ -61,7 +61,11 @@ async function getCommentList() {
   } catch (err) {
     console.log(err);
   }
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> origin/dev
 </script>
 
 <style scoped></style>
