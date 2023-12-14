@@ -35,7 +35,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users implements UserDetails {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false, length = 20, unique = true)
@@ -43,7 +43,7 @@ public class Users implements UserDetails {
 	@NotBlank(message = "이름은 필수 값입니다.")
 	private String nickname;
 
-	@Column(nullable = false, length = 60, unique = true)
+	@Column(nullable = false, length = 60,unique = true)
 	@Length(min = 1, max = 60, message = "이메일은 60자 이하여야 합니다.")
 	@NotBlank(message = "이메일은 필수 값입니다.")
 	@Email
@@ -99,19 +99,15 @@ public class Users implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-
 	public void updateEmail(String email) {
 		this.email = email;
 	}
-
 	public void updateNickname(String nickname) {
 		this.nickname = nickname;
 	}
-
 	public void updateProfileImg(String userPicture) {
 		this.userPicture = userPicture;
 	}
-
 	public void updateStatus(UserStatus userStatus) {
 		this.userStatus = userStatus;
 	}

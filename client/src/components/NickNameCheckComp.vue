@@ -24,8 +24,8 @@ import { ref } from 'vue'
 import { loginReq, nickDupCheckReq, signupReq } from '@/api/common';
 import router from '@/router';
 
-const props = defineProps(['email'])
 const nick = ref('');
+const email = ref(router.currentRoute.value.params.email);
 
 async function checkDupNick() {
   console.log(nick.value);
@@ -36,7 +36,7 @@ async function checkDupNick() {
     // 확인필요
     if(confirm(nick.value + "(으)로 가입하시겠습니까?")) {
       const signupDto = {
-        email: props.email,
+        email: email.value,
         nickname: nick.value,
       };
 
@@ -44,9 +44,8 @@ async function checkDupNick() {
         const signupResponse = await signupReq(signupDto);
         alert(signupResponse.data);
         try {
-          const loginDto = { email: props.email };
+          const loginDto = { email: email.value };
           const loginResponse = await loginReq(loginDto);
-          console.log("가입시 헤더");
           console.log(loginResponse.headers.authorization);
           localStorage.setItem('authorization', loginResponse.headers.authorization)
           router.push('/')
