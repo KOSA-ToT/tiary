@@ -51,9 +51,7 @@ public class SpringSecurityConfig {
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring()
 			.requestMatchers(new AntPathRequestMatcher("/h2/**"))
-			.requestMatchers(new AntPathRequestMatcher("/comment/guest/**"))
-			.requestMatchers(new AntPathRequestMatcher("/category/**"))
-			.requestMatchers(new AntPathRequestMatcher("/hashtag/**"));
+			.requestMatchers(new AntPathRequestMatcher("/comment/guest/**"));
 	}
 
 	@Bean

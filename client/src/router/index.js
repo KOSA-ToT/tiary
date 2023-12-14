@@ -3,9 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/pages/Home.vue'
 import ArticleTest from '@/pages/ArticleTest.vue'
 import ArticleList from '@/pages/ArticleList.vue'
-import Post from '@/pages/Post.vue'
-import ArticleCreate from '@/components/article/ArticleCreate.vue'
-import ArticleEdit from '@/components/article/ArticleEdit.vue'
+import ArticlePost from '@/components/ArticlePost.vue'
+import NickCheck from '@/pages/NickCheck.vue'
+import VerifyEmail from '@/pages/VerifyEmail.vue'
 
 const router = createRouter({
     history: createWebHistory(),

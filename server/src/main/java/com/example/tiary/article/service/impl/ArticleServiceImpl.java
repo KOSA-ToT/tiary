@@ -27,7 +27,7 @@ import com.example.tiary.category.service.CategoryService;
 import com.example.tiary.global.batch.BatchService;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
-import com.example.tiary.global.s3.service.S3UploadService;
+import com.example.tiary.global.s3.S3UploadService;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UsersRepository;
 
@@ -93,18 +93,20 @@ public class ArticleServiceImpl implements ArticleService {
 	//TODO DB 최적화 고민
 	@Transactional
 	@Override
-	public Article createArticle(Long usersId, RequestArticleDto requestArticleDto, List<String> storeNameList) throws
+	public Article createArticle(Long usersId,RequestArticleDto requestArticleDto, List<MultipartFile> multipartFiles) throws
 		IOException {
 		Users user = usersRepository.findById(usersId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
-		Article article = articleRepository.save(requestArticleDto.toEntity(category, user));
+		Article article = articleRepository.save(requestArticleDto.toEntity(category,user));
 
-		for (String storeName : storeNameList) {
+		for (MultipartFile image : multipartFiles) {
+			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+			s3UploadService.upload(image, storeName);
+
 			ArticleImage articleImage = ArticleImage.of(storeName, article);
 			articleImageRepository.save(articleImage);
 		}
-
 		hashtagService.saveHashtag(requestArticleDto, article);
 		batchService.updateRecommendationsAsync(article.getId());
 		return article;
@@ -113,16 +115,16 @@ public class ArticleServiceImpl implements ArticleService {
 	// 게시물 수정
 	@Transactional
 	@Override
-	public Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto,
-		List<MultipartFile> multipartFiles) throws IOException {
-		Users user = usersRepository.findById(usersId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+	public Article updateArticle(Long usersId,Long articleId, RequestArticleDto requestArticleDto,
+		List<MultipartFile> multipartFiles) throws
+		IOException {
+
+		Users user = usersRepository.findById(usersId).orElseThrow(()-> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 
-		if (!Objects.equals(user.getId(), article.getUsers().getId())) {
+		if(!Objects.equals(user.getId(), article.getUsers().getId()))
 			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-		}
 
 		Optional.ofNullable(requestArticleDto.getTitle()).ifPresent(article::updateTitle);
 		Optional.ofNullable(requestArticleDto.getContent()).ifPresent(article::updateContent);
@@ -132,8 +134,21 @@ public class ArticleServiceImpl implements ArticleService {
 			article.updateCategory(category);
 		}
 
-		uploadArticleImages(articleId, multipartFiles);
-		updateArticleHashtags(requestArticleDto, article);
+		List<ArticleImage> oldImage = articleImageRepository.findAllByArticleId(articleId);
+		for (ArticleImage image : oldImage) {
+			s3UploadService.deleteImage(image.getImgUrl());
+		}
+
+		for (MultipartFile image : multipartFiles) {
+			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+			s3UploadService.upload(image, storeName);
+
+			ArticleImage articleImage = ArticleImage.of(storeName, article);
+			articleImageRepository.save(articleImage);
+		}
+
+		hashtagService.removeOldHashtag(article);
+		hashtagService.updateHashtag(hashtagService.createHashtag(requestArticleDto), article);
 
 		return articleRepository.save(article);
 	}
@@ -144,37 +159,17 @@ public class ArticleServiceImpl implements ArticleService {
 	public String deleteArticle(Long articleId) {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_ALREADY_DELETE));
-		articleImageRepository.findAllByArticleId(articleId)
-			.forEach(img -> s3UploadService.deleteImage(img.getImgUrl()));
-
+		List<ArticleImage> articleImage = articleImageRepository.findAllByArticleId(articleId);
+		for (ArticleImage a : articleImage) {
+			s3UploadService.deleteImage(a.getImgUrl());
+		}
 		articleLikesService.deleteLikes(articleId);
 		articleRepository.delete(article);
 		return "삭제 완료";
 	}
 
 	@Override
-	public int updateView(Long articleId) {
+	public int updateView(Long articleId){
 		return articleRepository.updateViews(articleId);
-	}
-
-	private void uploadArticleImages(Long articleId, List<MultipartFile> multipartFiles) throws IOException {
-		List<ArticleImage> oldImage = articleImageRepository.findAllByArticleId(articleId);
-		for (ArticleImage image : oldImage) {
-			s3UploadService.deleteImage(image.getImgUrl());
-		}
-
-		for (MultipartFile image : multipartFiles) {
-			String storeName = UUID.randomUUID() + "-" + image.getOriginalFilename();
-			s3UploadService.upload(image, storeName);
-
-			ArticleImage articleImage = ArticleImage.of(storeName, articleRepository.findById(articleId)
-				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND)));
-			articleImageRepository.save(articleImage);
-		}
-	}
-
-	private void updateArticleHashtags(RequestArticleDto requestArticleDto, Article article) {
-		hashtagService.removeOldHashtag(article);
-		hashtagService.updateHashtag(hashtagService.createHashtag(requestArticleDto), article);
 	}
 }
