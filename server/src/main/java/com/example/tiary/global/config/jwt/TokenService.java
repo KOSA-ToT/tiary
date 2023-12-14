@@ -32,7 +32,7 @@ public class TokenService {
 			.sign(Algorithm.HMAC512(secretKey));
 	}
 
-	public String validateAndExtractSubjectFromToken(String token) {
+	public String validateAndExtractEmailFromToken(String token) {
 		try {
 			return JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token).getSubject();
 		} catch (TokenExpiredException e) {
