@@ -17,16 +17,19 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByEmail(String email);
 
     //내 글 보기
-    @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseMyArticleDto(a.title, a.content) " +
+    @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseMyArticleDto(a.title, a.category.id, a.content, a.createdAt, c.categoryName, ai.imgUrl) " +
             "FROM Article a " +
             "JOIN Users u ON a.createdBy = u.nickname " +
+            "JOIN Category c ON a.category.id = c.id " +
+            "LEFT JOIN ArticleImage ai ON a.id = ai.article.id " +  // LEFT JOIN 사용
             "WHERE u.nickname = (SELECT u.nickname FROM Users u WHERE u.id = :userId)")
     List<ResponseMyArticleDto> listMyArticle(@Param("userId") Long userId);
 
     //내 댓글 보기
-    @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseMyCommentDto(c.article.id, c.content) " +
+    @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseMyCommentDto(c.article.id, c.article.title, c.content, c.createdAt) " +
             "FROM Comment c " +
             "JOIN Users u ON c.createdBy = u.nickname " +
+            "JOIN Article a ON c.article.id = a.id " +  // 추가: Article 테이블 조인
             "WHERE u.nickname = (SELECT u.nickname FROM Users u WHERE u.id = :userId)")
     List<ResponseMyCommentDto> listMyComment(@Param("userId") Long userId);
 }
