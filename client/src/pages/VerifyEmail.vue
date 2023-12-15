@@ -4,6 +4,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import { emailAuthResultReq, loginReq } from '@/api/common'
+import { useAuthStore } from '@/stores/auth';
 import router from '@/router';
 
 const task = ref('');
@@ -32,12 +33,12 @@ async function getVerified(key, task) {
         const loginDto = { email: response.data.email };
           const loginResponse = await loginReq(loginDto);
           localStorage.setItem('Authorization', loginResponse.headers.authorization)
+          useAuthStore.login();
           router.push('/');
       } catch (error) { // 회원정보 없으니 회원가입
         if(task === '회원가입') {
           router.push({ name: 'Nickcheck', params: { email: response.data.email } });
         }
-        console.log(error.response.data.error)
       }
 
   } catch (error) {

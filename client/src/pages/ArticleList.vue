@@ -1,31 +1,39 @@
 <template>
+  <Header></Header>
   <div>
     <div class="grid grid-cols-9 gap-1">
       <div class="col-start-2 col-end-7">
         <ul class="grid grid-cols-1 xl:grid-cols-1 gap-y-10 gap-x-6 items-start p-8">
           <li v-for="item in getArticle" :key="item.id"
-            class="relative flex flex-col sm:flex-row xl:flex-row items-start">
-            <router-link :to="{ name: 'Post', params: { articleId: item.id } }">
-              <img v-if="item.imageSrc" :src="item.imageSrc" alt=""
-                class="mb-6 shadow-md rounded-lg bg-slate-50 w-full sm:w-[17rem] sm:mb-0 xl:mb-6 xl:w-35%" width="1216"
-                height="640">
-              <div class="order-1 sm:ml-6 xl:ml-15">
+            class="relative flex flex-col sm:flex-row xl:flex-col items-start">
+            <router-link :to="{ name: 'Post', params: { articleId: item.id } }" class="flex w-full">
+              <!-- 왼쪽 묶음 -->
+              <div class="flex flex-col w-full">
+                <!-- 제목 -->
                 <h3 class="mb-1 text-slate-900 font-semibold dark:text-slate-200">
                   <span class="mb-1 block text-xl mb-3 leading-6 text-black">{{ item.title || 'No Title Available'
                   }}</span>
                 </h3>
-                <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark">
-                  <!-- 사용자 입력 HTML이 그대로 렌더링되지 않도록 v-html 디렉티브 사용 -->
-                  <p class="mb-10" v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
+                <!-- 본문 -->
+                <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6">
+                  <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
                 </div>
-                <span>
+                <!-- 메타데이터 -->
+                <div>
                   <span class="ico_dot"></span>
                   <span class="publish_time">{{ item.createdAt ? dateFormat.formatCreatedAt(item.createdAt) : 'No Date Available' }}</span>
                   <span class="ico_dot"></span>
                   <span class="ico_by">by</span>
                   <span class="name_txt">{{ item.createdBy }}</span>
-                </span>
+                </div>
               </div>
+              <!-- 오른쪽 이미지 -->
+              <div class="ml-6">
+                <img v-if="item.imgPath && item.imgPath.length > 0" :src="getRandomImage(item.imgPath)" alt=""
+                  class="shadow-md rounded-lg bg-slate-50 w-250 h-250 xl:w-[250px] xl:h-[250px] object-contain"
+                  width="250" height="250" />
+              </div>
+
             </router-link>
           </li>
         </ul>
@@ -44,15 +52,12 @@
   <Footer />
 </template>
 
-
-
 <script setup>
+import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js'
-
-import router from '@/router';
 
 const { categoryCode } = defineProps(['categoryCode'])
 const getArticle = ref([]);
@@ -69,6 +74,7 @@ async function fetchList(e) {
   const data = (await response).data;
 
   getArticle.value = data;
+  console.log(getArticle.value);
 }
 
 async function fetchHashtag(e) {
@@ -84,6 +90,13 @@ async function fetchHashtag(e) {
 function sanitizeHTML(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   return doc.body.textContent || "";
+}
+
+// getRandomImage 함수 정의
+function getRandomImage(imgPathArray) {
+  // 랜덤한 이미지 선택
+  const randomIndex = Math.floor(Math.random() * imgPathArray.length);
+  return imgPathArray[randomIndex];
 }
 </script>
 
@@ -120,4 +133,5 @@ function sanitizeHTML(html) {
   font-size: 12px;
   overflow: hidden;
   padding-top: 20px;
-}</style>
+}
+</style>

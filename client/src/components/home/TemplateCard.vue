@@ -7,7 +7,7 @@
           <div>
             <div class="box">
               <div class="image fit">
-                <img src="../assets/images/pic01.jpg" alt="" width="600" height="300" />
+                <img src="/images/dog.jpg" alt="" width="600" height="300" />
               </div>
               <div class="content">
                 <header class="align-center">
@@ -30,7 +30,7 @@
           <div>
             <div class="box">
               <div class="image fit">
-                <img src="../assets/images/pic03.jpg" alt="" width="600" height="300" />
+                <img src="/images/dog.jpg" alt="" width="600" height="300" />
               </div>
               <div class="content">
                 <header class="align-center">

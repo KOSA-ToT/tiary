@@ -54,30 +54,15 @@ import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
-
-const props = defineProps(['modelValue']);
-
-const mode = ref('create');
-
 const emit = defineEmits(['update:modelValue']);
 const editor = ref("");
 const editorValid = ref("");
-const formData = new FormData();
 const images = [];
 
 //article
 const title = ref("");
 const hashtag = ref("");
 const testHtml = ref("");
-
-
-//article-update
-watch(
-  () => props.modelValue,
-  (newModelValue, oldModelValue) => {
-    console.log('modelValue changed:', newModelValue);
-  }
-);
 
 //category
 const categories = ref([]);
@@ -97,19 +82,21 @@ onMounted(async () => {
     initialEditType: 'wysiwyg',
     plugins: [colorSyntax, codeSyntaxHighlight],
     hooks: {
-      addImageBlobHook(blob, callback) {
-        formData.append('images', blob)
+      async addImageBlobHook(blob, callback) {
+        const formData = new FormData();
+        formData.append('images', blob);
 
-        const response = axios.post('http://localhost:8088/images', formData)
-          .then((response) => {
-            const dataMap = new Map(Object.entries(response.data))
-            dataMap.forEach((value) => {
-              callback(value, "img alt attribute");
-            })
-            dataMap.forEach((value, key) => {
-              images.push(key)
-            })
+        try {
+          const response = await axios.post('http://localhost:8088/images', formData);
+          // 새로운 이미지 추가
+          Object.entries(response.data).forEach(([key, value]) => {
+            console.log(response.data)
+            callback(value, "img alt attribute");
+            images.push(key);
           });
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
       }
     }
   });
@@ -138,7 +125,7 @@ function postArticle() {
     alert('에디터 내용을 입력해 주세요.');
     throw new Error('editor content is required!');
   }
-  const auth = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlkIjoxLCJleHAiOjE3MDIzNjMzNzIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20ifQ.--PQsHLQ";
+  const auth = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpZCI6MiwiZXhwIjoxNzAyNjI2MDgyLCJlbWFpbCI6InRlc3QxQGdtYWlsLmNvbSJ9.czX7PSNuX_5-owZElLn9mwCYOB6hCLx4Ydh2W6aiYursnzUQQfCK6bMxIhLmluaiuwWubKt9eEMeJsGbjAkkDA";
 
   axios.post('http://localhost:8088/article', requestArticleDto, {
     headers: {
@@ -208,5 +195,4 @@ const testValid = (e) => {
   outline: none;
   /* 포커스시 테두리 제거 */
 }
-
 </style>
