@@ -3,10 +3,10 @@
     <button @click="openModal('회원가입')">회원가입</button>&nbsp;
     <button @click="logout()">로그아웃</button>
   <div :class="{ dark: isDarkMode, light: !isDarkMode }">
+    <Sidebar></Sidebar>
     <Slider></Slider>
     <Category :categories="categories"></Category>
     <Thumbnails></Thumbnails>
-    <Band></Band>
     <Card></Card>
     <Footer></Footer>
     <UserModal
@@ -22,10 +22,10 @@
 import Slider from '@/components/Slider.vue'
 import Footer from '@/components/Footer.vue'
 import Thumbnails from '@/components/Thumbnails.vue'
-import Card from '@/components/Card.vue'
-import Band from '@/components/Band.vue'
+import Card from '@/components/home/Card.vue'
 import UserModal from '@/components/UserModal.vue'
 import Category from '@/components/Category.vue'
+import Sidebar from '@/components/Sidebar.vue'
 
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
