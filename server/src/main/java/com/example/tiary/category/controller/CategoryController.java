@@ -30,6 +30,7 @@ public class CategoryController {
 		if (categoryCode != null) {
 			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
 		}
+		List<Category> categoryList;
 		categoryList = categoryService.readCategoryList();
 		return new ResponseEntity<>(categoryList,HttpStatus.OK);
 	}
