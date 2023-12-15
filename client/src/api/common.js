@@ -23,3 +23,7 @@ export const emailDupCheckReq = async (email) => {
 export const emailAuthResultReq = async (key, task) => {
   return await instance.get("/auth/verify-email?link=" + key + "&task=" + task)
 }
+
+export const oauthTokenReq = async () => {
+  return await instance.post("/auth/oauth2/access-token");
+}
