@@ -41,6 +41,7 @@ import { onMounted, ref, watch } from 'vue';
 import axios from "axios";
 import { appStore } from '@/stores/store';
 import { storeToRefs } from 'pinia'
+import { listSubscribers, listsubscribedWriter } from '@/api/common';
 const store = appStore()
 const { dataFromChild, setDataFromChild } = store
 const props = defineProps({
@@ -50,37 +51,27 @@ const props = defineProps({
     },
 });
 const subscriberList = ref([]);
-const listSubscriber = async () => {
-    if (store.dataFromChild == '구독자') {
-        await axios.get('http://localhost:8088/users/1/subscriber')
-            .then(response => {
-                // 성공 처리
-                subscriberList.value = response.data;
-                console.log(subscriberList.value);
-                console.log("구독자 불러오기 완료");
-            })
-            .catch(error => {
-                // 에러 처리
-                console.log(error);
-            });
-    }
-    else if (store.dataFromChild == '구독작가') {
-        await axios.get('http://localhost:8088/users/1/subscribedWriter')
-            .then(response => {
-                // 성공 처리
-                subscriberList.value = response.data;
-                console.log(subscriberList.value);
-                console.log("구독 작가 불러오기 완료");
-            })
-            .catch(error => {
-                // 에러 처리
-                console.log(error);
-            });
-    }
+async function listSubscriber() {
+    try {
+        if (store.dataFromChild == '구독자') {
+            const response = await listSubscribers(props.user.id.value);
+            subscriberList.value = response.data;
+            console.log(subscriberList.value);
+            console.log("구독자 불러오기 완료");
+        }
+        else if (store.dataFromChild == '구독작가') {
+            const response = await listsubscribedWriter(props.user.id.value);
+            subscriberList.value = response.data;
+            console.log(subscriberList.value);
+            console.log("구독 작가 불러오기 완료");
+        }
 
-};
+    } catch (error) {
+        console.log(error);
+    }
+}
 const subscribe = async (userId) => {
-    await axios.get(`http://localhost:8088/users/${userId}/subscribe`)
+    await axios.get(`http://localhost:8088/users/${userId}/subscribe`) //나중에 수정
         .then(response => {
             if (response.status === 201) {
                 console.log("구독완료");

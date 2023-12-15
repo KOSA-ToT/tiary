@@ -209,8 +209,8 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </a>
-                            <a v-for="page in visiblePages" :key="page"
-                                @click="clickPage(page - 1)" :aria-current="currentPage === page - 1 ? 'page' : null"
+                            <a v-for="page in visiblePages" :key="page" @click="clickPage(page - 1)"
+                                :aria-current="currentPage === page - 1 ? 'page' : null"
                                 :class="{ 'hover:bg-commu-pagination-hover': totalPages > page - 1 }"
                                 class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 duration-200 ease-in-out ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0 page-link">
                                 {{ page }}
@@ -233,20 +233,17 @@
     <!-- Container for demo purpose -->
 </template>
 <script setup>
-import { defineProps, onMounted, ref, computed } from 'vue';
+import { defineProps, onMounted, ref, watchEffect,watch } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import { listMyPost } from '@/api/common';
 const postList = ref([]);
-const userId = ref();
-const Url = ref('');
 const allChecked = ref(false);
 const totalPages = ref();
 const currentPage = ref(0);
-const visiblePages = ref([1,2,3,4,5,6,7,8,9,10]);
-const startPage = ref();
-const endPage = ref();
-const pageSize = ref(10);
+const visiblePages = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 const pageCalculate = ref();
+
 const props = defineProps({
     user: {
         type: Object,
@@ -258,108 +255,37 @@ const Post = {
     content: ref()
 }
 
-// const { user } = props;
-// const user = (props) => {
-//   // props.user는 부모 컴포넌트에서 전달한 객체
-//   const userId = ref(props.user.id);
-//   const userNickname = ref(props.user.nickname);
-//   // ... (다른 프로퍼티도 필요에 따라 추가)
-
-//   onMounted(() => {
-//     // 컴포넌트가 마운트된 후 실행되는 로직
-//     console.log('UserComponent 마운트됨');
-//     console.log('userId:', userId.value);
-//     console.log('userNickname:', userNickname.value);
-//     // ... (다른 프로퍼티도 필요에 따라 출력)
-//   });
-// };
-// Url.value = `http://localhost:8088/${userId.value}/posts`;
-// async function listMyPost() {
-//     userId.value = props.user.id.value;
-//     console.log("props.user.id : " + props.user.nickname.value);
-//     console.log("props.user : " + props.user);
-//     try {
-//         const response = await axios.get(`http://localhost:8088/users/${userId}/posts`);
-//         console.log("userId : " + userId);
-//         if (response.status === 200) {
-//             postList.value = response.data;
-//             console.log(postList.value);
-//         }
-//     } catch (error) {
-//         // 에러 처리
-//         console.log(error);
-//     }
-// }
-// const listMyPost = async () => {
-//     // console.log(props.user.id.value);
-//     // console.log(props.user);
-//     // userId.value = props.user.id.value;
-//     await axios.get(`http://localhost:8088/users/1/posts`)
-//         .then(response => {
-//             // 성공 처리
-//             // subscriberList.value = response.data;
-//             // console.log(subscriberList.value);
-//             // console.log("Url.value : "+Url.value);
-//             postList.value = response.data;
-//             // Post.title.value = data.title;
-//             // Post.content.value = data.content;
-//             // console.log("response.data : "+response.data);
-//             console.log("불러오기 완료" + postList.value);
-//         })
-//         .catch(error => {
-//             // 에러 처리
-//             console.log(error);
-//         });
-
-// };
-const listMyPost = async () => {
-    // // 현재 주소 가져오기
-    // const currentUrl = window.location.href;
-    // console.log("currentUrl : " + currentUrl);
-    // // 현재 페이지의 경로만 가져오기
-    // const currentPath = window.location.pathname;
-    // console.log("currentPath : " + currentPath);
-    // // 현재 페이지의 경로에 페이지 쿼리 파라미터 추가
-    // const urlWithPage = new URL(`http://localhost:8088/users/1/posts`);
-    // urlWithPage.searchParams.set('page', currentPage.value);
-    // console.log(urlWithPage);
-
-    // 쿼리 파라미터가 추가된 주소로 요청 보내기
-    pageCalculate.value=Math.floor((currentPage.value)/10);
-    console.log(pageCalculate.value);
-    pageCalculate.value=(pageCalculate.value)*10;
-    // startPage.value = Math.floor((currentPage.value - 1) / pageSize.value) * pageSize.value + 1;
-    // endPage.value = Math.min(startPage.value + pageSize.value - 1, totalPages.value);
-
-    visiblePages.value = Array.from({ length: 10 }, (_, index) => pageCalculate.value + index + 1);
-
-    axios.get(`http://localhost:8088/users/1/posts?page=${currentPage.value}`)
-        .then(response => {
-            postList.value = response.data.content;
-            totalPages.value = response.data.totalPages;
-            console.log("response.data : " + response.data.content);
-            console.log("response.data.totalPages : " + response.data.totalPages);
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
+async function listMyPosts() {
+    try {
+        pageCalculate.value = Math.floor((currentPage.value) / 10);
+        console.log(pageCalculate.value);
+        pageCalculate.value = (pageCalculate.value) * 10;
+        visiblePages.value = Array.from({ length: 10 }, (_, index) => pageCalculate.value + index + 1);
+        const response = await listMyPost(props.user.id.value, currentPage.value);
+        postList.value = response.data.content;
+        totalPages.value = response.data.totalPages;
+        console.log("response.data : " + response.data.content);
+        console.log("response.data.totalPages : " + response.data.totalPages);
+    } catch (error) {
+        console.log(error);
+    }
 }
 function prevPage() {
     if (currentPage.value > 0) {
         currentPage.value -= 1;
-        listMyPost();
+        listMyPosts();
     }
 }
 function nextPage() {
     if (currentPage.value < totalPages.value - 1) {
         currentPage.value += 1;
-        listMyPost();
+        listMyPosts();
     }
 }
 function clickPage(num) {
     if (num < totalPages.value) {
         currentPage.value = num;
-        listMyPost();
+        listMyPosts();
     }
 }
 const formatCreatedAt = (createdAt) => {
@@ -398,8 +324,10 @@ const handleCheckboxChange = () => {
     // postId를 이용하여 해당 포스트의 선택 여부를 처리
 };
 onMounted(() => {
-    // userId.value = props.user.id.value;
-    listMyPost();
+    // listMyPosts();
+});
+watch(() => props.user.id.value, () => {
+    listMyPosts();
 });
 </script>
 <style>

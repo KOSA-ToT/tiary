@@ -49,6 +49,7 @@
 import { defineProps, onMounted, ref, computed, reactive } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import { listMyComment } from '@/api/common';
 const commentList = ref([]);
 const userId = ref();
 const Url = ref('');
@@ -61,19 +62,14 @@ const props = defineProps({
     },
 });
 
-const listMyComment = async () => {
-    await axios.get(`http://localhost:8088/users/1/comments`)
-        .then(response => {
-            // 성공 처리
-            commentList.value = response.data;
-            console.log("불러오기 완료" + commentList.value);
-        })
-        .catch(error => {
-            // 에러 처리
-            console.log(error);
-        });
-
-};
+async function listMyComments() {
+    try {
+        const response = await listMyComment(props.user.id.value);
+        commentList.value = response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
 const selectAll = () => {
     // 전체 선택 버튼 클릭 시 모든 체크박스의 상태를 변경
     allChecked.value = !allChecked.value;
@@ -90,6 +86,9 @@ const formatCreatedAt = (createdAt) => {
     return formattedDate;
 };
 onMounted(() => {
-    listMyComment();
+    // listMyComments();
+});
+watch(() => props.user.id.value, () => {
+    listMyComments();
 });
 </script>

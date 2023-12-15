@@ -3,30 +3,7 @@
         <div class="pb-12 border-b border-gray-900/10">
             <h2 class="text-base font-semibold leading-7 text-gray-900">내 정보</h2>
             <div class="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="pl-3 sm:col-span-4">
-                    <label for="email-address-icon"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">이메일</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                                <path
-                                    d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
-                                <path
-                                    d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
-                            </svg>
-                        </div>
-                        <div class="flex">
-                            <input type="text" id="email-address-icon"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="이메일을 입력해주세요" v-model="props.user.email.value">
-                            <button type="button" @click="editEmail()"
-                                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">변경</button>
-                        </div>
-                        <p v-if="isChanged">{{ msgEmail }}</p>
-                    </div>
-
-                </div>
+                
                 <div class="pl-3 sm:col-span-4">
                     <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">아이디</label>
                     <div class="relative">
@@ -38,11 +15,10 @@
                             </svg>
                         </div>
                         <div class="flex mt-2">
-
                             <input type="text" name="first-name" id="first-name" autocomplete="given-name"
                                 class="block py-2 pl-10 text-gray-600 border-0 rounded-md shadow-sm w-80 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 v-model="props.user.nickname.value" />
-                            <button type="button" @click="editNickname()"
+                            <button type="button" @click="editNickName()"
                                 class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">변경</button>
 
                         </div>
@@ -129,9 +105,10 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref,watch } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import { editNickname, handleWithDrawal, changeProfileImage } from '@/api/common';
 
 const props = defineProps({
     user: {
@@ -148,66 +125,30 @@ const modalOpen = ref(false);
 const route = useRoute();
 const router = useRouter();
 const previewImage = ref(null);
-
-async function editEmail() {
-    await axios
-        .patch("http://localhost:8088/users/1/updateEmail", {
-            email: props.user.email.value,
-        })
-        .then((response) => {
-            isChanged.value = true;
-            // changedNickName.value = response.data.nickname;
-            // console.log(changedNickName.value);
-            if (response.status === 205) {
-                msgEmail.value = "변경되었습니다.";
-            }
-            console.log("status: " + response.status);
-            console.log("data : " + response.data);
-            console.log("isChanged: " + isChanged.value);
-        })
-        .catch(error => {
-            // alert(error);
-            if (error.response && error.response.status === 409) {
-                isChanged.value = true;
-                msgEmail.value = "이미 있는 이메일입니다.";
-            }
-        });
-}
-async function editNickname() {
-    await axios
-        .patch("http://localhost:8088/users/1/updateNickname", {
-            nickname: props.user.nickname.value,
-        })
-        .then((response) => {
-            isChangedNickname.value = true;
-            // changedNickName.value = response.data.nickname;
-            // console.log(changedNickName.value);
-            if (response.status === 205) {
+async function editNickName() {
+    try {
+        const response = await editNickname(props.user.id.value, {nickname: props.user.nickname.value});
+        isChangedNickname.value = true;
+        if (response.status === 205) {
                 msgNickname.value = "변경되었습니다.";
             }
-        })
-        .catch(error => {
-            if (error.response && error.response.status === 409) {
+    } catch (error) {
+        console.log("에러 : "+error);
+        if (error.response && error.response.status === 409) {
                 isChangedNickname.value = true;
                 msgNickname.value = "이미 있는 닉네임입니다.";
             }
-        });
+    }
 }
 async function handleWithdrawal() {
-    await axios
-        .patch("http://localhost:8088/users/1/inactive", {
-            nickname: props.user.nickname.value,
-        })
-        .then((response) => {
-            console.log("inactive");
-            modalOpen.value = false;
-        })
-        .catch(error => {
-            console.log("에러");
-        }
-        );
-    console.log('클릭 이벤트 발생!');
-    router.push("/");
+    try {
+        const response = await handleWithDrawal(props.user.id.value, {nickname: props.user.nickname.value});
+        modalOpen.value = false;
+        router.push("/");
+    } catch (error) {
+        console.log("에러 : "+error);
+            
+    }
 };
 
 async function changeProfileImg() {
@@ -219,23 +160,15 @@ async function changeProfileImg() {
         alert("선택된 이미지가 없습니다.");
         return false;
     }
-
-    await axios
-        .post("http://localhost:8088/users/1/uploadProfileImg", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        })
-        .then((response) => {
-            console.log("업로드 완료");
-            // props.user.profileImgUrl.value = "profile" + response.data.profileImgUrl;
-            location.reload();
-        })
-        .catch((error) => {
-            alert(error.data);
-        });
+    try {
+        const response = await changeProfileImage(props.user.id.value, formData);
+        console.log("업로드 완료");
+        location.reload();
+    } catch (error) {
+        console.log("에러 : "+error);
+            
+    }
 }
-
 // 파일 선택 이벤트 핸들러
 const handleFileChange = (event) => {
     const file = event.target.files[0];
