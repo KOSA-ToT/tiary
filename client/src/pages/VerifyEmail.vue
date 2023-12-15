@@ -33,7 +33,7 @@ async function getVerified(key, task) {
         const loginDto = { email: response.data.email };
           const loginResponse = await loginReq(loginDto);
           localStorage.setItem('Authorization', loginResponse.headers.authorization)
-          useAuthStore.login();
+          useAuthStore().login();
           router.push('/');
       } catch (error) { // 회원정보 없으니 회원가입
         if(task === '회원가입') {
