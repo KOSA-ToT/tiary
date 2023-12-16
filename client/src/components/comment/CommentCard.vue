@@ -43,6 +43,7 @@
                 edit&nbsp;&nbsp;
               </span>
               <span
+              
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="deleteComment"
               >
@@ -100,9 +101,10 @@ import ReplyCommentCard from "../comment/ReplyCommentCard.vue";
 import CommentPasswordModal from "../comment/CommentPasswordModal.vue";
 import CommentUpdateModal from "../comment/CommentUpdateModal.vue";
 import ReplyInputModal from "./ReplyInputModal.vue";
-import router from "@/router";
+import { commentPasswordConfirm } from "@/api/common";
 
 const { commentData } = defineProps(["commentData"]);
+let user = localStorage.getItem("Authorization");
 
 let commentRequestDTO = ref({
   content: "",
@@ -136,28 +138,47 @@ function closeModal() {
 }
 
 // 비밀번호 검증
-function checkPassword(password) {
+async function checkPassword(password) {
   commentRequestDTO.value.password = password;
   console.log("비밀번호", commentRequestDTO.value.password);
 
-  axios
-    .post(
-      `http://localhost:8088/comment/guest/password-confirm/${commentData.id}`,
-      commentRequestDTO.value
-    )
-    .then((response) => {
-      if (mode.value === "delete") {
-        deleteComment();
-      } else if (mode.value === "edit") {
-        closeModal();
-        openUpdateModal();
-      }
-    })
-    .catch((error) => {
-      alert("비밀번호가 일치하지 않습니다.");
+  try {
+    const passwordConfirmResponse = await commentPasswordConfirm(
+      commentRequestDTO.value,
+      commentData.id
+    );
+    console.log(passwordConfirmResponse);
+
+    if (mode.value === "delete") {
+      deleteComment();
+    } else if (mode.value === "edit") {
       closeModal();
-      console.log("Error confirming password", error);
-    });
+      openUpdateModal();
+    }
+  } catch (error) {
+    alert("비밀번호가 일치하지 않습니다.");
+    closeModal();
+    console.log("Error confirming password", error);
+  }
+
+  // axios
+  //   .post(
+  //     `http://localhost:8088/comment/guest/password-confirm/${commentData.id}`,
+  //     commentRequestDTO.value
+  //   )
+  //   .then((response) => {
+  //     if (mode.value === "delete") {
+  //       deleteComment();
+  //     } else if (mode.value === "edit") {
+  //       closeModal();
+  //       openUpdateModal();
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     alert("비밀번호가 일치하지 않습니다.");
+  //     closeModal();
+  //     console.log("Error confirming password", error);
+  //   });
 }
 
 //  댓글 수정

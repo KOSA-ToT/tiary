@@ -1,11 +1,12 @@
+<!-- 댓글 입력 창 -->
 <template>
   <div>
-    <div class="py-7 px-3 text-lg font-semibold" v-if="!userId">
+    <div class="py-7 px-3 text-lg font-semibold" v-if="!user">
       Guest Comment
     </div>
     <div class="w-full px-3 mb-2 mt-6">
       <input
-        v-if="!userId"
+        v-if="!user"
         class="bg-white rounded border border-gray-400 placeholder-gray-400 py-1 px-3 focus:bg-white font-medium focus:outline-none"
         placeholder="Password"
         type="password"
@@ -36,52 +37,74 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
+import { createUserComment, createGuestComment } from "@/api/common";
+import { useRoute } from "vue-router";
 
-// const userId = localStorage.getItem("user");
-const userId = "";
-const auth =
-  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlkIjoxLCJleHAiOjE3MDI1MzIwNjQsImVtYWlsIjoidGVzdEBnbWFpbC5jb20ifQ.daZZtA-l1q8YRI4BOt-Wct7oFKCtfTtLnB8teYB2PmInbWucnZxQp2AoBk2SJf7ABlCfqHuXZiyEgT9yIcJ6kg";
+const user = localStorage.getItem("Authorization");
+const currentRoute = useRoute();
+let articleId = currentRoute.params.articleId;
 
 const commentRequestDTO = ref({
   content: "",
   password: "",
-  commentType: userId ? "USER" : "GUEST",
+  commentType: user ? "USER" : "GUEST",
 });
 
 // 댓글등록
-function createComment() {
+async function createComment() {
   if (commentRequestDTO.value.content.trim() == "") {
     alert("댓글 내용을 입력하세요");
   } else {
     // 회원
-    if (userId) {
-      axios
-        .post(`http://localhost:8088/comment/2`, commentRequestDTO.value, {
-          headers: {
-            Authorization: auth,
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          resetInput();
-        })
-        .catch((err) => console.log(err));
+    if (user) {
+      console.log("articleId", articleId);
+      // axios
+      //   .post(`http://localhost:8088/comment/2`, commentRequestDTO.value, {
+      //     headers: {
+      //       Authorization: auth,
+      //     },
+      //   })
+      //   .then((response) => {
+      //     console.log(response);
+      //     resetInput();
+      //   })
+      //   .catch((err) => console.log(err));
+      try {
+        const createUserCommentResponse = await createUserComment(
+          commentRequestDTO.value,
+          articleId
+        );
+        console.log(createUserCommentResponse);
+        resetInput();
+      } catch (error) {
+        console.log(error);
+      }
     }
     // 비회원
     else {
       if (commentRequestDTO.value.password.trim() == "") {
         alert("비밀번호를 입력하세요");
       } else {
-        axios
-          .post(
-            `http://localhost:8088/comment/${userId ? "" : "guest"}/2`,
-            commentRequestDTO.value
-          )
-          .then((response) => {
-            console.log(response);
-            resetInput();
-          })
-          .catch((err) => console.log(err));
+        try {
+          const createGuestCommentResponse = await createGuestComment(
+            commentRequestDTO.value,
+            articleId
+          );
+          console.log(createGuestCommentResponse);
+          resetInput();
+        } catch (error) {
+          console.log(error);
+        }
+        // axios
+        //   .post(
+        //     `http://localhost:8088/comment/guest/2`,
+        //     commentRequestDTO.value
+        //   )
+        //   .then((response) => {
+        //     console.log(response);
+        //     resetInput();
+        //   })
+        //   .catch((err) => console.log(err));
       }
     }
   }

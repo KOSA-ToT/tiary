@@ -13,17 +13,10 @@
         createdAt: comment.createdAt,
         createdBy: comment.createdBy,
       }"
-      @replyToComment="handleReplyToComment"
     >
     </CommentCard>
 
     <CommentInput></CommentInput>
-    <!-- <div v-if="userId">
-      <UserCommentInput></UserCommentInput>
-    </div>
-    <div v-else>
-      <GuestCommentInput></GuestCommentInput>
-    </div> -->
   </div>
 </template>
 
@@ -31,17 +24,21 @@
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
 import CommentInput from "@/components/comment/CommentInput.vue";
+import { useRoute, useRouter } from "vue-router";
 import { onMounted, reactive, ref, watch } from "vue";
 
-let userId = sessionStorage.getItem("user");
+const currentRoute = useRoute();
+let articleId = currentRoute.params.articleId;
 
 let commentList = reactive([]);
 
 onMounted(async () => {
   await getCommentList();
   console.log(commentList.value);
+  console.log("articleId", articleId);
 });
 
+// 새로고침 안하고 바로 불러오기
 // watch(
 //   () => commentList.value,
 //   (newVal, oldVal) => {
@@ -56,16 +53,15 @@ onMounted(async () => {
 // comment 불러오기
 async function getCommentList() {
   try {
-    const response = await axios.get("http://localhost:8088/comment/2");
+    const response = await axios.get(
+      "http://localhost:8088/comment/" + articleId
+    );
     commentList.value = response.data;
+    
   } catch (err) {
     console.log(err);
   }
-<<<<<<< HEAD
 }
-=======
-};
->>>>>>> origin/dev
 </script>
 
 <style scoped></style>
