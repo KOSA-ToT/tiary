@@ -1,7 +1,7 @@
 <template>
-  <div id="default-carousel" class="relative w-full mb-20" data-carousel="slide">
+  <div id="default-carousel" class="relative w-full mb-20 mt-20" data-carousel="slide">
     <!-- Carousel wrapper -->
-    <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+    <div class="relative h-56 overflow-hidden md:h-96">
       <!-- Carousel items -->
       <div v-for="(item, index) in items" :key="index"
         :class="{ 'hidden': currentSlide !== index, 'duration-700 ease-in-out': true }" data-carousel-item>
@@ -49,10 +49,10 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const items = [
   { imageSrc: "/images/spring.jpg" },
-  { imageSrc: "/docs/images/carousel/carousel-2.svg" },
-  { imageSrc: "/docs/images/carousel/carousel-3.svg" },
-  { imageSrc: "/docs/images/carousel/carousel-4.svg" },
-  { imageSrc: "/docs/images/carousel/carousel-5.svg" },
+  { imageSrc: "/images/error.jpg" },
+  { imageSrc: "/images/logo.png" },
+  { imageSrc: "/images/dog.jpg" },
+  { imageSrc: "/images/spring.jpg" },
 ];
 
 const totalSlides = items.length;

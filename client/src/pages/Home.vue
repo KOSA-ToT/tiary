@@ -1,12 +1,10 @@
 <template>
-    <button @click="openModal('로그인')">로그인</button>&nbsp;
-    <button @click="openModal('회원가입')">회원가입</button>&nbsp;
-    <button @click="logout()">로그아웃</button>
+   
   <div :class="{ dark: isDarkMode, light: !isDarkMode }">
+    <Header :threshold="100"></Header>
     <Slider></Slider>
     <Category :categories="categories"></Category>
-    <Thumbnails></Thumbnails>
-    <Band></Band>
+    <RandomArticle :randomArticles="randomArticle"></RandomArticle>
     <Card></Card>
     <Footer></Footer>
     <UserModal
@@ -19,17 +17,16 @@
 </template>
 
 <script setup>
-import Slider from '@/components/Slider.vue'
-import Footer from '@/components/Footer.vue'
-import Thumbnails from '@/components/Thumbnails.vue'
-import Card from '@/components/Card.vue'
-import Band from '@/components/Band.vue'
-import UserModal from '@/components/UserModal.vue'
-import Category from '@/components/Category.vue'
+import Header from '@/components/Header.vue';
+import Slider from '@/components/Slider.vue';
+import Footer from '@/components/Footer.vue';
+import RandomArticle from '@/components/RandomArticle.vue';
+import Card from '@/components/home/Card.vue';
+import UserModal from '@/components/UserModal.vue';
+import Category from '@/components/Category.vue';
 
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
-
 // 유저
 const userVars = ref({
     task: '',
@@ -56,5 +53,13 @@ onMounted(async () => {
 }
 );
 
+const randomArticle = ref([])
+onMounted( async () => {
+  const response = await axios.get('http://localhost:8088/article')
+  .then((response) => {
+    randomArticle.value = response.data;
+    console.log(randomArticle.value);
+  })
+})
 </script>
 <style scoped></style>

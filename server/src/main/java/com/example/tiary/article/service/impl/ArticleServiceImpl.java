@@ -1,11 +1,13 @@
 package com.example.tiary.article.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +54,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<ResponseArticleDto> readArticleList() {
-		return articleRepository.findAll().stream().map(ResponseArticleDto::from).toList();
+		List<Article> articles = articleRepository.findAll();
+		// Article과 이미지 경로를 조합하여 ResponseArticleDto 리스트 생성
+		return getResponseArticleDtoAddImages(articles);
 	}
 
 	//게시물 단건 조회
@@ -84,9 +88,33 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode) {
-		return articleRepository.findAllByCategory_CategoryCode(categoryCode)
-			.stream().map(ResponseArticleDto::from).toList();
+		List<Article> articles = articleRepository.findAllByCategory_CategoryCode(categoryCode);
+		// Article과 이미지 경로를 조합하여 ResponseArticleDto 리스트 생성
+		return getResponseArticleDtoAddImages(articles);
+	}
+	
+	//게시물에 이미지를 더하는 메서드
+	private List<ResponseArticleDto> getResponseArticleDtoAddImages(List<Article> articles) {
+		return articles.stream()
+			.map(this::getResponseArticleDtoWithImages)
+			.toList();
+	}
 
+	private ResponseArticleDto getResponseArticleDtoWithImages(Article article) {
+		List<String> articleImgPaths = articleImageRepository.findAllByArticleId(article.getId())
+			.stream()
+			.map(this::getS3UrlForArticleImage)
+			.toList();
+
+		return ResponseArticleDto.from(article, articleImgPaths);
+	}
+
+	private String getS3UrlForArticleImage(ArticleImage articleImage) {
+		try {
+			return s3UploadService.getS3URL(articleImage.getImgUrl());
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	// 게시물 생성

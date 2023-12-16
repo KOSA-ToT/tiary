@@ -15,6 +15,7 @@ import ArticleEdit from '@/components/article/ArticleEdit.vue'
 import Post from '@/pages/Post.vue'
 import NickCheck from '@/pages/NickCheck.vue'
 import VerifyEmail from '@/pages/VerifyEmail.vue'
+import OauthCallback from '@/pages/OauthCallback.vue'
 
 
 const router = createRouter({
@@ -50,7 +51,8 @@ const router = createRouter({
         {path: '/category' ,name: 'CategoryPage', component :       ArticleList , props : (route) =>
         ({categoryCode : route.query.categoryCode})},
         {path: '/nickname-check/:email', name: 'Nickcheck', component: NickCheck},
-        {path: '/auth/verify-email', component: VerifyEmail}
+        {path: '/auth/verify-email', component: VerifyEmail},
+        {path: '/oauth/callback', component: OauthCallback},
     ],
     })
 
