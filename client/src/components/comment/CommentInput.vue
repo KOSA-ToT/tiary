@@ -56,7 +56,7 @@ function createComment() {
     // 회원
     if (userId) {
       axios
-        .post(`http://localhost:8088/comment/1014`, commentRequestDTO.value, {
+        .post(`http://localhost:8088/comment/2`, commentRequestDTO.value, {
           headers: {
             Authorization: auth,
           },
@@ -74,7 +74,7 @@ function createComment() {
       } else {
         axios
           .post(
-            `http://localhost:8088/comment/${userId ? "" : "guest"}/1014`,
+            `http://localhost:8088/comment/${userId ? "" : "guest"}/2`,
             commentRequestDTO.value
           )
           .then((response) => {

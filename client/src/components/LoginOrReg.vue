@@ -113,6 +113,7 @@ async function submitEmail(task){
             }
         }
         const emailDto = {
+            
             email: email.value,
             task: props.task
         };
