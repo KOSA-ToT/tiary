@@ -23,6 +23,7 @@
 import { ref } from 'vue'
 import { loginReq, nickDupCheckReq, signupReq } from '@/api/common';
 import router from '@/router';
+import { useAuthStore } from '@/stores/auth';
 
 const nick = ref('');
 const email = ref(router.currentRoute.value.params.email);
@@ -47,10 +48,11 @@ async function checkDupNick() {
           const loginDto = { email: email.value };
           const loginResponse = await loginReq(loginDto);
           console.log(loginResponse.headers.authorization);
-          localStorage.setItem('authorization', loginResponse.headers.authorization)
-          router.push('/')
+          localStorage.setItem('authorization', loginResponse.headers.authorization);
+          useAuthStore.login();
+          router.push('/');
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       } catch (error) {
         // 이미 가입 되었을때

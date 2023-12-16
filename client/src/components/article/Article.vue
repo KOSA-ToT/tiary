@@ -17,7 +17,8 @@
           </span>
           <span class="ico_by">By </span>
           <span>{{ article.createdBy }}</span>
-          <span v-if="authStore.isLoggedIn">
+          <!-- <span v-if="authStore.isLoggedIn"> -->
+            <span v-if="true">
             <span class="mx-2">•</span>
             <router-link :to="{ name: 'ArticleEdit', params: { id: articleId }}">수정</router-link>
             <span class="mx-2">•</span>
@@ -26,20 +27,7 @@
         </div>
       </div>
       <!-- 헤더 영역 -->
-      <nav v-if="showHeader" class="flex items-center justify-between p-4 text-white absolute top-0 w-full sticky"
-        :style="{ 'background-color': headerBackgroundVisible ? 'rgba(169, 169, 169, 0.95)' : '' }"
-        style="z-index: 1000;">
-
-        <div>
-          <router-link to="/">HOME LOGO</router-link>
-        </div>
-
-        <div class="meta text-right">
-          <span class="mx-2">•</span>
-          <!--로그인한 유저의 프로필이 뜨게 위치만 잡아둠-->
-          <span>by {{ article.createdBy }}</span>
-        </div>
-      </nav>
+      <Header :threshold="250"></Header>
     </div>
 
     <!-- 글 내용 -->
@@ -68,30 +56,24 @@
 </template>
 
 <script setup>
-import recommendations from '@/components/article/Recommendations.vue'
-import comment from '@/components/comment/Comment.vue'
+import Header from '@/components/Header.vue';
+import recommendations from '@/components/article/Recommendations.vue';
+import comment from '@/components/comment/Comment.vue';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js';
-import { useAuthStore } from '@/stores/auth';
 import router from '@/router';
 
 const { articleId } = defineProps(['articleId']);
 const article = ref(null);
-const showHeader = ref(true);
-const headerBackgroundVisible = ref(false);
+
 
 // 로그인 상태 관리
-const authStore = useAuthStore();
 
 onMounted(async () => {
   try {
     const response = await axios.get(`http://localhost:8088/article/${articleId}`);
     article.value = response.data;
-    authStore.login({
-      token: 'token',
-      currentUserName: '테스트계정'
-    });
   } catch (error) {
     console.error('글을 불러오는 데 실패했습니다:', error);
   }
@@ -128,47 +110,9 @@ const formatTimeDifference = (createdAt) => {
     return `${minutes} 분 전`;
   }
 };
-
-// 스크롤 이벤트 핸들러 등록
-onMounted(() => {
-  window.addEventListener('scroll', handleHeaderBackground);
-
-  // 컴포넌트가 제거될 때 이벤트 핸들러 제거
-  onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleHeaderBackground);
-  });
-});
-
-// 헤더 배경을 처리하는 함수
-const handleHeaderBackground = () => {
-  const scrollY = window.scrollY;
-
-  // 헤더의 위치를 확인하고 배경을 표시할지 여부를 업데이트
-  headerBackgroundVisible.value = scrollY > 250; // 48은 커버 이미지의 높이에 따라 조절할 수 있음
-};
 </script>
 
 <style scoped>
-/* Sticky 헤더를 위한 스타일 */
-nav.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  animation: fadeInDown 0.3s;
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* 추가된 스타일 */
 .bg-blue-500 {
   background-color: #3490dc;

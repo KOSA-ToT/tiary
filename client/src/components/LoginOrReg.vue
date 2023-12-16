@@ -2,7 +2,7 @@
 <div class="w-full flex-1 mt-8 ">
     <div class="flex flex-col items-center mb-5">
         <!-- Google -->
-        <button
+        <a :href="oauthGoogle"
             class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-white border text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
             <div class="p-2 rounded-full">
                 <svg class="w-4" viewBox="0 0 533.5 544.3">
@@ -23,7 +23,7 @@
             <span class="ml-4">
                 구글 계정으로 {{ task }}
             </span>
-        </button>
+        </a>
         <!-- Github -->
         <button
             class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-gray-950 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
@@ -93,6 +93,7 @@ import { emailAuthReq, emailDupCheckReq } from '@/api/common';
 const props = defineProps(['task'])
 const emits = defineEmits(['emailSent']);
 
+const oauthGoogle = import.meta.env.VITE_SERVER_URL + import.meta.env.VITE_OAUTH_GOOGLE;
 const task = ref(props.task);
 const email = ref('');
 

@@ -61,7 +61,6 @@ const props = defineProps(['articleId']);
 const emit = defineEmits(['update:modelValue']);
 const editor = ref("");
 const editorValid = ref("");
-const formData = new FormData();
 const images = [];
 
 //article
@@ -112,19 +111,21 @@ onMounted(
       initialEditType: 'wysiwyg',
       plugins: [colorSyntax, codeSyntaxHighlight],
       hooks: {
-        addImageBlobHook(blob, callback) {
-          formData.append('images', blob)
+        async addImageBlobHook(blob, callback) {
+          const formData = new FormData();
+          formData.append('images', blob);
 
-          const response = axios.post('http://localhost:8088/images', formData)
-            .then((response) => {
-              const dataMap = new Map(Object.entries(response.data))
-              dataMap.forEach((value) => {
-                callback(value, "img alt attribute");
-              })
-              dataMap.forEach((value, key) => {
-                images.push(key)
-              })
+          try {
+            const response = await axios.post('http://localhost:8088/images', formData);
+            // 새로운 이미지 추가
+            Object.entries(response.data).forEach(([key, value]) => {
+              console.log(response.data)
+              callback(value, "img alt attribute");
+              images.push(key);
             });
+          } catch (error) {
+            console.error('Error uploading image:', error);
+          }
         }
       }
     });

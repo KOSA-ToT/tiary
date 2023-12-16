@@ -4,7 +4,8 @@ const baseConfig = {
   baseURL: "http://localhost:8088", // 로컬
   headers: {
     'Content-type': 'application/json'
-  }
+  },
+  withCredentials: true,
 };
 
 const fileConfig = {
@@ -13,6 +14,7 @@ const fileConfig = {
     'Content-Type': 'multipart/form-data',
     accept: 'application/json'
   },
+  withCredentials: true,
 };
 
 export const instance = axios.create(baseConfig);

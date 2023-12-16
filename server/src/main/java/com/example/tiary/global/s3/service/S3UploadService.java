@@ -3,6 +3,7 @@ package com.example.tiary.global.s3.service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -71,13 +72,12 @@ public class S3UploadService {
 		} catch (SdkClientException e) {
 			e.printStackTrace();
 		}
-		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), "utf-8");
+		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), StandardCharsets.UTF_8);
 	}
 
 	//키 값으로 url 가져오기
 	public String getS3URL(String storeName) throws UnsupportedEncodingException {
-		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), "utf-8");
-
+		return URLDecoder.decode(amazonS3.getUrl(bucket, storeName).toString(), StandardCharsets.UTF_8);
 	}
 
 	/*  파일 이름이 이미 업로드된 파일들과 겹치지 않게 UUID를 사용한다.   */
