@@ -1,31 +1,39 @@
 <!-- Header.vue -->
 <template>
   <div>
-    <nav v-if="showHeader" class="flex items-center justify-between p-4 text-white absolute top-0 w-full sticky"
-      :style="{ 'background-color': headerBackgroundVisible ? 'rgba(255, 255, 255, 0.9)' : '', 'opacity': inSlider ? '0.8' : '1' }"
-      style="z-index: 1000; transition: background-color 0.3s ease;">
-     
+    <nav
+      v-if="showHeader"
+      class="flex items-center justify-between p-4 text-white absolute top-0 w-full sticky"
+      :style="{
+        'background-color': headerBackgroundVisible ? 'rgba(255, 255, 255, 0.8)' : '',
+        'opacity': inSlider ? '0.9' : '1'
+      }"
+      style="z-index: 1000; transition: background-color 0.3s ease;"
+    >
       <!-- 왼쪽에 사이드바와 홈 로고 위치 -->
       <div class="flex items-center">
         <Sidebar></Sidebar>
-        <router-link to="/">홈 로고</router-link>
+        <router-link to="/" class="text-lg font-bold text-gray-800 dark:text-black">홈 로고</router-link>
       </div>
 
-      <div class="flex items-center">
-        <div v-if="isLoggedIn" class="meta text-right">
+      <div class="flex items-center space-x-4">
+        <div v-if="isLoggedIn" class="meta text-right space-x-4">
           <span>{{ userVars.task }}</span>
-          <router-link to="/article-create">글 작성</router-link>
-          <button @click="logoutHeader">로그아웃</button>
+          <router-link to="/article-create" class="btn btn-outline btn-orange">글 작성</router-link>
+          <button @click="logoutHeader" class="btn btn-outline btn-orange">로그아웃</button>
         </div>
 
-        <div v-else>
-          <button @click="openModal('로그인')">로그인</button>&nbsp;
-          <button @click="openModal('회원가입')">회원가입</button>
+        <div v-else class="space-x-4">
+          <button @click="openModal('로그인')" class="btn btn-outline btn-orange">로그인</button>
+          <button @click="openModal('회원가입')" class="btn btn-outline btn-orange">회원가입</button>
         </div>
       </div>
     </nav>
-    <UserModal v-if="userVars.isShowModal" v-model:task="userVars.task" v-model:isShowModal="userVars.isShowModal">
-    </UserModal>
+    <UserModal
+      v-if="userVars.isShowModal"
+      v-model:task="userVars.task"
+      v-model:isShowModal="userVars.isShowModal"
+    ></UserModal>
   </div>
 </template>
 
@@ -53,7 +61,7 @@ function openModal(tasks) {
 }
 
 function logoutHeader() {
-  if (confirm("로그아웃 하시겠습니까?")) {
+  if (confirm('로그아웃 하시겠습니까?')) {
     localStorage.removeItem('Authorization');
     window.location.reload();
     logout();
@@ -87,6 +95,7 @@ function handleHeaderBackground(threshold) {
   headerBackgroundVisible.value = scrollY > threshold;
 }
 </script>
+
 <style scoped>
 /* Sticky 헤더를 위한 스타일 */
 nav.sticky {
@@ -107,5 +116,32 @@ nav.sticky {
     transform: translateY(0);
   }
 }
-</style>
 
+/* 추가된 스타일 */
+.btn {
+  margin-right: 5px;
+  padding: 5px 16px; /* padding 수정 */
+  min-width: 75px; /* 최소 너비 추가 */
+  border: 1px solid orange;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  border-color: #ff9800;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #ff9800;
+}
+
+.btn-outline:hover {
+  background-color: #ff9800;
+  color: #fff;
+}
+.btn-orange {
+  background-color: transparent;
+  color : #ff9800;
+}
+</style>
