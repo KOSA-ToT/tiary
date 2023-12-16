@@ -47,6 +47,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			JwtProperties.getREFRESH_TOKEN_EXPIRE_DURATION());
 
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.sendRedirect("http://localhost:5173/");
+		// TODO 승희: 하드코딩 삭제
+		response.sendRedirect("http://localhost:5173/oauth/callback");
 	}
 }
