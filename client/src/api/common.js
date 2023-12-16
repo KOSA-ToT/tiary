@@ -1,4 +1,4 @@
-import { instance, fileInstance } from "./config";
+import { instance, fileInstance, authInstance } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);
@@ -30,7 +30,7 @@ export const listMyPost = async (userId,page) => {
   return await instance.get("/users/"+userId+"/posts?page="+ page);
 }
 export const editNickname = async (userId,nickname) => {
-  return await instance.patch("/users/"+userId+"/updateNickname", nickname);
+  return await authInstance.patch("/users/"+userId+"/updateNickname", nickname);
 }
 export const handleWithDrawal = async (userId,nickname) => {
   return await instance.patch("/users/"+userId+"/inactive", nickname);

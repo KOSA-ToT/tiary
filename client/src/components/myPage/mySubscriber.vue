@@ -1,7 +1,7 @@
 <template>
     <SubscribeTab @subscribe="listSubscriber"></SubscribeTab>
-    <div class="flex flex-col h-[100vh] pt-4">
-        <div
+    <div class="flex flex-col h-[40vh] pt-4">
+        <div v-if="subscriberList"
             class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 w-[576px] mx-auto p-4 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none">
             <div class="flex items-center justify-between w-full p-3 rounded-t-3xl">
             </div>
@@ -32,7 +32,9 @@
 
                 </div>
             </div>
+            <p>{{ msg }}</p>
         </div>
+        
     </div>
 </template>
 <script setup>
@@ -51,6 +53,7 @@ const props = defineProps({
     },
 });
 const subscriberList = ref([]);
+const msg = ref("");
 async function listSubscriber() {
     try {
         if (store.dataFromChild == '구독자') {
@@ -58,12 +61,23 @@ async function listSubscriber() {
             subscriberList.value = response.data;
             console.log(subscriberList.value);
             console.log("구독자 불러오기 완료");
+            if(subscriberList.value==""){
+                msg.value="구독자가 없습니다.";
+            }
+            else{
+                msg.value="";
+            }
         }
         else if (store.dataFromChild == '구독작가') {
             const response = await listsubscribedWriter(props.user.id.value);
             subscriberList.value = response.data;
             console.log(subscriberList.value);
             console.log("구독 작가 불러오기 완료");
+            if(subscriberList.value==""){
+                msg.value="구독 작가가 없습니다.";
+            }else{
+                msg.value="";
+            }
         }
 
     } catch (error) {

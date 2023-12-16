@@ -1,25 +1,22 @@
 <template>
-	<div class="flex mx-64 bg-purple-100 sm:px-6 lg:px-8">
-		<div class="pt-20 ml-auto">
-			<h1 class="text-xl tracking-tight text-gray-900">
-				{{ User.nickname.value }}
-			</h1>
-		</div>
-		<div class="flex px-4 py-6 max-w-7xl sm:px-6 lg:px-8 lg:block md:block ">
-			<img class="w-24 h-24 rounded-full shadow-lg"
-				:src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + User.userPicture.value" alt="">
-		</div>
+	<div class="flex items-center">
+		<section class="w-full py-32 bg-center bg-cover"
+			style="background-image: url('https://source.unsplash.com/random');">
+			<div class="container mx-auto text-center text-white">
+				<div class="flex items-center justify-center">
+					<img class="w-24 h-24 mb-6 rounded-full shadow-lg"
+						:src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + User.userPicture.value" alt="">
+				</div>
+
+				<h1 class="mb-6 text-5xl font-medium">{{ User.nickname.value }}</h1>
+				<!-- <p class="mb-12 text-xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio,
+				gravida pellentesque urna varius vitae.</p> -->
+				<!-- <a href="#" class="px-12 py-4 text-white bg-indigo-500 rounded-full hover:bg-indigo-600">구독</a> -->
+			</div>
+		</section>
 	</div>
-	<div class="flex mx-64 min-h-screen h-[calc(100%-1rem)] w-screen pt-10">
-		<div class="pr-10">
-			<MyProfile :user=User></MyProfile>
-			<MyPageMenu :user=User></MyPageMenu>
-		</div>
-
-
-		<div>
-			<router-view :user="User"/>
-		</div>
+	<div>
+		<router-view :user="User"/>
 	</div>
 </template>
 <script setup>
@@ -52,7 +49,7 @@ async function getUsers() {
 		User.userPicture.value = data.userPicture;
 		User.userStatus.value = data.userStatus;
 		console.log(User.nickname.value);
-		console.log("User.id.value : "+User.id.value);
+		console.log("User.id.value : " + User.id.value);
 	} catch (error) {
 		console.log(error);
 	}

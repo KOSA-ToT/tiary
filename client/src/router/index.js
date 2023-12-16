@@ -7,6 +7,7 @@ import MyInfoView from '@/components/myPage/myInfo.vue'
 import MyPostView from '@/components/myPage/myPost.vue'
 import MyCommentView from '@/components/myPage/myComment.vue'
 import MySubscriberView from '@/components/myPage/mySubscriber.vue'
+import WriterProfile from '@/components/myPage/writerProfile.vue'
 import Comment from '@/components/comment/Comment.vue'
 
 import ArticleList from '@/pages/ArticleList.vue'
@@ -42,6 +43,7 @@ const router = createRouter({
                             component:  MySubscriberView
                         }
                     ]},
+        {path: '/writer-page/:id', component: WriterProfile},
         {path: '/article-test', component: Comment},
         {path: '/articles', component : ArticleList},
         {path: '/article/:articleId' , name: 'Post', component : Post, props : true },
