@@ -17,7 +17,8 @@
           </span>
           <span class="ico_by">By </span>
           <span>{{ article.createdBy }}</span>
-          <span v-if="authStore.isLoggedIn">
+          <!-- <span v-if="authStore.isLoggedIn"> -->
+            <span v-if="true">
             <span class="mx-2">•</span>
             <router-link :to="{ name: 'ArticleEdit', params: { id: articleId }}">수정</router-link>
             <span class="mx-2">•</span>
@@ -61,7 +62,6 @@ import comment from '@/components/comment/Comment.vue';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js';
-import { useAuthStore } from '@/stores/auth';
 import router from '@/router';
 
 const { articleId } = defineProps(['articleId']);
@@ -69,16 +69,11 @@ const article = ref(null);
 
 
 // 로그인 상태 관리
-const authStore = useAuthStore();
 
 onMounted(async () => {
   try {
     const response = await axios.get(`http://localhost:8088/article/${articleId}`);
     article.value = response.data;
-    authStore.login({
-      token: 'token',
-      currentUserName: '테스트계정'
-    });
   } catch (error) {
     console.error('글을 불러오는 데 실패했습니다:', error);
   }

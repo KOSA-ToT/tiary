@@ -1,7 +1,7 @@
 <template>
    
   <div :class="{ dark: isDarkMode, light: !isDarkMode }">
-    <Header :threshold="200"></Header>
+    <Header :threshold="100"></Header>
     <Slider></Slider>
     <Category :categories="categories"></Category>
     <RandomArticle :randomArticles="randomArticle"></RandomArticle>
