@@ -19,7 +19,7 @@
       <div class="flex items-center space-x-4">
         <div v-if="isLoggedIn" class="meta text-right space-x-4">
           <span>{{ userVars.task }}</span>
-          <router-link to="/article-create" class="btn btn-outline btn-orange">글 작성</router-link>
+          <button @click="articleCreate" class="btn btn-outline btn-orange">글 작성</button>
           <button @click="logoutHeader" class="btn btn-outline btn-orange">로그아웃</button>
         </div>
 
@@ -42,6 +42,7 @@ import { ref, watchEffect, onMounted, onBeforeUnmount, defineProps } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import Sidebar from '@/components/Sidebar.vue';
 import UserModal from '@/components/UserModal.vue';
+import router from '@/router/index.js';
 
 const props = defineProps(['threshold']);
 const showHeader = ref(true);
@@ -59,7 +60,9 @@ function openModal(tasks) {
   userVars.value.task = tasks;
   userVars.value.isShowModal = true;
 }
-
+function articleCreate() {
+  router.push('/article-create');
+}
 function logoutHeader() {
   if (confirm('로그아웃 하시겠습니까?')) {
     localStorage.removeItem('Authorization');
