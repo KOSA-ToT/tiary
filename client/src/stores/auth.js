@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
     },
     logout() {
       this.isLoggedIn = false;
-      this.currentUser = null;
+      // this.currentUser = null;
     },
   },
 });
