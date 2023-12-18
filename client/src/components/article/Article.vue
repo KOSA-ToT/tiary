@@ -63,6 +63,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js';
 import router from '@/router';
+import { deleteArticleRequest } from '@/api/common';
 
 const { articleId } = defineProps(['articleId']);
 const article = ref(null);
@@ -83,7 +84,17 @@ onMounted(async () => {
 
 const deleteArticle = () => {
   // 삭제 로직 구현
-  console.log('삭제 버튼 클릭');
+  try{
+    const response = deleteArticleRequest(articleId)
+    .then((response) => {
+      if(response.status == 205){
+        alert("게시물이 삭제되었습니다.")
+        router.go("/");
+      }
+    })
+  }catch{
+    alert("에러입니다.")
+  }
 };
 
 // 시간 표시
