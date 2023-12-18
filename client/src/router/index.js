@@ -14,7 +14,7 @@ import ArticleList from '@/pages/ArticleList.vue'
 import ArticleCreate from '@/components/article/ArticleCreate.vue'
 import ArticleEdit from '@/components/article/ArticleEdit.vue'
 import Post from '@/pages/Post.vue'
-import NickCheck from '@/pages/NickCheck.vue'
+import NickCheck from '@/pages/Nickcheck.vue'
 import VerifyEmail from '@/pages/VerifyEmail.vue'
 import OauthCallback from '@/pages/OauthCallback.vue'
 

@@ -25,7 +25,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	private final TokenService tokenService;
 
 	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UsersRepository usersRepository,
-			TokenService tokenService) {
+		TokenService tokenService) {
 		super(authenticationManager);
 		this.usersRepository = usersRepository;
 		this.tokenService = tokenService;
@@ -41,7 +41,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+		throws IOException, ServletException {
 		// Header 에서 토큰 추출
 		String accessToken = tokenService.getTokenFromHeader(request);
 		if (accessToken == null) {
@@ -58,13 +58,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				return;
 			}
 			Users user = usersRepository.findByEmail(email)
-					.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 			UserDto principalDetails = new UserDto(user);
 
 			Authentication authentication = new UsernamePasswordAuthenticationToken(
-					principalDetails,
-					null,
-					principalDetails.getUsers().getAuthorities());
+				principalDetails,
+				null,
+				principalDetails.getUsers().getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			chain.doFilter(request, response);
 		} catch (BusinessLogicException e) {
@@ -81,10 +81,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		String refreshToken = CookieUtil.getValueFromCookie(request, JwtProperties.getREFRESH_TOKEN_COOKIE_NAME());
 		String email = tokenService.validateAndExtractEmailFromToken(refreshToken);
 		Users user = usersRepository.findByEmail(email)
-				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		return tokenService.createToken(
-				user.getId(),
-				user.getEmail(),
-				JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
+			user.getId(),
+			user.getEmail(),
+			JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
 	}
 }

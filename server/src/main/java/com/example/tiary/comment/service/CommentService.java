@@ -80,6 +80,12 @@ public class CommentService {
 		commentList.forEach(comment -> {
 			CommentResponseDTO commentResponseDTO = new CommentResponseDTO().from(comment);
 			commentResponseDTOMap.put(commentResponseDTO.getId(), commentResponseDTO);
+
+			// 프로필 이미지 URL 추가
+			if (comment.getUsers() != null) {
+				commentResponseDTO.setUserProfileImageUrl(comment.getUsers().getUserPicture());
+			}
+
 			// 부모 댓글이 있는 경우(부모 댓글 id를 가진 댓글 children에 넣음
 			if (comment.getParent() != null) {
 				CommentResponseDTO parentDTO = commentResponseDTOMap.get(comment.getParent().getId());

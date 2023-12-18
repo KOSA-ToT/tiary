@@ -25,6 +25,7 @@ public class CommentResponseDTO {
 	private String commentType;
 	private Long articleId;
 	private List<CommentResponseDTO> children;
+	private String userProfileImageUrl; // 유저 프로필 이미지 url
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private String createdBy;
@@ -38,6 +39,7 @@ public class CommentResponseDTO {
 				.password(comment.getPassword())
 				.commentType(comment.getCommentType())
 				.articleId(comment.getArticle().getId())
+				.userProfileImageUrl(comment.getUsers() != null ? comment.getUsers().getUserPicture() : null)
 				.createdAt(comment.getCreatedAt())
 				.modifiedAt(comment.getModifiedAt())
 				.createdBy(comment.getCreatedBy())

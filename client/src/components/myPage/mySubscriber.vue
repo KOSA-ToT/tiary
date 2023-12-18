@@ -126,6 +126,7 @@ async function subscribe(userId) {
         }
         else {
             showButton.value[userId] = 'notShow';
+            alert('구독했습니다!');
             console.log("구독완료");
         }
 

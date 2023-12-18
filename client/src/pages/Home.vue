@@ -1,6 +1,6 @@
 <template>
    
-  <div :class="{ dark: isDarkMode, light: !isDarkMode }">
+  <div>
     <Header :threshold="100"></Header>
     <Slider></Slider>
     <Category :categories="categories"></Category>

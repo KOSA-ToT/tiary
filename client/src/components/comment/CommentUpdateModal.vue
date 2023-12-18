@@ -1,6 +1,6 @@
 <template>
   <!-- 비회원 댓글 수정 모달 -->
-  <div class="max-w-md border rounded-lg">
+  <div class="w-3/4 border rounded-lg">
     <div class="flex flex-col p-5 rounded-lg shadow bg-white">
       <div class="ml-3">
         <h2 class="font-semibold text-gray-800">댓글 내용 수정</h2>
@@ -34,7 +34,6 @@
 <script setup>
 import { defineProps, ref } from "vue";
 
-// const content = ref(props.commentContent.content);
 const content = ref("");
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
 

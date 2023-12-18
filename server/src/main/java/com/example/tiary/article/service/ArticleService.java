@@ -30,7 +30,7 @@ public interface ArticleService {
 		List<MultipartFile> multipartFiles) throws
 		IOException;
 
-	String deleteArticle(Long articleId);
+	String deleteArticle(Long articleId, Long usersId);
 
 	@Transactional
 	int updateView(Long articleId);
