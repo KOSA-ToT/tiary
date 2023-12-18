@@ -20,10 +20,10 @@
 import Header from '@/components/Header.vue';
 import Slider from '@/components/Slider.vue';
 import Footer from '@/components/Footer.vue';
-import RandomArticle from '@/components/RandomArticle.vue';
+import RandomArticle from '@/components/home/RandomArticle.vue'
 import Card from '@/components/home/Card.vue';
 import UserModal from '@/components/UserModal.vue';
-import Category from '@/components/Category.vue';
+import Category from '@/components/home/Category.vue';
 
 import { onMounted, ref } from 'vue';
 import axios from 'axios';

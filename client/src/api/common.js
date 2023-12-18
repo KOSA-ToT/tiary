@@ -86,3 +86,31 @@ export const postArticleRequest = async (requestArticleDto) => {
 export const deleteArticleRequest = async (articleId) => {
   return await authInstance.delete("/article/" + articleId);
 };
+
+export const getUser = async (userId) => {
+  return await instance.get("/users/"+ userId);
+}
+export const listMyPost = async (userId,page) => {
+  return await instance.get("/users/"+userId+"/posts?page="+ page);
+}
+export const editNickname = async (userId,nickname) => {
+  return await authInstance.patch("/users/"+userId+"/updateNickname", nickname);
+}
+export const handleWithDrawal = async (userId,nickname) => {
+  return await instance.patch("/users/"+userId+"/inactive", nickname);
+}
+export const changeProfileImage = async (userId,formData) => {
+  return await fileInstance.post("/users/"+userId+"/uploadProfileImg", formData);
+}
+export const listMyComment = async (userId) => {
+  return await instance.get("/users/"+userId+"/comments");
+}
+export const listSubscribers = async (userId) => {
+  return await instance.get("/users/"+userId+"/subscriber");
+}
+export const listsubscribedWriter = async (userId) => {
+  return await instance.get("/users/"+userId+"/subscribedWriter");
+}
+export const subscribeUser = async (userId) => {
+  return await authInstance.get("/users/"+userId+"/subscribe");
+}

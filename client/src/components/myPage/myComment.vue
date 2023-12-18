@@ -1,13 +1,18 @@
 <template>
-    <!-- Container for demo purpose -->
-    <div class="container mx-auto my-24 md:px-6">
-        <!-- Section: Design Block -->
-        <section class="mb-32 text-center md:text-left">
-            <h2 class="mb-12 text-lg font-bold text-zinc-600">작성 댓글</h2>
-            <button class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">삭제</button>
-            <button @click="selectAll" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">전체 선택</button>
-            <div class="flex flex-wrap mb-6" v-for="comment in commentList" :key="comment.id">
-                <input type="checkbox" :id="'react-option-' + comment.id">
+    <div class="max-w-screen-md px-4 mx-auto mt-12 text-lg leading-relaxed text-gray-700 lg:px-0">
+        <p class="pb-6">
+            <!-- Container for demo purpose -->
+        <div class="container mx-auto my-24 md:px-6">
+            <!-- Section: Design Block -->
+            <section class="mb-32 text-center md:text-left">
+                <h2 class="mb-12 text-lg font-bold text-zinc-600">작성 댓글</h2>
+                <button
+                    class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">삭제</button>
+                <button @click="selectAll"
+                    class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">전체
+                    선택</button>
+                <div class="flex flex-wrap mb-6" v-for="comment in commentList" :key="comment.id">
+                    <input type="checkbox" :id="'react-option-' + comment.id">
                     <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
                         <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
                             data-te-ripple-init data-te-ripple-color="light">
@@ -35,21 +40,25 @@
                         </p>
 
                     </div>
-            </div>
+                </div>
 
-        </section>
-        <!-- Section: Design Block -->
+            </section>
+            <!-- Section: Design Block -->
+        </div>
+        <!-- Container for demo purpose -->
+        </p>
     </div>
-    <!-- Container for demo purpose -->
 </template>
 <script setup>
-import { defineProps, onMounted, ref, computed, reactive } from 'vue';
+import { defineProps, onMounted, ref, computed, reactive, watch } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import { listMyComment } from '@/api/common';
 const commentList = ref([]);
 const userId = ref();
 const Url = ref('');
 const selectedComments = reactive({});
+const allChecked = ref(false);
 const props = defineProps({
     user: {
         type: Object,
@@ -57,24 +66,18 @@ const props = defineProps({
     },
 });
 
-const listMyComment = async () => {
-    await axios.get(`http://localhost:8088/users/1/comments`)
-        .then(response => {
-            // 성공 처리
-            commentList.value = response.data;
-            console.log("불러오기 완료" + commentList.value);
-        })
-        .catch(error => {
-            // 에러 처리
-            console.log(error);
-        });
-
-};
+async function listMyComments() {
+    try {
+        const response = await listMyComment(props.user.id.value);
+        commentList.value = response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
 const selectAll = () => {
-  // 전체 선택 버튼 클릭 시 모든 체크박스의 상태를 변경
-  commentList.value.forEach((comment) => {
-    selectedComments[comment.id] = true;
-  });
+    // 전체 선택 버튼 클릭 시 모든 체크박스의 상태를 변경
+    allChecked.value = !allChecked.value;
+    commentList.value.forEach(comment => (comment.selected = allChecked.value));
 };
 const formatCreatedAt = (createdAt) => {
     // createdAt이 문자열인 경우 Date 객체로 변환
@@ -87,6 +90,9 @@ const formatCreatedAt = (createdAt) => {
     return formattedDate;
 };
 onMounted(() => {
-    listMyComment();
+    // listMyComments();
+});
+watch(() => props.user.id.value, () => {
+    listMyComments();
 });
 </script>

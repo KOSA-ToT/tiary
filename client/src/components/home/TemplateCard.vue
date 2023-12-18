@@ -1,7 +1,5 @@
 <template>
     <section id="one" class="wrapper style2">
-      <h2 style="text-align: center">에디터 선정 게시글</h2>
-      <br />
       <div class="inner">
         <div class="grid-style">
           <div>
