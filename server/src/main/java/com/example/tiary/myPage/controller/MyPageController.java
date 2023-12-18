@@ -96,14 +96,16 @@ public class MyPageController {
 
     //내 정보 수정(닉네임)
     @PatchMapping("/{userId}/updateNickname")
-    public ResponseEntity updateNickName(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
+    public ResponseEntity updateNickName(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto,@AuthenticationPrincipal UserDto user){
         try{
+            System.out.println("user.getUsers().getId() : "+user.getUsers().getId());
             if (userService.isNicknameDuplicate(requestUserDto.getNickname())){
                 return new ResponseEntity<>("이미 존재하는 닉네임입니다",HttpStatus.CONFLICT);
             }else{
-                return new ResponseEntity<>(userService.editNickname(requestUserDto,userId),HttpStatus.RESET_CONTENT);
+                return new ResponseEntity<>(userService.editNickname(requestUserDto,user.getUsers().getId()),HttpStatus.RESET_CONTENT);
             }
 //            return ResponseEntity.created(URI.create("/users/"+userId)).body("수정완료했습니다.");
+
         }catch(Exception e){
             log.error("에러 : ",e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("닉네임 수정에 실패했습니다.");

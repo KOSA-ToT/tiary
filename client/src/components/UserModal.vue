@@ -1,6 +1,7 @@
 <template>
 <!-- source:https://codepen.io/owaiswiz/pen/jOPvEPB  tabindex="-1"--> 
-<div class="min-h-screen bg-black/50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 text-gray-900 flex justify-center">
+<div class="min-h-screen bg-black/50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 text-gray-900 flex justify-center"
+style="z-index: 1001;">
     <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div class="lg:w-1/2 xl:w-5/12 sm:p-12">
             <!-- <slot name="closeModalButton"></slot> -->
