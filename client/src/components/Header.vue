@@ -17,7 +17,7 @@
       </div>
 
       <div class="flex items-center space-x-4">
-        <div v-if="isLoggedIn" class="meta text-right space-x-4">
+        <div v-if="authStore.isLoggedIn" class="meta text-right space-x-4">
           <span>{{ userVars.task }}</span>
           <button @click="articleCreate" class="btn btn-outline btn-orange">글 작성</button>
           <button @click="logoutHeader" class="btn btn-outline btn-orange">로그아웃</button>
