@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-stone-50 px-6 pt-16 pb-15 lg:px-8 lg:pt-16 lg:pb-16 dark:bg-gray-50">
+  <div class="relative bg-stone-50 px-6 pb-15 lg:px-8 lg:pb-16 dark:bg-gray-50">
   <!-- ?? -->
   <!-- <div class="absolute inset-0">
     <div class="h-1/3 bg-white sm:h-2/3"></div>
@@ -7,11 +7,10 @@
 
   <div class="relative mx-auto max-w-7xl">
     <!-- Title -->
-    <div class="text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">에디터 추천 게시글</h2>
-      <p class="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4">
-        This is your life and it's ending one minute @ a time...</p>
-    </div>
+        <!-- 이미지를 가운데 정렬하도록 클래스 추가 -->
+  <div class="text-center">
+    <img style="display: block; margin: 0 auto;" src="/images/editor_choice.png" alt="Random Image">
+  </div>
 
     <!-- 카드 묶음 -->
     <div class="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">

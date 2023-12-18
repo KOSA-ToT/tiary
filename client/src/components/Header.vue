@@ -13,7 +13,9 @@
       <!-- 왼쪽에 사이드바와 홈 로고 위치 -->
       <div class="flex items-center">
         <Sidebar></Sidebar>
-        <router-link to="/" class="text-lg font-bold text-gray-800 dark:text-black">홈 로고</router-link>
+        <router-link to="/" class="text-lg font-bold text-gray-800 dark:text-black">
+          <img src="/images/header_logo.png" class="h-auto max-h-full">
+        </router-link>
       </div>
 
       <div class="flex items-center space-x-4">
