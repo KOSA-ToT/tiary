@@ -49,11 +49,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const items = [
-  { imageSrc: "/images/spring.jpg" },
-  { imageSrc: "/images/error.jpg" },
-  { imageSrc: "/images/logo.png" },
-  { imageSrc: "/images/dog.jpg" },
-  { imageSrc: "/images/spring.jpg" },
+  { imageSrc: "/images/slider1.png" },
+  { imageSrc: "/images/slider2.png" },
+  { imageSrc: "/images/slider3.png" },
+  { imageSrc: "/images/slider4.png" },
+  { imageSrc: "/images/slider5.png" },
 ];
 
 const totalSlides = items.length;
