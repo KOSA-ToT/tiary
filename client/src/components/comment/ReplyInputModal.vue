@@ -1,13 +1,13 @@
 <template>
   <!-- 대댓글 작성 모달 -->
-  <div class="max-w-md border rounded-lg">
+  <div class="w-3/4 border rounded-lg">
     <div class="flex flex-col p-5 rounded-lg shadow bg-white">
       <div class="ml-3">
         <h2 class="font-semibold text-gray-800">대댓글 작성</h2>
         <br />
-        <!-- userId가 존재하는 경우 비밀번호 입력란 숨김 -->
-        <input v-if="userId" type="hidden" />
-        <!-- userId가 존재하지 않는 경우 비밀번호 입력란 표시 -->
+        <!-- user가 존재하는 경우 비밀번호 입력란 숨김 -->
+        <input v-if="user" type="hidden" />
+        <!-- user가 존재하지 않는 경우 비밀번호 입력란 표시 -->
         <div v-else>
           <input
             type="password"
@@ -43,14 +43,13 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { ref } from "vue";
+let user = localStorage.getItem("Authorization");
 
-let userId = "test";
 const replyComment = ref({
   password: "",
   content: "",
 });
-// const props = defineProps(["closeModal", "createReplyComment"]);
 
 defineEmits(["closeModal", "createReplyComment"]);
 </script>

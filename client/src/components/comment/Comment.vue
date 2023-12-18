@@ -12,18 +12,12 @@
         content: comment.content,
         createdAt: comment.createdAt,
         createdBy: comment.createdBy,
+        modifiedAt: comment.modifiedAt,
       }"
-      @replyToComment="handleReplyToComment"
     >
     </CommentCard>
 
-    <CommentInput></CommentInput>
-    <!-- <div v-if="userId">
-      <UserCommentInput></UserCommentInput>
-    </div>
-    <div v-else>
-      <GuestCommentInput></GuestCommentInput>
-    </div> -->
+    <CommentInput ></CommentInput>
   </div>
 </template>
 
@@ -31,26 +25,50 @@
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
 import CommentInput from "@/components/comment/CommentInput.vue";
-import { onMounted, reactive, ref, watch, watchSyncEffect } from "vue";
+import { useRoute} from "vue-router";
+import { onMounted, reactive, ref, watch, watchEffect } from "vue";
+import { getCommentList } from "@/api/common.js";
 
-let userId = sessionStorage.getItem("user");
+const currentRoute = useRoute();
+let articleId = currentRoute.params.articleId;
 
 let commentList = reactive([]);
 
 onMounted(async () => {
-  await getCommentList();
+  await getCommentLists();
   console.log(commentList.value);
+  console.log("articleId", articleId);
 });
 
+// // 새로고침 안하고 바로 불러오기
+// watch(
+//   () => commentList.value,
+//   (newVal, oldVal) => {
+//     if (newVal !== oldVal) {
+//       getCommentLists();
+//       console.log("Comment list updated:", newVal);
+//     }
+//   },
+//   { deep: true, immediate: true }
+// );
+
+// 새로고침 없이 데이터 업데이트
+// watchEffect(
+//   () => {
+//     getCommentLists();
+//   },
+//   { immediate: true, deep:true }
+// );
+
 // comment 불러오기
-async function getCommentList() {
+async function getCommentLists() {
   try {
-    const response = await axios.get("http://localhost:8088/comment/2");
+    const response = await getCommentList(articleId);
     commentList.value = response.data;
   } catch (err) {
     console.log(err);
   }
-};
+}
 </script>
 
 <style scoped></style>

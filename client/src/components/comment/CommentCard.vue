@@ -10,11 +10,20 @@
                 class="object-cover w-10 h-10 rounded-full border-2 border-emerald-400 shadow-emerald-400"
               />
               <h3 class="font-bold">
-                id: {{ commentData.id }}/
-                {{ commentData.createdBy }}
+                {{
+                  commentData.createdBy === "anonymousUser"
+                    ? "Guest"
+                    : commentData.createdBy
+                }}
                 <br />
-                <span class="text-sm text-gray-400 font-normal"
-                  >{{ formatCreatedAt(commentData.createdAt) }}
+                <span class="text-sm text-gray-400 font-normal">
+                  {{
+                    commentData.createdAt == commentData.modifiedAt
+                      ? formatCreatedAt(commentData.createdAt)
+                      : formatCreatedAt(commentData.modifiedAt)
+                  }}
+
+                  <!-- {{ formatCreatedAt(commentData.createdAt) }} -->
                 </span>
               </h3>
             </div>
@@ -67,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div class="my-0">
+      <div class="my-0 flex justify-center">
         <CommentPasswordModal
           v-if="isPasswordModalOpen"
           @closeModal="closeModal"
@@ -100,9 +109,18 @@ import ReplyCommentCard from "../comment/ReplyCommentCard.vue";
 import CommentPasswordModal from "../comment/CommentPasswordModal.vue";
 import CommentUpdateModal from "../comment/CommentUpdateModal.vue";
 import ReplyInputModal from "./ReplyInputModal.vue";
-import router from "@/router";
+import {
+  commentPasswordConfirm,
+  editUserComment,
+  editGuestComment,
+  deleteUserComment,
+  deleteGuestComment,
+  createUserComment,
+  createGuestComment,
+} from "@/api/common";
 
 const { commentData } = defineProps(["commentData"]);
+let user = localStorage.getItem("Authorization");
 
 let commentRequestDTO = ref({
   content: "",
@@ -125,10 +143,6 @@ function openUpdateModal() {
 
 // 비밀번호 확인 모달창 열기
 function openModal(action) {
-  // 회원
-  // isUpdateModalOpen.value = true;
-
-  // 비회원
   mode.value = action;
   isPasswordModalOpen.value = true;
 }
@@ -137,61 +151,62 @@ function openModal(action) {
 function closeModal() {
   isPasswordModalOpen.value = false;
   isUpdateModalOpen.value = false;
+  isReplyModalOpen.value = false;
 }
 
 // 비밀번호 검증
-function checkPassword(password) {
+async function checkPassword(password) {
   commentRequestDTO.value.password = password;
   console.log("비밀번호", commentRequestDTO.value.password);
-
-  axios
-    .post(
-      `http://localhost:8088/comment/guest/password-confirm/${commentData.id}`,
-      commentRequestDTO.value
-    )
-    .then((response) => {
-      if (mode.value === "delete") {
-        deleteComment();
-      } else if (mode.value === "edit") {
-        closeModal();
-        openUpdateModal();
-      }
-    })
-    .catch((error) => {
-      alert("비밀번호가 일치하지 않습니다.");
+  try {
+    const passwordConfirmResponse = await commentPasswordConfirm(
+      commentRequestDTO.value,
+      commentData.id
+    );
+    console.log(passwordConfirmResponse);
+    if (mode.value === "delete") {
+      deleteComment();
+    } else if (mode.value === "edit") {
       closeModal();
-      console.log("Error confirming password", error);
-    });
+      openUpdateModal();
+    }
+  } catch (error) {
+    alert("비밀번호가 일치하지 않습니다.");
+    closeModal();
+    console.log("Error confirming password", error);
+  }
 }
 
 //  댓글 수정
-function editComment(content) {
+async function editComment(content) {
   commentRequestDTO.value.content = content;
-  axios
-    .patch(
-      `http://localhost:8088/comment/guest/1014/${commentData.id}`,
-      commentRequestDTO.value
-    )
-    .then((response) => {
-      console.log("Comment updated successfully", response);
-      closeModal();
-    })
-    .catch((error) => {
-      console.error("Error updating comment", error);
-    });
+  const editComment = user ? editUserComment : editGuestComment;
+  try {
+    const editCommentResponse = await editComment(
+      commentRequestDTO.value,
+      commentData.articleId,
+      commentData.id
+    );
+    console.log("Comment updated successfully", editCommentResponse);
+    closeModal();
+  } catch (error) {
+    console.log("failed edit comment", error);
+  }
 }
 
 // 댓글 삭제
-function deleteComment() {
-  let result = confirm("정말 삭제하시겠습니까?");
-  if (result) {
-    axios
-      .delete(`http://localhost:8088/comment/guest/1014/${commentData.id}`)
-      .then((response) => {
-        alert("성공적으로 삭제되었습니다.");
-        router.push("/article-test");
-      })
-      .catch((error) => console.error("Error deleting comment", error));
+async function deleteComment() {
+  const confirmDelete = confirm("정말 삭제하시겠습니까?");
+  if (!confirmDelete) return;
+
+  const deleteComment = user ? deleteUserComment : deleteGuestComment;
+  try {
+    const response = await deleteComment(commentData.articleId, commentData.id);
+    console.log(response);
+    closeModal();
+    alert("성공적으로 삭제되었습니다.");
+  } catch (error) {
+    console.error("Error deleting comment", error);
   }
 }
 
@@ -201,20 +216,44 @@ function replyToComment() {
 }
 
 // 대댓글 등록
-function createReplyComment(replyComment) {
-  commentRequestDTO.value.content = replyComment.content;
-  commentRequestDTO.value.password = replyComment.password;
-  commentRequestDTO.value.parentId = commentData.id;
+async function createReplyComment(replyComment) {
+  let content = replyComment.content.trim();
+  let password = replyComment.password.trim();
+
+  if (content === "") {
+    alert("댓글 내용을 입력하세요");
+    return;
+  }
+  try {
+    commentRequestDTO.value.content = replyComment.content;
+    commentRequestDTO.value.parentId = commentData.id;
+    if (user) {
+      let commentResponse = await createUserComment(
+        commentRequestDTO.value,
+        commentData.articleId
+      );
+      console.log(commentResponse);
+    } else {
+      if (password == "") {
+        alert("비밀번호를 입력하세요");
+        return;
+      }
+      commentRequestDTO.value.password = replyComment.password;
+      await createGuestComment(commentRequestDTO.value, commentData.articleId);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
   // 비회원일 경우
-  axios
-    .post(`http://localhost:8088/comment/guest/1014`, commentRequestDTO.value)
-    .then((response) => {
-      console.log(response);
-      commentRequestDTO.value.content = "";
-      commentRequestDTO.value.password = "";
-    })
-    .catch((err) => console.log(err));
+  // axios
+  //   .post(`http://localhost:8088/comment/guest/2`, commentRequestDTO.value)
+  //   .then((response) => {
+  //     console.log(response);
+  //     commentRequestDTO.value.content = "";
+  //     commentRequestDTO.value.password = "";
+  //   })
+  //   .catch((err) => console.log(err));
 }
 
 // 등록 시간 포맷
