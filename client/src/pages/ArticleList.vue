@@ -3,7 +3,7 @@
   <div class="min-h-screen">
     <div v-show="!isLoading">
     <div v-if="getArticle.length === 0" class="flex justify-center items-center h-full">
-      <img src="/public/images/loading.gif" class="mt-24" alt="Loading..." />
+      <img src="/images/loading.gif" class="mt-24" alt="Loading..." />
       게시물이 존재하지 않습니다 :(
     </div>
     <div v-else>
