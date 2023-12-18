@@ -31,3 +31,7 @@ export const oauthTokenReq = async () => {
 export const postArticleRequest = async (requestArticleDto) => {
   return await authInstance.post("/article",requestArticleDto)
 }
+
+export const deleteArticleRequest = async (articleId) => {
+  return await authInstance.delete("/article/"+articleId)
+}
