@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tiary.global.config.oauth.provider.GoogleUserInfo;
+import com.example.tiary.global.config.oauth.provider.NaverUserInfo;
 import com.example.tiary.global.config.oauth.provider.OAuth2UserInfo;
 import com.example.tiary.users.entity.UserProvider;
 import com.example.tiary.users.entity.UserProviderId;
@@ -32,14 +33,8 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
-		loginAndSignUp(oAuth2User, userRequest);
 		System.out.println("OAuth2UserCustomService : " + oAuth2User);
 		System.out.println("getAttributes : " + oAuth2User.getAttributes());
-		return oAuth2User;
-	}
-
-	private void loginAndSignUp(OAuth2User oAuth2User, OAuth2UserRequest userRequest)
-		throws OAuth2AuthenticationException {
 
 		OAuth2UserInfo userInfo = null; // 유저 정보를 담을 객체
 		String provider = userRequest.getClientRegistration().getRegistrationId(); // OAuth2 공급자
@@ -47,8 +42,15 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 		// TODO : Github, Naver, Kakao 등등 추가
 		switch (provider) {
 			case "google" -> userInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+			case "naver" -> userInfo = new NaverUserInfo(oAuth2User.getAttributes());
 			default -> throw new OAuth2AuthenticationException(new OAuth2Error("존재하지 않는 OAuth2 공급자입니다"));
 		}
+		loginAndSignUp(userInfo);
+		return new Oauth2PrincipalDetails(userInfo, usersRepository);
+	}
+
+	private void loginAndSignUp(OAuth2UserInfo userInfo)
+		throws OAuth2AuthenticationException {
 
 		// TODO 승희: 예외 처리 추가, 로직 수정
 		Optional<Users> user = usersRepository.findByEmail(userInfo.getEmail());
