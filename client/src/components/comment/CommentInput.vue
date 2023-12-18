@@ -15,9 +15,9 @@
     </div>
     <div class="w-full px-3 mb-2 mt-6">
       <textarea
-        class="bg-white rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
+        class="bg-white rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-light placeholder-lightgray-400 focus:outline-none focus:bg-white"
         name="body"
-        placeholder="Comment"
+        placeholder="댓글을 입력해주세요"
         v-model="commentRequestDTO.content"
         @keyup.enter="createComment"
       ></textarea>
@@ -26,7 +26,7 @@
     <div class="w-full flex justify-end px-3 my-3" id="submitBtn">
       <input
         type="submit"
-        class="px-2.5 py-1.5 rounded-md text-white text-sm bg-indigo-500 text-lg cursor-pointer hover:bg-indigo-700"
+        class="px-2.5 py-1.5 rounded-md text-white text-sm btn text-lg btn-orange cursor-pointer"
         value="Post Comment"
         @click="createComment"
       />
@@ -89,4 +89,33 @@ function resetInput() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.btn {
+  margin-right: 5px;
+  padding: 5px 16px;
+  min-width: 75px;
+  border: 1px solid orange;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  background-color: #ff9800;
+}
+/* .btn:hover {
+  border-color: #ffad32;
+  background-color: #ffad32;
+} */
+
+/* .btn-outline {
+  background-color: transparent;
+  color: #ff9800;
+} */
+
+.btn:hover {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.btn-orange {
+  background-color: transparent;
+  color: #ff9800;
+}
+</style>

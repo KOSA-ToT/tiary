@@ -8,9 +8,8 @@
         <textarea
           type="text"
           class="border rounded-lg w-5/6 h-20"
-          v-model="content"
-          ></textarea
-        >
+          v-model="props.commentContent.content"
+        ></textarea>
       </div>
 
       <div class="flex justify-end items-center mt-3">
@@ -21,8 +20,8 @@
           Cancel
         </button>
         <button
-          class="px-4 py-2 ml-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md"
-          @click="$emit('updateContent', content)"
+          class="px-4 py-2 ml-2 btn btn-orange text-white text-sm font-medium rounded-md"
+          @click="$emit('updateContent', props.commentContent.content)"
         >
           Confirm
         </button>
@@ -34,9 +33,25 @@
 <script setup>
 import { defineProps, ref } from "vue";
 
-const content = ref("");
+const content = ref();
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
 
 defineEmits(["closeModal", "updateContent"]);
 </script>
-<style scoped></style>
+<style scoped>
+.btn {
+  min-width: 75px;
+  border: 1px solid orange;
+  transition: all 0.3s ease;
+  background-color: #ff9800;
+}
+.btn:hover {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.btn-orange {
+  background-color: transparent;
+  color: #ff9800;
+}
+</style>

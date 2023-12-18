@@ -5,8 +5,17 @@
     <div class="p-3">
       <div class="flex gap-3 items-center">
         <img
-          src="https://avatars.githubusercontent.com/u/22263436?v=4"
-          class="object-cover w-10 h-10 rounded-full border-2 border-emerald-400 shadow-emerald-400"
+          v-if="replyCommentData.userProfileImageUrl"
+          :src="
+            'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' +
+            replyCommentData.userProfileImageUrl
+          "
+          class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
+        />
+        <img
+          v-else
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+          class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
         />
 
         <h3 class="font-bold">
@@ -31,14 +40,16 @@
       </button> -->
       <div class="text-right">
         <!-- 회원이 작성한 댓글 -->
-        
+
         <span
+          v-if="user"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="openUpdateModal"
         >
           edit&nbsp;&nbsp;
         </span>
         <span
+          v-if="user"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="deleteComment"
         >
@@ -47,41 +58,44 @@
 
         <!-- 비회원이 작성한 댓글 -->
 
-        <!-- <span
+        <span
+          v-if="replyCommentData.createdBy === 'anonymousUser'"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="openModal('edit')"
         >
           edit&nbsp;&nbsp;
         </span>
         <span
+          v-if="replyCommentData.createdBy === 'anonymousUser'"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="openModal('delete')"
         >
           delete</span
-        > -->
+        >
       </div>
+      <div class="my-0 flex justify-center">
+        <CommentPasswordModal
+          v-if="isPasswordModalOpen"
+          @closeModal="closeModal"
+          @submitPassword="checkPassword"
+        ></CommentPasswordModal>
 
-      <CommentPasswordModal
-        v-if="isPasswordModalOpen"
-        @closeModal="closeModal"
-        @submitPassword="checkPassword"
-      ></CommentPasswordModal>
+        <CommentUpdateModal
+          v-if="isUpdateModalOpen"
+          @closeModal="closeModal"
+          @updateContent="editComment"
+          :commentContent="{
+            content: replyCommentData.content,
+          }"
+        >
+        </CommentUpdateModal>
 
-      <CommentUpdateModal
-        v-if="isUpdateModalOpen"
-        @closeModal="closeModal"
-        @updateContent="editComment"
-        :commentContent="{
-          content: replyCommentData.content,
-        }"
-      >
-      </CommentUpdateModal>
-
-      <ReplyInputModal
-        v-if="isReplyModalOpen"
-        @closeModal="closeModal"
-        @createReplyComment="createReplyComment"
-      ></ReplyInputModal>
+        <ReplyInputModal
+          v-if="isReplyModalOpen"
+          @closeModal="closeModal"
+          @createReplyComment="createReplyComment"
+        ></ReplyInputModal>
+      </div>
     </div>
   </div>
 </template>
@@ -158,24 +172,6 @@ async function checkPassword(password) {
     closeModal();
     console.log("Error confirming password", error);
   }
-  // axios
-  //   .post(
-  //     `http://localhost:8088/comment/guest/password-confirm/${replyCommentData.id}`,
-  //     commentRequestDTO.value
-  //   )
-  //   .then((response) => {
-  //     if (mode.value === "delete") {
-  //       deleteComment();
-  //     } else if (mode.value === "edit") {
-  //       closeModal();
-  //       openUpdateModal();
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     alert("비밀번호가 일치하지 않습니다.");
-  //     closeModal();
-  //     console.log("Error confirming password", error);
-  //   });
 }
 
 //  댓글 수정
@@ -194,18 +190,6 @@ async function editComment(content) {
   } catch (error) {
     console.log("failed edit comment", error);
   }
-  // axios
-  //   .patch(
-  //     `http://localhost:8088/comment/guest/2/${replyCommentData.id}`,
-  //     commentRequestDTO.value
-  //   )
-  //   .then((response) => {
-  //     console.log("Comment updated successfully", response);
-  //     closeModal();
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error updating comment", error);
-  //   });
 }
 
 // 댓글 삭제
@@ -226,16 +210,6 @@ async function deleteComment() {
     console.error("Error deleting comment", error);
   }
 
-  // let result = confirm("정말 삭제하시겠습니까?");
-  // if (result) {
-  //   axios
-  //     .delete(`http://localhost:8088/comment/guest/2/${replyCommentData.id}`)
-  //     .then((response) => {
-  //       alert("성공적으로 삭제되었습니다.");
-  //       router.push("/article-test");
-  //     })
-  //     .catch((error) => console.error("Error deleting comment", error));
-  // }
 }
 
 // 댓글 포맷
