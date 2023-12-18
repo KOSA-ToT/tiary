@@ -13,7 +13,7 @@ public class JwtProperties {
 
 	// AccessToken 관련 설정
 	@Getter
-	private static final Duration ACCESS_TOKEN_EXPIRE_DURATION = Duration.ofMinutes(1);
+	private static final Duration ACCESS_TOKEN_EXPIRE_DURATION = Duration.ofMinutes(30);
 
 	// RefreshToken 관련 설정
 	@Getter

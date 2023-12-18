@@ -1,9 +1,9 @@
 <template>
   <div :class="{ 'dark': isDarkMode, 'light': !isDarkMode }">
-    <div id="article" class="max-w-4xl mx-auto p-4 font-sans bg-white dark:bg-white-800">
+    <div id="article" class="max-w-4xl p-4 mx-auto font-sans bg-white dark:bg-white-800">
       <div id="category" :class="{ 'text-white': isDarkMode, 'text-black': !isDarkMode }">
-        <label for="category" class="block text-sm font-bold mb-2"></label>
-        <select v-model="categoryCode" class="w-40 p-2 border border-gray-300  dark:bg-white-300 dark:text-black">
+        <label for="category" class="block mb-2 text-sm font-bold"></label>
+        <select v-model="categoryCode" class="w-40 p-2 border border-gray-300 dark:bg-white-300 dark:text-black">
           <option disabled value="" selected>카테고리</option>
           <option v-for="i in categories" :key="i.categoryCode" :value="i.categoryCode"
             class="dark:bg-gray-700 dark:text-white">
@@ -12,26 +12,26 @@
         </select>
       </div>
       <div id="title" class="mb-4">
-        <label for="title" class="block text-sm font-bold mb-2"></label>
+        <label for="title" class="block mb-2 text-sm font-bold"></label>
         <input type="text" name="title" v-model="title" placeholder="제목을 입력해주세요"
-          class="w-full p-2 border-0 border-gray-300  dark:bg-gray-300 dark:text-black" />
+          class="w-full p-2 border-0 border-gray-300 dark:bg-gray-300 dark:text-black" />
       </div>
-      <div id="content" ref="editor" class="mb-8 h-full">
+      <div id="content" ref="editor" class="h-full mb-8">
         <div v-html="testHtml"></div>
       </div>
       <div id="hashtag" class="mb-4">
-        <label for="hashtag" class="block text-sm font-bold mb-2" placeholder="#해시태그"></label>
+        <label for="hashtag" class="block mb-2 text-sm font-bold" placeholder="#해시태그"></label>
         <input type="text" name="hashtag" v-model="hashtag" placeholder="#해시태그"
-          class="w-full p-2 border-0 border-gray-300  dark:bg-gray-300 dark:text-black" />
+          class="w-full p-2 border-0 border-gray-300 dark:bg-gray-300 dark:text-black" />
       </div>
     </div>
-    <div class="fixed bottom-0 right-0 left-0 flex justify-end items-center p-4 bg-white dark:bg-gray-300">
+    <div class="fixed bottom-0 left-0 right-0 flex items-center justify-end p-4 bg-white dark:bg-gray-300">
       <button @click.prevent="postArticle"
-        class="text-white py-2 px-4 bg-green-500 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
+        class="px-4 py-2 text-white transition duration-300 bg-green-500 rounded-full dark:bg-gray-800 hover:bg-purple-500">
         작성하기
       </button>
       <button
-        class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
+        class="px-4 py-2 ml-2 transition duration-300 bg-gray-300 rounded-full text-white-700 dark:bg-gray-800 hover:bg-purple-500">
         취소
       </button>
     </div>

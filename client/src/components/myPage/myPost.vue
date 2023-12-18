@@ -255,7 +255,7 @@ const totalPages = ref(0);
 const currentPage = ref(0);
 const visiblePages = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 const pageCalculate = ref();
-
+const selectedPosts = ref([]);
 const props = defineProps({
     user: {
         type: Object,
@@ -312,7 +312,7 @@ const formatCreatedAt = (createdAt) => {
 };
 const deleteSelected = () => {
     // 선택한 게시물의 ID를 서버에 전송
-    axios.delete('/{article-id}/{comment-id}', { selectedPosts: selectedPosts.value })
+    axios.delete('http://localhost:8088/article/{article-id}/{comment-id}', { selectedPosts: selectedPosts.value })
         .then((response) => {
             console.log('삭제 요청이 성공했습니다.');
             // 성공적으로 서버에서 응답을 받으면 선택한 게시물 목록에서 제거

@@ -52,3 +52,6 @@ export const listSubscribers = async (userId) => {
 export const listsubscribedWriter = async (userId) => {
   return await instance.get("/users/"+userId+"/subscribedWriter");
 }
+export const subscribeUser = async (userId) => {
+  return await authInstance.get("/users/"+userId+"/subscribe");
+}

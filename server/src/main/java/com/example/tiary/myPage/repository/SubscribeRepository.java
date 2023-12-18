@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     List<Subscribe> findByWriterId(@Param("writerId") Long writerId);
@@ -21,4 +22,5 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseSubscribeDto(s.userId, s.writerId, u.nickname, u.userPicture) FROM Subscribe s LEFT JOIN Users u ON s.writerId = u.id WHERE s.userId = :userId")
     List<ResponseSubscribeDto> showSubscribedWriterList(@Param("userId") Long userId);
 
+    Optional<Subscribe> findByUserIdAndWriterId(@Param("userId") Long userId, @Param("writerId") Long writerId);
 }
