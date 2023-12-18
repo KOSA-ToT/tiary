@@ -13,6 +13,8 @@ import com.example.tiary.myPage.service.UserService;
 import com.example.tiary.myPage.dto.response.ResponseUsersDto;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -86,8 +88,8 @@ public class UserServiceImpl implements UserService {
     //내 글 보기
     @Transactional
     @Override
-    public List<ResponseMyArticleDto> showMyArticle(Long userId){
-        List<ResponseMyArticleDto> myArticleList= userRepository.listMyArticle(userId);
+    public Page<ResponseMyArticleDto> showMyArticle(Long userId, Pageable pageable){
+        Page<ResponseMyArticleDto> myArticleList= userRepository.listMyArticle(userId, pageable);
         return myArticleList;
     }
 

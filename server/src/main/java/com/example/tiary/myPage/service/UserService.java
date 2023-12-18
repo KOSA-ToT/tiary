@@ -5,6 +5,8 @@ import com.example.tiary.myPage.dto.response.ResponseMyCommentDto;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.myPage.dto.response.ResponseUsersDto;
 import com.example.tiary.users.entity.Users;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,7 +28,7 @@ public interface UserService {
     //이메일 중복 검사
     boolean isEmailDuplicate(String email);
     //내 글 보기
-    List<ResponseMyArticleDto> showMyArticle(Long userId);
+    Page<ResponseMyArticleDto> showMyArticle(Long userId, Pageable pageable);
     //내 댓글 보기
     List<ResponseMyCommentDto> showMyComment(Long userId);
     //유저 inactive하기

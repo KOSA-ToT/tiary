@@ -47,27 +47,27 @@ public class MyPageController {
         }
     }
 
-//    //내 글 보기
-//    @GetMapping("/{userId}/posts")
-//    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId,Pageable pageable){
-//        try{
-//            Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
-//            return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
-//        }catch(Exception e){
-//            log.error(e.getMessage());
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
-//        }
-//    }
     //내 글 보기
     @GetMapping("/{userId}/posts")
-    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
+    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId,Pageable pageable){
         try{
-            return ResponseEntity.ok(userService.showMyArticle(userId));
+            Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
+            return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
         }catch(Exception e){
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
         }
     }
+//    //내 글 보기
+//    @GetMapping("/{userId}/posts")
+//    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
+//        try{
+//            return ResponseEntity.ok(userService.showMyArticle(userId));
+//        }catch(Exception e){
+//            log.error(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
+//        }
+//    }
     //내 댓글 보기
     @GetMapping("/{userId}/comments")
     public ResponseEntity viewMyComments(@PathVariable("userId") Long userId){
@@ -96,14 +96,16 @@ public class MyPageController {
 
     //내 정보 수정(닉네임)
     @PatchMapping("/{userId}/updateNickname")
-    public ResponseEntity updateNickName(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
+    public ResponseEntity updateNickName(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto,@AuthenticationPrincipal UserDto user){
         try{
+            System.out.println("user.getUsers().getId() : "+user.getUsers().getId());
             if (userService.isNicknameDuplicate(requestUserDto.getNickname())){
                 return new ResponseEntity<>("이미 존재하는 닉네임입니다",HttpStatus.CONFLICT);
             }else{
-                return new ResponseEntity<>(userService.editNickname(requestUserDto,userId),HttpStatus.RESET_CONTENT);
+                return new ResponseEntity<>(userService.editNickname(requestUserDto,user.getUsers().getId()),HttpStatus.RESET_CONTENT);
             }
 //            return ResponseEntity.created(URI.create("/users/"+userId)).body("수정완료했습니다.");
+
         }catch(Exception e){
             log.error("에러 : ",e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("닉네임 수정에 실패했습니다.");
@@ -112,7 +114,7 @@ public class MyPageController {
 
     //구독자 보기 (닉네임,프로필 이미지)
     @GetMapping("/{userId}/subscriber")
-    public ResponseEntity listSubscriber(@PathVariable("userId") Long writerId){
+    public ResponseEntity listSubscriber(@PathVariable("userId") Long writerId,@AuthenticationPrincipal UserDto user){
         try{
             return ResponseEntity.ok(subscribeService.readSubscriber(writerId));
         }catch(Exception e){
@@ -123,7 +125,7 @@ public class MyPageController {
 
     //구독 작가 보기
     @GetMapping("/{userId}/subscribedWriter")
-    public ResponseEntity listSubscribedWriter(@PathVariable("userId") Long userId){
+    public ResponseEntity listSubscribedWriter(@PathVariable("userId") Long userId,@AuthenticationPrincipal UserDto user){
         try{
             return ResponseEntity.ok(subscribeService.readsubscribedWriter(userId));
         }catch(Exception e){
@@ -133,7 +135,7 @@ public class MyPageController {
 
     //유저 INACTIVE 상태 만들기
     @PatchMapping("/{userId}/inactive")
-    public ResponseEntity inactiveUser(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
+    public ResponseEntity inactiveUser(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto,@AuthenticationPrincipal UserDto user){
         try{
             return new ResponseEntity<>(userService.accountCancellation(requestUserDto,userId),HttpStatus.RESET_CONTENT);
         }catch(Exception e){

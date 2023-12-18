@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class ResponseUsersDto {
+    private Long id;
     private String nickname;
     @Email
     private String email;
@@ -25,9 +26,10 @@ public class ResponseUsersDto {
     private UserStatus userStatus;
     public static ResponseUsersDto from(Users users) {
         return ResponseUsersDto.builder()
+                .id(users.getId())
                 .nickname(users.getNickname())
                 .email(users.getEmail())
-                //role?
+                .role(users.getRole())
                 .userPicture(users.getUserPicture())
                 .userStatus(users.getUserStatus())
                 .build();
