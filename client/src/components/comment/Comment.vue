@@ -12,6 +12,7 @@
         content: comment.content,
         createdAt: comment.createdAt,
         createdBy: comment.createdBy,
+        modifiedAt: comment.modifiedAt
       }"
     >
     </CommentCard>
@@ -26,6 +27,7 @@ import CommentCard from "@/components/comment/CommentCard.vue";
 import CommentInput from "@/components/comment/CommentInput.vue";
 import { useRoute, useRouter } from "vue-router";
 import { onMounted, reactive, ref, watch } from "vue";
+import { getCommentList } from "@/api/common.js";
 
 const currentRoute = useRoute();
 let articleId = currentRoute.params.articleId;
@@ -33,7 +35,7 @@ let articleId = currentRoute.params.articleId;
 let commentList = reactive([]);
 
 onMounted(async () => {
-  await getCommentList();
+  await getCommentLists();
   console.log(commentList.value);
   console.log("articleId", articleId);
 });
@@ -51,13 +53,10 @@ onMounted(async () => {
 // );
 
 // comment 불러오기
-async function getCommentList() {
+async function getCommentLists() {
   try {
-    const response = await axios.get(
-      "http://localhost:8088/comment/" + articleId
-    );
+    const response = await getCommentList(articleId);
     commentList.value = response.data;
-    
   } catch (err) {
     console.log(err);
   }

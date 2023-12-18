@@ -29,6 +29,11 @@ export const oauthTokenReq = async () => {
 };
 
 // comment
+
+export const getCommentList = async (articleId)=>{
+  return await instance.get("/comment/"+articleId)
+}
+
 export const createUserComment = async (commentRequestDTO, articleId) => {
   return await authInstance.post("/comment/" + articleId, commentRequestDTO);
 };
@@ -42,4 +47,34 @@ export const commentPasswordConfirm = async (commentRequestDTO, commentId) => {
     "/comment/guest/password-confirm/" + commentId,
     commentRequestDTO
   );
+};
+
+export const editUserComment = async (
+  commentRequestDTO,
+  articleId,
+  commentId
+) => {
+  return await authInstance.patch(
+    "/comment/" + articleId + "/" + commentId,
+    commentRequestDTO
+  );
+};
+
+export const editGuestComment = async (
+  commentRequestDTO,
+  articleId,
+  commentId
+) => {
+  return await instance.patch(
+    "/comment/guest/" + articleId + "/" + commentId,
+    commentRequestDTO
+  );
+};
+
+export const deleteUserComment = async (articleId, commentId) => {
+  return await authInstance.delete("/comment/" + articleId + "/" + commentId);
+};
+
+export const deleteGuestComment = async (articleId, commentId) => {
+  return await instance.delete("/comment/guest/" + articleId + "/" + commentId);
 };

@@ -123,6 +123,7 @@ function openModal(action) {
 function closeModal() {
   isPasswordModalOpen.value = false;
   isUpdateModalOpen.value = false;
+  isReplyModalOpen.value = false;
 }
 
 // 비밀번호 검증

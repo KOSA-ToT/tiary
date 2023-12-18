@@ -52,63 +52,70 @@ const commentRequestDTO = ref({
 
 // 댓글등록
 async function createComment() {
-  if (commentRequestDTO.value.content.trim() == "") {
+  const content = commentRequestDTO.value.content.trim();
+  const password = commentRequestDTO.value.password.trim();
+
+  if (content === "") {
     alert("댓글 내용을 입력하세요");
-  } else {
-    // 회원
+    return;
+  }
+
+  try {
     if (user) {
+      // 회원
       console.log("articleId", articleId);
-      // axios
-      //   .post(`http://localhost:8088/comment/2`, commentRequestDTO.value, {
-      //     headers: {
-      //       Authorization: auth,
-      //     },
-      //   })
-      //   .then((response) => {
-      //     console.log(response);
-      //     resetInput();
-      //   })
-      //   .catch((err) => console.log(err));
-      try {
-        const createUserCommentResponse = await createUserComment(
-          commentRequestDTO.value,
-          articleId
-        );
-        console.log(createUserCommentResponse);
-        resetInput();
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    // 비회원
-    else {
-      if (commentRequestDTO.value.password.trim() == "") {
+      await createUserComment(commentRequestDTO.value, articleId);
+    } else {
+      // 비회원
+      if (password === "") {
         alert("비밀번호를 입력하세요");
-      } else {
-        try {
-          const createGuestCommentResponse = await createGuestComment(
-            commentRequestDTO.value,
-            articleId
-          );
-          console.log(createGuestCommentResponse);
-          resetInput();
-        } catch (error) {
-          console.log(error);
-        }
-        // axios
-        //   .post(
-        //     `http://localhost:8088/comment/guest/2`,
-        //     commentRequestDTO.value
-        //   )
-        //   .then((response) => {
-        //     console.log(response);
-        //     resetInput();
-        //   })
-        //   .catch((err) => console.log(err));
+        return;
       }
+      await createGuestComment(commentRequestDTO.value, articleId);
     }
+
+    resetInput();
+  } catch (error) {
+    console.error(error);
   }
 }
+// async function createComment() {
+//   if (commentRequestDTO.value.content.trim() == "") {
+//     alert("댓글 내용을 입력하세요");
+//   } else {
+//     // 회원
+//     if (user) {
+//       console.log("articleId", articleId);
+//       try {
+//         const createUserCommentResponse = await createUserComment(
+//           commentRequestDTO.value,
+//           articleId
+//         );
+//         console.log(createUserCommentResponse);
+//         resetInput();
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     }
+//     // 비회원
+//     else {
+//       if (commentRequestDTO.value.password.trim() == "") {
+//         alert("비밀번호를 입력하세요");
+//       } else {
+//         try {
+//           const createGuestCommentResponse = await createGuestComment(
+//             commentRequestDTO.value,
+//             articleId
+//           );
+//           console.log(createGuestCommentResponse);
+//           resetInput();
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       }
+//     }
+//   }
+// }
 // 입력창 리셋
 function resetInput() {
   commentRequestDTO.value.content = "";
