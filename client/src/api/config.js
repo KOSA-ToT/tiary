@@ -1,12 +1,13 @@
 import axios from "axios";
-import moment from "moment";
+import Cookies from 'js-cookie';
+import { parseJwt } from '@/utils/jwtUtils';
 
 const baseConfig = {
   baseURL: "http://localhost:8088", // 로컬
   headers: {
     'Content-type': 'application/json'
   },
-  withCredentials: true,
+  withCredentials: true
 };
 
 const fileConfig = {
@@ -29,28 +30,36 @@ authInstance.interceptors.request.use((config) => {
 })
 
 const getLocalStorageToken = () => {
-  refresh();
   return localStorage.getItem("Authorization");
 }
+
+authInstance.interceptors.response.use(
+  (response) => {
+    // 응답이 성공적으로 왔을 때 처리
+    return response;
+  },
+  async (error) => {
+    // 응답이 에러인 경우 처리
+    if (error.response && error.response.status === 403) {
+      console.log('토큰 만료, 새로고침 필요');
+
+      // 토큰을 갱신하고 새로운 토큰을 설정
+      await refresh();
+      authInstance.defaults.headers.common['Authorization'] = getLocalStorageToken();
+
+      // 갱신된 토큰으로 다시 요청을 시도
+      return authInstance(error.config);
+    }
+
+    // 다른 에러 처리
+    return Promise.reject(error);
+  }
+);
 
 // 리프레시 토큰
 const refresh = async (config) => {
   let token = localStorage.getItem('Authorization');
   const decodedPayload = parseJwt(token);
-    //   email
-    // : 
-    // "dpa357@gmail.com"
-    // exp
-    // : 
-    // 1702799682
-    // id
-    // : 
-    // 4
-    // sub
-    // : 
-    // "dpa357@gmail.com"
-  
-  // const expireAt = ;
   console.log(decodedPayload.exp) // 유닉스 시간
 
   const currentTime = Math.floor(Date.now() / 1000);
@@ -58,17 +67,13 @@ const refresh = async (config) => {
   if(decodedPayload.exp - currentTime < 0) {
     console.log(decodedPayload.exp - currentTime)
     console.log('토큰 만료');
-  }
 
+    // 리프레시 토큰으로 엑세스 토큰 갱신
+    console.log('리프레시 토큰 = ')
+    const refreshToken = Cookies.get('refreshToken');
+    console.log(refreshToken)
+    // localStorage.setItem('Authorization', refreshToken);
+  }
   return config;
 }
 
-function parseJwt (token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
-
-  return JSON.parse(jsonPayload);
-}

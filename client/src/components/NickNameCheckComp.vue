@@ -27,6 +27,7 @@ import { useAuthStore } from '@/stores/auth';
 
 const nick = ref('');
 const email = ref(router.currentRoute.value.params.email);
+const store = useAuthStore();
 
 async function checkDupNick() {
   console.log(nick.value);
@@ -47,9 +48,7 @@ async function checkDupNick() {
         try {
           const loginDto = { email: email.value };
           const loginResponse = await loginReq(loginDto);
-          console.log(loginResponse.headers.authorization);
           localStorage.setItem('authorization', loginResponse.headers.authorization);
-          useAuthStore.login();
           router.push('/');
         } catch (error) {
           console.log(error);
