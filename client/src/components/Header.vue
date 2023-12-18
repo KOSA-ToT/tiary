@@ -17,7 +17,7 @@
       </div>
 
       <div class="flex items-center space-x-4">
-        <div v-if="isLoggedIn" class="meta text-right space-x-4">
+        <div v-if="authStore.isLoggedIn" class="meta text-right space-x-4">
           <span>{{ userVars.task }}</span>
           <button @click="articleCreate" class="btn btn-outline btn-orange">글 작성</button>
           <button @click="logoutHeader" class="btn btn-outline btn-orange">로그아웃</button>
@@ -43,6 +43,7 @@ import { useAuthStore } from '@/stores/auth';
 import Sidebar from '@/components/Sidebar.vue';
 import UserModal from '@/components/UserModal.vue';
 import router from '@/router/index.js';
+import { userEmail } from '@/utils/jwtUtils';
 
 const props = defineProps(['threshold']);
 const showHeader = ref(true);
@@ -54,7 +55,7 @@ const userVars = ref({
   isShowModal: false
 });
 
-const { isLoggedIn, logout, login } = authStore;
+const { logout, login } = authStore;
 
 function openModal(tasks) {
   userVars.value.task = tasks;
@@ -75,7 +76,7 @@ function logoutHeader() {
 watchEffect(() => {
   const authorizationToken = localStorage.getItem('Authorization');
   if (authorizationToken) {
-    login();
+    login(userEmail(authorizationToken));
   }
 });
 
