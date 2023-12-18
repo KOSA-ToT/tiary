@@ -7,9 +7,7 @@
           <div v-else class="h-48 bg-orange-500"></div>
           <div class="p-4">
             <div class="font-bold text-xl mb-2 lines-clamp-2">{{ related.title }}</div>
-            <p class="text-gray-700 text-base lines-clamp-2">
-              {{ related.content }}
-            </p>
+            <p class="text-gray-700 text-base lines-clamp-2" v-html="sanitizeHtml(related.content)"></p>
           </div>
         </div>
       </a>
@@ -36,6 +34,17 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData(); // 초기 로드
 });
+
+const sanitizeHtml = (html) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  
+  // 텍스트 노드만 추출
+  const textNodes = [...doc.body.childNodes].filter(node => node.nodeType === Node.TEXT_NODE);
+  
+  // 추출한 텍스트 노드들을 합쳐서 반환
+  return textNodes.map(node => node.nodeValue).join(' ');
+};
 </script>
 
 <style scoped>

@@ -1,4 +1,4 @@
-import { instance, fileInstance } from "./config";
+import { instance, fileInstance, authInstance } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);
@@ -26,4 +26,12 @@ export const emailAuthResultReq = async (key, task) => {
 
 export const oauthTokenReq = async () => {
   return await instance.post("/auth/oauth2/access-token");
+}
+
+export const postArticleRequest = async (requestArticleDto) => {
+  return await authInstance.post("/article",requestArticleDto)
+}
+
+export const deleteArticleRequest = async (articleId) => {
+  return await authInstance.delete("/article/"+articleId)
 }

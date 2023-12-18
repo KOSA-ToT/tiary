@@ -44,6 +44,7 @@ import axios from 'axios';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import router from '@/router';
+import { postArticleRequest } from '@/api/common';
 
 //컬러
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -111,7 +112,6 @@ onMounted(
   }
 );
 
-
 function postArticle() {
   const requestArticleDto = {
     title: title.value,
@@ -125,18 +125,20 @@ function postArticle() {
     alert('에디터 내용을 입력해 주세요.');
     throw new Error('editor content is required!');
   }
-  const auth = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpZCI6MiwiZXhwIjoxNzAyNjI2MDgyLCJlbWFpbCI6InRlc3QxQGdtYWlsLmNvbSJ9.czX7PSNuX_5-owZElLn9mwCYOB6hCLx4Ydh2W6aiYursnzUQQfCK6bMxIhLmluaiuwWubKt9eEMeJsGbjAkkDA";
-
-  axios.post('http://localhost:8088/article', requestArticleDto, {
-    headers: {
-      Authorization: auth
-    }
-  })
+  try {
+    const response = postArticleRequest(requestArticleDto)
     .then((response) => {
       if (response.status == 201) {
-        alert("확인")
-      }
+      alert("게시물이 작성되었습니다.")
+      console.log(response.data);
+      router.push('/article/' + response.data.id)
+    }
     })
+
+  } catch {
+    alert(response.status);
+    return;
+  }
 }
 
 watch(

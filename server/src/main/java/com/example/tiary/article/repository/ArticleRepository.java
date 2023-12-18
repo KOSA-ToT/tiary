@@ -13,6 +13,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
 	List<Article> findAllByCategory_CategoryCode(String categoryCode);
 
+	void deleteArticleByIdAndUsersId(Long articleId, Long usersId);
+
 	@Modifying
 	@Query("update Article a set a.view = a.view +1 where a.id = :id")
 	int updateViews(@Param("id")Long articleId);
