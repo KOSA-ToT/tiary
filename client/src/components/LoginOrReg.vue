@@ -88,11 +88,9 @@
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
-
 import { emailAuthReq, emailDupCheckReq } from '@/api/common';
 
 const props = defineProps(['task'])
-const emits = defineEmits(['emailSent']);
 
 const oauthGoogle = import.meta.env.VITE_SERVER_URL + import.meta.env.VITE_OAUTH_GOOGLE;
 const oauthNaver = import.meta.env.VITE_SERVER_URL + import.meta.env.VITE_OAUTH_NAVER;
@@ -108,6 +106,7 @@ async function submitEmail(task){
         if(task === '회원가입') {
             try {
                 const emailDupCheckResponse = await emailDupCheckReq(email.value);
+                console.log(emailDupCheckResponse)
                 if(!confirm(emailDupCheckResponse.data + " 사용하시겠습니까?")) {
                     return;
                 }
@@ -123,16 +122,12 @@ async function submitEmail(task){
         const request = await emailAuthReq(emailDto);
 
         alert(request.data);
-        emitEmailSent();
     } catch (error) {
         console.log("에러: ", error);
     }
     
 }
 
-function emitEmailSent() {
-    emits('emailSent');
-}
 
 </script>
 <style scoped>

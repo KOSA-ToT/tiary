@@ -1,11 +1,12 @@
 import axios from "axios";
+import { parseJwt } from '@/utils/jwtUtils';
 
 const baseConfig = {
   baseURL: "http://localhost:8088", // 로컬
   headers: {
     'Content-type': 'application/json'
   },
-  withCredentials: true,
+  withCredentials: true
 };
 
 const fileConfig = {
@@ -30,3 +31,31 @@ authInstance.interceptors.request.use((config) => {
 const getLocalStorageToken = () => {
   return localStorage.getItem("Authorization");
 }
+
+authInstance.interceptors.response.use(
+  (response) => {
+    // 응답이 성공적으로 왔을 때 처리
+    return response;
+  },
+  async (error) => {
+    // 응답이 에러인 경우 처리
+    if (error.response && error.response.status === 403) {
+      // 토큰을 갱신하고 새로운 토큰을 설정
+      await refresh(error);
+      authInstance.defaults.headers.common['Authorization'] = getLocalStorageToken();
+
+      // 갱신된 토큰으로 다시 요청을 시도
+      return authInstance(error.config);
+    }
+
+    // 다른 에러 처리
+    return Promise.reject(error);
+  }
+);
+
+// 리프레시 토큰
+const refresh = async (error) => {
+  const headerToken = error.response.headers.get('Authorization');
+  localStorage.setItem('Authorization', headerToken);
+}
+
