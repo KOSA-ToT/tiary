@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- 커버 이미지 영역 -->
-    <div v-if="article" class="h-64 bg-cover bg-center relative"
-      :style="{ 'background-image': `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('${article.headerImage}')`, 'background-color': showHeader ? 'rgba(169, 169, 169, 0.8)' : '' }">
-
+    <div v-if="article" class="h-64 bg-cover bg-center relative overflow-hidden">
+      <img src="/images/cover.png">
       <div class="absolute bottom-0 left-0 right-0 text-white text-center p-4">
         <h1 class="text-3xl font-bold mb-5">{{ article.title || '제목 없음' }}</h1>
+
         <div class="mb-4">
           <span class="ico_by">At </span>
           <span class="mr-5">
@@ -18,9 +18,10 @@
           <span class="ico_by">By </span>
           <span>{{ article.createdBy }}</span>
           <!-- <span v-if="authStore.isLoggedIn"> -->
-            <span v-if="true">
+          <span v-if="true">
             <span class="mx-2">•</span>
-            <router-link :to="{ name: 'ArticleEdit', params: { id: articleId }}">수정</router-link>
+            <router-link :to="{ name: 'ArticleEdit', params: { id: articleId } }"
+            class="">수정</router-link>
             <span class="mx-2">•</span>
             <button @click="deleteArticle">삭제</button>
           </span>
@@ -84,15 +85,15 @@ onMounted(async () => {
 
 const deleteArticle = () => {
   // 삭제 로직 구현
-  try{
+  try {
     const response = deleteArticleRequest(articleId)
-    .then((response) => {
-      if(response.status == 205){
-        alert("게시물이 삭제되었습니다.")
-        router.go("/");
-      }
-    })
-  }catch{
+      .then((response) => {
+        if (response.status == 205) {
+          alert("게시물이 삭제되었습니다.")
+          router.go("/");
+        }
+      })
+  } catch {
     alert("에러입니다.")
   }
 };
@@ -145,15 +146,7 @@ const formatTimeDifference = (createdAt) => {
   margin-bottom: 0.5rem;
 }
 
-.ico_by {
-  color: #bfbfbf;
-  font-family: Georgia;
-  font-size: 12px;
-  font-style: italic;
-  height: 15px;
-  margin-right: 4px;
-  width: 15px;
+.text-stroke {
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
-
-/* 기타 Tailwind CSS 클래스를 필요에 따라 추가할 수 있습니다. */
 </style>
