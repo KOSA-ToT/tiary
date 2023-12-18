@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md border rounded-lg">
+  <div class="w-3/4 border rounded-lg">
     <div class="flex flex-col p-5 rounded-lg shadow bg-white">
       <div class="flex">
         <div>

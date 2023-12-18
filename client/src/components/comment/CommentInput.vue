@@ -40,6 +40,8 @@ import { ref } from "vue";
 import { createUserComment, createGuestComment } from "@/api/common";
 import { useRoute } from "vue-router";
 
+defineEmits(["createComment", "submitPassword"]);
+
 const user = localStorage.getItem("Authorization");
 const currentRoute = useRoute();
 let articleId = currentRoute.params.articleId;
@@ -79,43 +81,7 @@ async function createComment() {
     console.error(error);
   }
 }
-// async function createComment() {
-//   if (commentRequestDTO.value.content.trim() == "") {
-//     alert("댓글 내용을 입력하세요");
-//   } else {
-//     // 회원
-//     if (user) {
-//       console.log("articleId", articleId);
-//       try {
-//         const createUserCommentResponse = await createUserComment(
-//           commentRequestDTO.value,
-//           articleId
-//         );
-//         console.log(createUserCommentResponse);
-//         resetInput();
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     }
-//     // 비회원
-//     else {
-//       if (commentRequestDTO.value.password.trim() == "") {
-//         alert("비밀번호를 입력하세요");
-//       } else {
-//         try {
-//           const createGuestCommentResponse = await createGuestComment(
-//             commentRequestDTO.value,
-//             articleId
-//           );
-//           console.log(createGuestCommentResponse);
-//           resetInput();
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       }
-//     }
-//   }
-// }
+
 // 입력창 리셋
 function resetInput() {
   commentRequestDTO.value.content = "";

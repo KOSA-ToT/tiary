@@ -10,22 +10,28 @@
         />
 
         <h3 class="font-bold">
-          {{ replyCommentData.createdBy }} 아이디: {{ replyCommentData.id }}
+          {{
+            replyCommentData.createdBy === "anonymousUser"
+              ? "Guest"
+              : replyCommentData.createdBy
+          }}
           <br />
-          <span class="text-sm text-gray-400 font-normal">{{
-            formatCreatedAt(replyCommentData.createdAt)
-          }}</span>
+          <span class="text-sm text-gray-400 font-normal">
+            {{
+              replyCommentData.createdAt == replyCommentData.modifiedAt
+                ? formatCreatedAt(replyCommentData.createdAt)
+                : formatCreatedAt(replyCommentData.modifiedAt)
+            }}
+          </span>
         </h3>
       </div>
-      <p class="text-gray-600 mt-2">
-        {{ replyCommentData.content }}
-      </p>
+      <p class="text-gray-600 mt-2">{{ replyCommentData.content }}</p>
       <!-- <button class="text-left text-blue-500" @click="replyToComment">
         Reply
       </button> -->
       <div class="text-right">
         <!-- 회원이 작성한 댓글 -->
-        <!-- 
+        
         <span
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="openUpdateModal"
@@ -37,11 +43,11 @@
           @click="deleteComment"
         >
           delete</span
-        > -->
+        >
 
         <!-- 비회원이 작성한 댓글 -->
 
-        <span
+        <!-- <span
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="openModal('edit')"
         >
@@ -52,7 +58,7 @@
           @click="openModal('delete')"
         >
           delete</span
-        >
+        > -->
       </div>
 
       <CommentPasswordModal
@@ -87,8 +93,17 @@ import CommentPasswordModal from "./CommentPasswordModal.vue";
 import CommentUpdateModal from "./CommentUpdateModal.vue";
 import ReplyInputModal from "./ReplyInputModal.vue";
 import router from "@/router";
+import {
+  commentPasswordConfirm,
+  editGuestComment,
+  editUserComment,
+  deleteGuestComment,
+  deleteUserComment,
+} from "@/api/common";
+
 const { replyCommentData } = defineProps(["replyCommentData"]);
 console.log(replyCommentData);
+let user = localStorage.getItem("Authorization");
 
 let commentRequestDTO = ref({
   content: "",
@@ -111,10 +126,6 @@ function openUpdateModal() {
 
 // 비밀번호 확인 모달창 열기
 function openModal(action) {
-  // 회원
-  // isUpdateModalOpen.value = true;
-
-  // 비회원
   mode.value = action;
   isPasswordModalOpen.value = true;
 }
@@ -127,59 +138,104 @@ function closeModal() {
 }
 
 // 비밀번호 검증
-function checkPassword(password) {
+async function checkPassword(password) {
   commentRequestDTO.value.password = password;
   console.log("비밀번호", commentRequestDTO.value.password);
-
-  axios
-    .post(
-      `http://localhost:8088/comment/guest/password-confirm/${replyCommentData.id}`,
-      commentRequestDTO.value
-    )
-    .then((response) => {
-      if (mode.value === "delete") {
-        deleteComment();
-      } else if (mode.value === "edit") {
-        closeModal();
-        openUpdateModal();
-      }
-    })
-    .catch((error) => {
-      alert("비밀번호가 일치하지 않습니다.");
+  try {
+    const passwordConfirmResponse = await commentPasswordConfirm(
+      commentRequestDTO.value,
+      replyCommentData.id
+    );
+    console.log(passwordConfirmResponse);
+    if (mode.value === "delete") {
+      deleteComment();
+    } else if (mode.value === "edit") {
       closeModal();
-      console.log("Error confirming password", error);
-    });
+      openUpdateModal();
+    }
+  } catch (error) {
+    alert("비밀번호가 일치하지 않습니다.");
+    closeModal();
+    console.log("Error confirming password", error);
+  }
+  // axios
+  //   .post(
+  //     `http://localhost:8088/comment/guest/password-confirm/${replyCommentData.id}`,
+  //     commentRequestDTO.value
+  //   )
+  //   .then((response) => {
+  //     if (mode.value === "delete") {
+  //       deleteComment();
+  //     } else if (mode.value === "edit") {
+  //       closeModal();
+  //       openUpdateModal();
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     alert("비밀번호가 일치하지 않습니다.");
+  //     closeModal();
+  //     console.log("Error confirming password", error);
+  //   });
 }
 
 //  댓글 수정
-function editComment(content) {
+async function editComment(content) {
   commentRequestDTO.value.content = content;
-  axios
-    .patch(
-      `http://localhost:8088/comment/guest/2/${replyCommentData.id}`,
-      commentRequestDTO.value
-    )
-    .then((response) => {
-      console.log("Comment updated successfully", response);
-      closeModal();
-    })
-    .catch((error) => {
-      console.error("Error updating comment", error);
-    });
+
+  const editComment = user ? editUserComment : editGuestComment;
+  try {
+    const editCommentResponse = await editComment(
+      commentRequestDTO.value,
+      replyCommentData.articleId,
+      replyCommentData.id
+    );
+    console.log("Comment updated successfully", editCommentResponse);
+    closeModal();
+  } catch (error) {
+    console.log("failed edit comment", error);
+  }
+  // axios
+  //   .patch(
+  //     `http://localhost:8088/comment/guest/2/${replyCommentData.id}`,
+  //     commentRequestDTO.value
+  //   )
+  //   .then((response) => {
+  //     console.log("Comment updated successfully", response);
+  //     closeModal();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error updating comment", error);
+  //   });
 }
 
 // 댓글 삭제
-function deleteComment() {
-  let result = confirm("정말 삭제하시겠습니까?");
-  if (result) {
-    axios
-      .delete(`http://localhost:8088/comment/guest/2/${replyCommentData.id}`)
-      .then((response) => {
-        alert("성공적으로 삭제되었습니다.");
-        router.push("/article-test");
-      })
-      .catch((error) => console.error("Error deleting comment", error));
+async function deleteComment() {
+  const confirmDelete = confirm("정말 삭제하시겠습니까?");
+  if (!confirmDelete) return;
+
+  const deleteComment = user ? deleteUserComment : deleteGuestComment;
+  try {
+    const response = await deleteComment(
+      replyCommentData.articleId,
+      replyCommentData.id
+    );
+    console.log(response);
+    closeModal();
+    alert("성공적으로 삭제되었습니다.");
+  } catch (error) {
+    console.error("Error deleting comment", error);
   }
+
+  // let result = confirm("정말 삭제하시겠습니까?");
+  // if (result) {
+  //   axios
+  //     .delete(`http://localhost:8088/comment/guest/2/${replyCommentData.id}`)
+  //     .then((response) => {
+  //       alert("성공적으로 삭제되었습니다.");
+  //       router.push("/article-test");
+  //     })
+  //     .catch((error) => console.error("Error deleting comment", error));
+  // }
 }
 
 // 댓글 포맷

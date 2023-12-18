@@ -1,6 +1,6 @@
 <template>
   <!-- 대댓글 작성 모달 -->
-  <div class="max-w-md border rounded-lg">
+  <div class="w-3/4 border rounded-lg">
     <div class="flex flex-col p-5 rounded-lg shadow bg-white">
       <div class="ml-3">
         <h2 class="font-semibold text-gray-800">대댓글 작성</h2>

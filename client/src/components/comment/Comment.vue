@@ -12,12 +12,12 @@
         content: comment.content,
         createdAt: comment.createdAt,
         createdBy: comment.createdBy,
-        modifiedAt: comment.modifiedAt
+        modifiedAt: comment.modifiedAt,
       }"
     >
     </CommentCard>
 
-    <CommentInput></CommentInput>
+    <CommentInput ></CommentInput>
   </div>
 </template>
 
@@ -25,8 +25,8 @@
 import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
 import CommentInput from "@/components/comment/CommentInput.vue";
-import { useRoute, useRouter } from "vue-router";
-import { onMounted, reactive, ref, watch } from "vue";
+import { useRoute} from "vue-router";
+import { onMounted, reactive, ref, watch, watchEffect } from "vue";
 import { getCommentList } from "@/api/common.js";
 
 const currentRoute = useRoute();
@@ -40,16 +40,24 @@ onMounted(async () => {
   console.log("articleId", articleId);
 });
 
-// 새로고침 안하고 바로 불러오기
+// // 새로고침 안하고 바로 불러오기
 // watch(
 //   () => commentList.value,
 //   (newVal, oldVal) => {
 //     if (newVal !== oldVal) {
-//       getCommentList();
+//       getCommentLists();
 //       console.log("Comment list updated:", newVal);
 //     }
 //   },
 //   { deep: true, immediate: true }
+// );
+
+// 새로고침 없이 데이터 업데이트
+// watchEffect(
+//   () => {
+//     getCommentLists();
+//   },
+//   { immediate: true, deep:true }
 // );
 
 // comment 불러오기

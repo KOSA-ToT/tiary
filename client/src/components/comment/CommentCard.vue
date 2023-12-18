@@ -76,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div class="my-0">
+      <div class="my-0 flex justify-center">
         <CommentPasswordModal
           v-if="isPasswordModalOpen"
           @closeModal="closeModal"
@@ -164,7 +164,6 @@ async function checkPassword(password) {
       commentData.id
     );
     console.log(passwordConfirmResponse);
-
     if (mode.value === "delete") {
       deleteComment();
     } else if (mode.value === "edit") {
