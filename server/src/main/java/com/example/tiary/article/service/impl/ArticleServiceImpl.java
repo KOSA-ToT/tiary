@@ -92,7 +92,7 @@ public class ArticleServiceImpl implements ArticleService {
 		// Article과 이미지 경로를 조합하여 ResponseArticleDto 리스트 생성
 		return getResponseArticleDtoAddImages(articles);
 	}
-	
+
 	//게시물에 이미지를 더하는 메서드
 	private List<ResponseArticleDto> getResponseArticleDtoAddImages(List<Article> articles) {
 		return articles.stream()
@@ -171,14 +171,18 @@ public class ArticleServiceImpl implements ArticleService {
 	//게시물 삭제
 	@Transactional
 	@Override
-	public String deleteArticle(Long articleId) {
+	public String deleteArticle(Long articleId, Long usersId) {
+		Users users = usersRepository.findById(usersId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_ALREADY_DELETE));
+		if(!Objects.equals(article.getUsers().getId(), users.getId())){
+			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+		}
 		articleImageRepository.findAllByArticleId(articleId)
 			.forEach(img -> s3UploadService.deleteImage(img.getImgUrl()));
-
 		articleLikesService.deleteLikes(articleId);
-		articleRepository.delete(article);
+		articleRepository.deleteArticleByIdAndUsersId(articleId,usersId);
 		return "삭제 완료";
 	}
 

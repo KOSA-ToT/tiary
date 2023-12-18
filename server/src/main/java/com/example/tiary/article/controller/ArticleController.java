@@ -23,6 +23,7 @@ import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.service.ArticleLikesService;
 import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.users.dto.UserDto;
+import com.example.tiary.users.entity.Users;
 
 @RestController
 @RequestMapping("/article")
@@ -78,8 +79,10 @@ public class ArticleController {
 
 	//게시물 삭제
 	@DeleteMapping("/{article-id}")
-	public ResponseEntity deleteArticle(@PathVariable("article-id") Long articleId) {
-		return new ResponseEntity<>(articleService.deleteArticle(articleId), HttpStatus.RESET_CONTENT);
+	public ResponseEntity deleteArticle(@PathVariable("article-id") Long articleId,
+		@AuthenticationPrincipal UserDto users) {
+
+		return new ResponseEntity<>(articleService.deleteArticle(articleId,users.getUsers().getId()), HttpStatus.RESET_CONTENT);
 	}
 
 	@GetMapping("/{article-id}/likes")

@@ -3,14 +3,14 @@
     <h2 style="text-align: center">Random Articles</h2>
     <section class="thumbnails">
       <div v-for="article in randomArticles.slice(0, 6)" :key="article.id">
-        <a :href="article.link" class="article-link">
+        <router-link :to="{ name: 'Post', params: { articleId: article.id } }" class="article-link">
           <div class="ml-6">
             <img v-if="article.imgPath && article.imgPath.length > 0" :src="getRandomImage(article.imgPath)" alt=""
                  class="shadow-md rounded-lg bg-slate-50 w-250 h-250 xl:w-[250px] xl:h-[250px] object-contain"
                  width="250" height="250" />
           </div>
           <h3>{{ article.title }}</h3>
-        </a>
+        </router-link>
       </div>
     </section>
   </section>
