@@ -1,5 +1,6 @@
 package com.example.tiary.myPage.controller;
 //import com.example.tiary.myPage.service.UserService;
+import com.example.tiary.article.dto.request.RequestArticleDto;
 import com.example.tiary.article.service.ArticleLikesService;
 import com.example.tiary.article.service.ArticleService;
 import com.example.tiary.users.dto.RequestUserDto;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.tiary.article.service.ArticleService;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -46,6 +48,15 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 정보 조회에 실패했습니다.");
         }
     }
+//    //이메일로 유저 찾기
+//    @GetMapping("/{email}")
+//    public ResponseEntity emailInfo(@PathVariable("email") String email){
+//        try{
+//            return ResponseEntity.ok(userService.readUserByEmail(email));
+//        }catch(Exception e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 정보 조회에 실패했습니다.");
+//        }
+//    }
 
     //내 글 보기
     @GetMapping("/{userId}/posts")
@@ -68,31 +79,50 @@ public class MyPageController {
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
 //        }
 //    }
+//    //내 댓글 보기
+//    @GetMapping("/{userId}/comments")
+//    public ResponseEntity viewMyComments(@PathVariable("userId") Long userId){
+//        try{
+//            return ResponseEntity.ok(userService.showMyComment(userId));
+//        }catch(Exception e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 댓글 조회에 실패했습니다.");
+//        }
+//    }
     //내 댓글 보기
     @GetMapping("/{userId}/comments")
-    public ResponseEntity viewMyComments(@PathVariable("userId") Long userId){
+    public ResponseEntity viewMyComments(@PathVariable("userId") Long userId,Pageable pageable){
         try{
-            return ResponseEntity.ok(userService.showMyComment(userId));
+            Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
+            return ResponseEntity.ok(userService.showMyComment(userId,fixedPageable));
         }catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 댓글 조회에 실패했습니다.");
         }
     }
-
-    //내 정보 수정(이메일)
-    @PatchMapping("/{userId}/updateEmail")
-    public ResponseEntity updateEmail(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
-        try{
-            if (userService.isEmailDuplicate(requestUserDto.getEmail())){
-                return new ResponseEntity<>("이미 존재하는 이메일입니다",HttpStatus.CONFLICT);
-            }else{
-                return new ResponseEntity<>(userService.editEmail(requestUserDto,userId),HttpStatus.RESET_CONTENT);
-            }
-//            return ResponseEntity.created(URI.create("/users/" + userId)).body("수정완료했습니다.");
-        }catch(Exception e){
-            log.error("에러 : ",e);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일 수정에 실패했습니다.");
-        }
-    }
+//    //게시물 수정
+//    @PatchMapping(value = "/article/{userId}")
+//    public ResponseEntity patchArticle(@PathVariable("userId") Long userId,
+//                                       @RequestBody RequestUserDto requestUserDto,
+//                                       @AuthenticationPrincipal UserDto user) throws IOException {
+//        return new ResponseEntity<>(
+//                userService.editNicknameInArticle(user.getUsers().getId(), articleId, requestArticleDto, multipartFileList),
+//                HttpStatus.OK);
+//    }
+//    //내 정보 수정(이메일)
+//    @PatchMapping("/{userId}/updateEmail")
+//    public ResponseEntity updateEmail(@PathVariable("userId") Long userId, @RequestBody RequestUserDto requestUserDto){
+//        try{
+//            if (userService.isEmailDuplicate(requestUserDto.getEmail())){
+//                return new ResponseEntity<>("이미 존재하는 이메일입니다",HttpStatus.CONFLICT);
+//            }else{
+//                return new ResponseEntity<>(userService.editEmail(requestUserDto,userId),HttpStatus.RESET_CONTENT);
+//            }
+////            return ResponseEntity.created(URI.create("/users/" + userId)).body("수정완료했습니다.");
+//        }catch(Exception e){
+//            log.error("에러 : ",e);
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일 수정에 실패했습니다.");
+//        }
+//    }
 
     //내 정보 수정(닉네임)
     @PatchMapping("/{userId}/updateNickname")

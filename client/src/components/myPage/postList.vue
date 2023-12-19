@@ -3,7 +3,7 @@
     <div class="container mx-auto my-24 md:px-6">
         <!-- Section: Design Block -->
         <section class="mb-32 text-center md:text-left">
-            <h2 class="mb-12 text-lg font-bold text-zinc-600">작성글</h2>
+            <h2 class="mb-12 text-lg font-bold text-zinc-600">{{ props.user.nickname.value }}님의 글</h2>
             <div class="flex flex-wrap mb-6" v-for="post in postList" :key="post.id">
                 <div class="w-full px-3 mb-6 ml-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-3/12">
                     <div class="relative mb-6 overflow-hidden bg-no-repeat bg-cover rounded-lg shadow-lg dark:shadow-black/20"
@@ -171,7 +171,10 @@
                             </g>
 
                         </svg>
-                        {{ post.categoryName }}
+                        <div class="ml-2">
+                            {{ post.categoryName }}
+                        </div>
+                        
                     </div>
                     <p class="mb-6 text-neutral-500 dark:text-neutral-300">
                         <small>작성일시 : {{ formatCreatedAt(post.createdAt) }}</small>
@@ -308,12 +311,6 @@ const deleteSelected = () => {
         });
 }; // 나중에 수정..
 
-const selectAll = () => {
-    console.log("선택됨");
-    allChecked.value = !allChecked.value;
-    // 전체 선택 상태에 따라 postList의 각 항목의 선택 상태를 업데이트
-    postList.value.forEach(post => (post.selected = allChecked.value));
-};
 const handleCheckboxChange = () => {
     // 개별 체크박스 상태 변경에 대한 로직 추가
     // postId를 이용하여 해당 포스트의 선택 여부를 처리

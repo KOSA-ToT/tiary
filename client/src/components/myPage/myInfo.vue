@@ -111,11 +111,11 @@
     </div>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { editNickname, handleWithDrawal, changeProfileImage } from '@/api/common';
-
+import { useAuthStore } from '@/stores/auth';
 const props = defineProps({
     user: {
         type: Object,
@@ -132,6 +132,8 @@ const route = useRoute();
 const router = useRouter();
 const previewImage = ref(null);
 const token = localStorage.getItem('Authorization');
+const authStore = useAuthStore();
+const { currentUser } = authStore;
 async function editNickName() {
     // 토큰이 없으면 요청을 보내지 않음
     if (!token) {
@@ -200,4 +202,7 @@ const handleFileChange = (event) => {
         previewImage.value = null;
     }
 };
+onMounted(() => {
+	console.log("currentUser : "+currentUser);
+});
 </script>

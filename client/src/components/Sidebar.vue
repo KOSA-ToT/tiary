@@ -41,7 +41,7 @@
                      class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                      :class="link.iconClass"></span> -->
                   <span class="ms-3">{{ link.text }}</span>
-               </router-link> 
+               </router-link>
             </li>
          </ul>
 
@@ -100,7 +100,6 @@ async function getUserInfo() {
       const res = await getUserInfoReq();
       return res.data;
    } catch (err) {
-      console.log(err);
    }
 }
 

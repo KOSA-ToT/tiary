@@ -110,8 +110,8 @@ export const handleWithDrawal = async (userId,nickname) => {
 export const changeProfileImage = async (userId,formData) => {
   return await fileInstance.post("/users/"+userId+"/uploadProfileImg", formData);
 }
-export const listMyComment = async (userId) => {
-  return await instance.get("/users/"+userId+"/comments");
+export const listMyComment = async (userId,page) => {
+  return await instance.get("/users/"+userId+"/comments?page="+page);
 }
 export const listSubscribers = async (userId) => {
   return await instance.get("/users/"+userId+"/subscriber");
@@ -121,4 +121,7 @@ export const listsubscribedWriter = async (userId) => {
 }
 export const subscribeUser = async (userId) => {
   return await authInstance.get("/users/"+userId+"/subscribe");
+}
+export const getUserByEmail = async (email) => {
+  return await instance.get("/users/"+email);
 }
