@@ -19,7 +19,7 @@ public class HashtagController {
 	}
 
 	@GetMapping
-	public ResponseEntity getHashtagContainCategoryCodeFromArticle(@RequestParam String categoryCode){
-		return new ResponseEntity(hashtagService.readHashtag(categoryCode), HttpStatus.OK);
+	public ResponseEntity getHashtagContainCategoryNameFromArticle(@RequestParam String categoryName){
+		return new ResponseEntity(hashtagService.readHashtag(categoryName), HttpStatus.OK);
 	}
 }
