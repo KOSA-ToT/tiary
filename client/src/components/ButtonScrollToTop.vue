@@ -1,19 +1,23 @@
 <template>
-  <img src="../../public/images/topBtn.png" @click="scrollToTop" v-show="shouldShowButton" class="scroll-to-top-button">
-  <!-- <img src="../../public/images/topBtn2.png" @click="scrollToTop" v-show="shouldShowButton" class="scroll-to-top-button"> -->
+  <img
+    src="/images/topBtn.png"
+    @click="scrollToTop"
+    v-show="shouldShowButton"
+    class="scroll-to-top-button"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const shouldShowButton = ref(false);
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener("scroll", handleScroll);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener("scroll", handleScroll);
 });
 
 const handleScroll = () => {
@@ -21,7 +25,7 @@ const handleScroll = () => {
 };
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 </script>
 

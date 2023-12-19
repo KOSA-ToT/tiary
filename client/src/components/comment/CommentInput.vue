@@ -7,7 +7,7 @@
     <div class="w-full px-3 mb-2 mt-6">
       <input
         v-if="!user"
-        class="bg-white rounded border border-gray-400 placeholder-gray-400 py-1 px-3 focus:bg-white font-medium focus:outline-none"
+        class="bg-white rounded border border-gray-400 placeholder-gray-400 py-1 px-3 focus:bg-white font-light focus:outline-none"
         placeholder="Password"
         type="password"
         v-model="commentRequestDTO.password"
