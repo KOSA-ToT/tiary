@@ -161,6 +161,7 @@ async function handleWithdrawal() {
     try {
         const response = await handleWithDrawal(props.user.id.value, { nickname: props.user.nickname.value });
         modalOpen.value = false;
+        authStore.logout();
         router.push("/");
     } catch (error) {
         console.log("에러 : " + error);

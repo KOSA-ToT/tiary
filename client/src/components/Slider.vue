@@ -2,7 +2,7 @@
   <div id="default-carousel" class="relative w-full mb-20 mt-20" data-carousel="slide">
     <!-- Carousel wrapper -->
     <div class="relative h-56 overflow-hidden md:h-96">
-      <!-- Carousel items -->
+      <!-- Carousel items --> 
       <transition name="fade" mode="out-in">
         <div :key="currentSlide" class="absolute inset-0">
           <img :src="items[currentSlide].imageSrc" class="absolute inset-0 w-full h-full object-cover" alt="...">

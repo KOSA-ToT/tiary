@@ -31,7 +31,7 @@
                 <svg version="1.1" id="naver" class="w-7" 
                 xmlns="http://www.w3.org/2000/svg" 
                 xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
-                <polygon class="logo" fill="#ffffff" points="115.9,145.8 83.7,98.4 83.7,145.8 50,145.8 50,54.3 84.2,54.3 116.4,101.6 116.4,54.3    150,54.3 150,145.8 115.9,145.8"/>
+                    <polygon class="logo" fill="#ffffff" points="115.9,145.8 83.7,98.4 83.7,145.8 50,145.8 50,54.3 84.2,54.3 116.4,101.6 116.4,54.3    150,54.3 150,145.8 115.9,145.8"/>
                 </svg>
             </div>
             <span class="ml-2 py-1.5 text-white font-bold">
@@ -83,14 +83,15 @@
     </div>
 </div>
 
-
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
+
 import { emailAuthReq, emailDupCheckReq } from '@/api/common';
 
 const props = defineProps(['task'])
+const emits = defineEmits()
 
 const oauthGoogle = import.meta.env.VITE_SERVER_URL + import.meta.env.VITE_OAUTH_GOOGLE;
 const oauthNaver = import.meta.env.VITE_SERVER_URL + import.meta.env.VITE_OAUTH_NAVER;
@@ -99,35 +100,34 @@ const task = ref(props.task);
 const email = ref('');
 
 async function submitEmail(task){
-    console.log(task);
-    console.log(email.value);
+  console.log(task);
+  console.log(email.value);
 
-    try {
-        if(task === '회원가입') {
-            try {
-                const emailDupCheckResponse = await emailDupCheckReq(email.value);
-                console.log(emailDupCheckResponse)
-                if(!confirm(emailDupCheckResponse.data + " 사용하시겠습니까?")) {
-                    return;
-                }
-            } catch (error) { // 이메일 중복
-                alert(error.response.data)
-                return;
-            }
+  try {
+    if(task === '회원가입') {
+      try {
+        const emailDupCheckResponse = await emailDupCheckReq(email.value);
+          if(!confirm(emailDupCheckResponse.data + " 사용하시겠습니까?")) {
+          return;
         }
-        const emailDto = {
-            email: email.value,
-            task: props.task
-        };
-        const request = await emailAuthReq(emailDto);
-
-        alert(request.data);
-    } catch (error) {
-        console.log("에러: ", error);
+        emits('isLoading', true);
+      } catch (error) { // 이메일 중복
+        alert(error.response.data)
+        return;
+      }
     }
-    
+    const emailDto = {
+        email: email.value,
+        task: props.task
+    };
+    const request = await emailAuthReq(emailDto);
+    alert(request.data);
+    emits('isLoading', false);
+  } catch (error) {
+    console.log("에러: ", error);
+  }
+  
 }
-
 
 </script>
 <style scoped>
