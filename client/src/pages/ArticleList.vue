@@ -7,7 +7,7 @@
           <h2 class="text-3xl mt-20 mb-12 font-semibold">{{ categoryName }}</h2>
           <hr>
         </div>
-        <img src="/images/loading.gif" class="mt-24" alt="Loading..." />
+        <img src="/images/loading_2.gif" class="mt-24" alt="Loading..." />
         게시물이 존재하지 않습니다 :(
       </div>
       <div v-else>
@@ -51,6 +51,8 @@
                   <hr class="my-4 border-gray-300" v-if="getArticle.indexOf(item) !== getArticle.length - 1">
                 </li>
               </ul>
+            </div>
+            </div>
             </div>
     <div v-if="getArticle.length === 0" class="flex justify-center items-center h-full">
       <Loading></Loading>
