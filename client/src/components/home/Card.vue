@@ -58,18 +58,18 @@
                 <p class="text-sm font-medium text-gray-400">문화와 예술</p>
                 <hr class="gray-300 my-2 w-3/4">
                 <p class="text-xl font-semibold text-gray-900">우리 봄이 볼 사람 ^0^~</p>
-                <p class="mt-3 text-base text-gray-500">우리 김씨네 자랑 봄이입니다 ㅎ ㅎ 만나는 사람마다 귀엽다고 해요! 어제는 올림픽 공원 갔다왔는데, 봄이가 엄청 좋아했어요! 방방 뛰어다니더라구요 ㅎㅎ 말리느라 고생했어요</p>
+                <p class="mt-3 text-base text-gray-500">우리 김씨네 자랑 봄이입니다 ㅎ ㅎ 만나는 사람마다 귀엽다고 해요! 어제는 올림픽 공원 갔다왔는데, 봄이가 엄청 좋아했어요! 방방 뛰어다니더라구요 ㅎㅎ 말리느라 고생했어요...</p>
               </div>
             </div>
             <!-- 해시태그 -->
             <ul class="mt-4 flex flex-wrap items-center justify-start text-sm gap-2">
                   <li title="Pricing type"
                       class="flex items-center cursor-pointer gap-0.5 bg-gray-100 text-black px-2 py-0.5 rounded-full">
-                      <span>문화</span>
+                      <span>일상</span>
                   </li>
                   <li title="Support for API"
                       class="flex items-center cursor-pointer gap-0.5 bg-gray-100 text-black px-2 py-0.5 rounded-full">
-                      <span>아쿠아리움</span>
+                      <span>강아지</span>
                   </li>
               </ul>
             </div>
@@ -97,11 +97,11 @@
             <ul class="mt-4 flex flex-wrap items-center justify-start text-sm gap-2">
                   <li title="Pricing type"
                       class="flex items-center cursor-pointer gap-0.5 bg-gray-100 text-black px-2 py-0.5 rounded-full">
-                      <span>여행/문화</span>
+                      <span>개발</span>
                   </li>
                   <li title="Support for API"
                       class="flex items-center cursor-pointer gap-0.5 bg-gray-100 text-black px-2 py-0.5 rounded-full">
-                      <span>API</span>
+                      <span>인사</span>
                   </li>
               </ul>
             </div>
