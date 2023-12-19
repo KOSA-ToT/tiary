@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.global.config.jwt.JwtProperties;
 import com.example.tiary.global.config.jwt.TokenService;
 import com.example.tiary.users.dto.EmailSendDto;
-import com.example.tiary.users.dto.EmailVerifyDto;
 import com.example.tiary.users.dto.RequestUserDto;
 import com.example.tiary.users.dto.UserDto;
 import com.example.tiary.users.service.EmailService;
@@ -45,14 +42,17 @@ public class UserController {
 	}
 
 	// 매니저, 어드민 접근 가능 TEST
-	@GetMapping("/no-user")
-	@PreAuthorize("hasAnyRole('WRITER', 'ADMIN')")
-	public String noUser(Authentication authentication) {
+	@GetMapping("/user")
+	// @PreAuthorize("hasAnyRole('WRITER', 'ADMIN')")
+	public ResponseEntity<Object> noUser(Authentication authentication) {
 		System.out.println(authentication.getPrincipal());
-		UserDto principal = (UserDto) authentication.getPrincipal();
-		System.out.println("principal nickname : " + principal.getUsers().getNickname());
-		System.out.println("principal email : " + principal.getUsers().getEmail());
-		return "<h1>user</h1>";
+		UserDto principal = (UserDto)authentication.getPrincipal();
+		Map<String, Object> response = new HashMap<>();
+		response.put("id", principal.getUsers().getId());
+		response.put("nickname", principal.getUsers().getNickname());
+		response.put("email", principal.getUsers().getEmail());
+		response.put("picture", principal.getUsers().getUserPicture());
+		return ResponseEntity.ok(response);
 	}
 
 	// 회원 가입
@@ -66,16 +66,16 @@ public class UserController {
 	@GetMapping("/chk-email")
 	public ResponseEntity checkDupEmail(@RequestParam("email") String email) {
 		return userService.existsEmail(email)
-				? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
-				: ResponseEntity.ok("사용 가능한 이메일입니다.");
+			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.")
+			: ResponseEntity.ok("사용 가능한 이메일입니다.");
 	}
 
 	// 닉네임 존재 여부 체크
 	@GetMapping("/chk-nickname")
 	public ResponseEntity checkDupNickname(@RequestParam("nickname") String nickname) {
 		return userService.existsNickname(nickname)
-				? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.")
-				: ResponseEntity.ok("사용 가능한 닉네임입니다.");
+			? ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.")
+			: ResponseEntity.ok("사용 가능한 닉네임입니다.");
 	}
 
 	// 인증 이메일 전송
@@ -97,18 +97,18 @@ public class UserController {
 		response.put("email", result);
 		response.put("accepted", "이메일 인증 완료");
 		return result != null ? ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
-				: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("제한시간이 초과되었습니다.");
+			: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("제한시간이 초과되었습니다.");
 	}
 
 	@PostMapping("/oauth2/access-token")
 	public ResponseEntity<Object> getAccessToken(@CookieValue("refreshToken") String refreshToken,
-			HttpServletResponse response) {
+		HttpServletResponse response) {
 		// TODO 승희: 반복되는 코드 처리
 		String email = tokenService.validateAndExtractEmailFromToken(refreshToken);
 		String accessToken = tokenService.createToken(
-				userService.loadUserByUsername(email).getId(),
-				email,
-				JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
+			userService.loadUserByUsername(email).getId(),
+			email,
+			JwtProperties.getACCESS_TOKEN_EXPIRE_DURATION());
 		response.addHeader(JwtProperties.getHEADER_STRING(), JwtProperties.getTOKEN_PREFIX() + accessToken);
 		return ResponseEntity.status(HttpStatus.CREATED).body("accessToken 발급 완료");
 	}
