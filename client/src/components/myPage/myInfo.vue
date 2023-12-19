@@ -9,9 +9,9 @@
                     <div class="pl-3 sm:col-span-4">
                         <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">아이디</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                            <div class="absolute inset-y-0 start-0 items-center ps-3.5 pointer-events-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                    class="w-5 h-5 text-gray-500 dark:text-gray-400">
+                                    class="w-5 h-5 mt-2.5 text-gray-500 dark:text-gray-400">
                                     <path
                                         d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
                                 </svg>
@@ -24,7 +24,7 @@
                                     class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">변경</button>
 
                             </div>
-                            <p v-if="isChangedNickname">{{ msgNickname }}</p>
+                            <div class="mt-2 ml-2 text-xs text-pink-700">{{ msgNickname }}</div>
                         </div>
                     </div>
                     <div class="pl-3 col-span-full">
@@ -124,7 +124,7 @@ const props = defineProps({
 });
 const changedNickName = ref("");
 let msgEmail = ref("");
-let msgNickname = ref("");
+const msgNickname = ref(" ");
 let isChanged = ref(false);
 let isChangedNickname = ref(false);
 const modalOpen = ref(false);

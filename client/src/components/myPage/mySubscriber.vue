@@ -2,25 +2,42 @@
     <SubscribeTab @subscribe="listSubscriber"></SubscribeTab>
     <div class="flex flex-col h-full pt-4">
         <div v-if="subscriberList"
-            class="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 w-[576px] mx-auto p-4 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none">
-            <div class="flex items-center justify-between w-full p-3 rounded-t-3xl">
+            class="relative flex flex-col items-center w-[576px] mx-auto p-4 bg-white dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none">
+            <div class="flex items-center justify-between w-full rounded-t-3xl">
             </div>
             <div v-for="subscriber in subscriberList"
                 class="flex h-full w-full items-start justify-between rounded-md border-[1px] border-[transparent] dark:hover:border-white/20 bg-white px-3 py-[20px] transition-all duration-150 hover:border-gray-200 dark:!bg-navy-800 dark:hover:!bg-navy-700">
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center justify-center w-16 h-16">
-                        <img class="w-full h-full rounded-full" v-if="subscriber.userPicture"
-                        :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + subscriber.userPicture"
-                            alt="" />
-                        <img class="w-full h-full rounded-full" v-else
-                            src="https://horizon-tailwind-react-corporate-7s21b54hb-horizon-ui.vercel.app/static/media/Nft1.0fea34cca5aed6cad72b.png"
-                            alt="" />
-                    </div>
-                    <div class="flex flex-col">
-                        <h5 class="text-base font-bold text-navy-700 dark:text-white">
-                            {{ subscriber.nickname }}
-                        </h5>
-                    </div>
+                    <router-link :to="'/writer-page/' + subscriber.userId" v-if="store.dataFromChild == '구독자'" class="flex items-center gap-3">
+                        <div class="flex items-center justify-center w-16 h-16">
+                            <img class="w-full h-full rounded-full" v-if="subscriber.userPicture"
+                                :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + subscriber.userPicture"
+                                alt="" />
+                            <img class="w-full h-full rounded-full" v-else
+                                src="https://horizon-tailwind-react-corporate-7s21b54hb-horizon-ui.vercel.app/static/media/Nft1.0fea34cca5aed6cad72b.png"
+                                alt="" />
+                        </div>
+                        <div class="flex flex-col">
+                            <h5 class="text-base font-bold text-navy-700 dark:text-white">
+                                {{ subscriber.nickname }}
+                            </h5>
+                        </div>
+                    </router-link>
+                    <router-link :to="'/writer-page/' + subscriber.writerId" v-if="store.dataFromChild == '구독작가'" class="flex items-center gap-3">
+                        <div class="flex items-center justify-center w-16 h-16">
+                            <img class="w-full h-full rounded-full" v-if="subscriber.userPicture"
+                                :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + subscriber.userPicture"
+                                alt="" />
+                            <img class="w-full h-full rounded-full" v-else
+                                src="https://horizon-tailwind-react-corporate-7s21b54hb-horizon-ui.vercel.app/static/media/Nft1.0fea34cca5aed6cad72b.png"
+                                alt="" />
+                        </div>
+                        <div class="flex flex-col">
+                            <h5 class="text-base font-bold text-navy-700 dark:text-white">
+                                {{ subscriber.nickname }}
+                            </h5>
+                        </div>
+                    </router-link>
                 </div>
                 <div class="flex items-center justify-center mt-3 text-navy-700 dark:text-white">
                     <button @click="subscribe(subscriber.userId)" :id="'subscriber-option-' + subscriber.userId"
@@ -49,7 +66,7 @@
 </template>
 <script setup>
 import SubscribeTab from '@/components/myPage/subscribeTab.vue';
-import { onMounted, ref, watch } from 'vue';
+import { onBeforeMount, onMounted, ref, watch } from 'vue';
 import axios from "axios";
 import { appStore } from '@/stores/store';
 import { storeToRefs } from 'pinia'
@@ -125,7 +142,6 @@ async function subscribe(userId) {
             alert('이미 구독한 사용자입니다!');
         }
         else {
-            showButton.value[userId] = 'notShow';
             alert('구독했습니다!');
             console.log("구독완료");
         }
@@ -137,5 +153,8 @@ async function subscribe(userId) {
 watch(() => store.dataFromChild, listSubscriber);
 onMounted(() => {
     listSubscriber();
+});
+onBeforeMount(()=>{
+	listSubscriber();
 });
 </script>
