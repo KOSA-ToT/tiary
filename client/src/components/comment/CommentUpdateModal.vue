@@ -8,7 +8,7 @@
         <textarea
           type="text"
           class="border rounded-lg w-5/6 h-20"
-          v-model="props.commentContent.content"
+          v-model="content"
         ></textarea>
       </div>
 
@@ -21,7 +21,7 @@
         </button>
         <button
           class="px-4 py-2 ml-2 btn btn-orange text-white text-sm font-medium rounded-md"
-          @click="$emit('updateContent', props.commentContent.content)"
+          @click="$emit('updateContent', content)"
         >
           Confirm
         </button>
@@ -31,12 +31,21 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, ref, watch } from "vue";
 
 const content = ref();
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
 
 defineEmits(["closeModal", "updateContent"]);
+
+// 댓글 내용이 변경될 때마다 content 값을 초기화
+watch(
+  () => props.commentContent.content,
+  () => {
+    content.value = props.commentContent.content;
+  },
+  { immediate: true }
+);
 </script>
 <style scoped>
 .btn {

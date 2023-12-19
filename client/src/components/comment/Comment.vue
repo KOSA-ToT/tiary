@@ -14,6 +14,7 @@
         createdBy: comment.createdBy,
         modifiedAt: comment.modifiedAt,
         userProfileImageUrl: comment.userProfileImageUrl,
+        email: comment.email,
       }"
     >
     </CommentCard>
@@ -23,42 +24,33 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import CommentCard from "@/components/comment/CommentCard.vue";
 import CommentInput from "@/components/comment/CommentInput.vue";
 import { useRoute } from "vue-router";
 import { onMounted, reactive, ref, watch, watchEffect } from "vue";
 import { getCommentList } from "@/api/common.js";
+import { useAuthStore } from "@/stores/auth";
 
 const currentRoute = useRoute();
 let articleId = currentRoute.params.articleId;
 
 let commentList = reactive([]);
+const authStore = useAuthStore();
 
 onMounted(async () => {
   await getCommentLists();
-  // console.log(commentList.value);
-  // console.log("articleId", articleId);
 });
 
 // // 새로고침 안하고 바로 불러오기
-watch(
-  () => commentList.value,
-  (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-      getCommentLists();
-      // console.log("Comment list updated:", newVal);
-    }
-  },
-  { deep: true, immediate: true }
-);
-
-// 새로고침 없이 데이터 업데이트
-// watchEffect(
-//   () => {
-//     getCommentLists();
+// watch(
+//   () => commentList.value,
+//   (newVal, oldVal) => {
+//     if (newVal !== oldVal) {
+//       getCommentLists();
+//       // console.log("Comment list updated:", newVal);
+//     }
 //   },
-//   { immediate: true, deep:true }
+//   { deep: true, immediate: true }
 // );
 
 // comment 불러오기
@@ -66,13 +58,11 @@ async function getCommentLists() {
   try {
     const response = await getCommentList(articleId);
     commentList.value = response.data;
+    console.log(response);
   } catch (err) {
     console.log(err);
   }
 }
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

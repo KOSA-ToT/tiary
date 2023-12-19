@@ -42,22 +42,20 @@
         <!-- 회원이 작성한 댓글 -->
 
         <span
-          v-if="user"
+        v-if="showEditDeleteBtn"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="openUpdateModal"
         >
           edit&nbsp;&nbsp;
         </span>
         <span
-          v-if="user"
+        v-if="showEditDeleteBtn"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
           @click="deleteComment"
         >
           delete</span
         >
-
         <!-- 비회원이 작성한 댓글 -->
-
         <span
           v-if="replyCommentData.createdBy === 'anonymousUser'"
           class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
@@ -101,12 +99,11 @@
 </template>
 
 <script setup>
-import axios from "axios";
-import { defineProps, ref } from "vue";
+import { defineProps, ref, computed } from "vue";
 import CommentPasswordModal from "./CommentPasswordModal.vue";
 import CommentUpdateModal from "./CommentUpdateModal.vue";
 import ReplyInputModal from "./ReplyInputModal.vue";
-import router from "@/router";
+import { useAuthStore } from "@/stores/auth";
 import {
   commentPasswordConfirm,
   editGuestComment,
@@ -116,7 +113,7 @@ import {
 } from "@/api/common";
 
 const { replyCommentData } = defineProps(["replyCommentData"]);
-console.log(replyCommentData);
+const authStore = useAuthStore();
 let user = localStorage.getItem("Authorization");
 
 let commentRequestDTO = ref({
@@ -132,6 +129,11 @@ let commentId = ref(replyCommentData.id);
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
+
+// 로그인 확인
+const showEditDeleteBtn = computed(() => {
+  return authStore.isLoggedIn && authStore.currentUser === replyCommentData.email;
+});
 
 // 수정 모달창 오픈
 function openUpdateModal() {

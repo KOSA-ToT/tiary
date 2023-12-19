@@ -3,8 +3,9 @@
   <div class="min-h-screen">
     <div v-show="!isLoading">
     <div v-if="getArticle.length === 0" class="flex justify-center items-center h-full">
-      <img src="/images/loading.gif" class="mt-24" alt="Loading..." />
-      게시물이 존재하지 않습니다 :(
+      <Loading></Loading>
+      <!-- <img src="/images/loading.gif" class="mt-24" alt="Loading..." />-->
+      게시물이 존재하지 않습니다 :( 
     </div>
     <div v-else>
       <div class="grid grid-cols-9 gap-1">
@@ -66,6 +67,7 @@ import Footer from '@/components/Footer.vue';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js'
+import Loading from '@/components/Loading.vue';
 
 const { categoryCode } = defineProps(['categoryCode'])
 const getArticle = ref([]);

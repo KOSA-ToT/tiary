@@ -34,13 +34,14 @@
                 </span>
               </h3>
             </div>
-            <p class="text-gray-600 mt-2">{{ commentData.content }}</p>
+            <p class="text-gray-600 mt-2">
+              {{ commentData.content }}
+            </p>
             <div
               class="text-sm text-gray-400 font-normal"
               v-if="commentData.children && commentData.children.length > 0"
               @click="showReplyComment"
             >
-              대댓글 개수: {{ commentData.children.length }}
               <ReplyCommentCard
                 v-for="(replyComment, index) in commentData.children"
                 :replyCommentData="commentData.children[index]"
@@ -51,20 +52,19 @@
             </button>
             <div class="text-right">
               <!-- 회원이 작성한 댓글 -->
-
               <span
-                v-if="user"
+                v-if="showEditDeleteBtn"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openUpdateModal"
               >
-                edit회원 &nbsp;&nbsp;
+                edit &nbsp;&nbsp;
               </span>
               <span
-                v-if="user"
+                v-if="showEditDeleteBtn"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="deleteComment"
               >
-                delete회원</span
+                delete</span
               >
 
               <!-- 비회원이 작성한 댓글 -->
@@ -73,14 +73,14 @@
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openModal('edit')"
               >
-                edit비회원&nbsp;&nbsp;
+                edit&nbsp;&nbsp;
               </span>
               <span
                 v-if="commentData.createdBy === 'anonymousUser'"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openModal('delete')"
               >
-                delete비회원</span
+                delete</span
               >
             </div>
           </div>
@@ -113,12 +113,12 @@
   </div>
 </template>
 <script setup>
-import axios from "axios";
-import { defineProps, ref } from "vue";
+import { defineProps, ref, computed } from "vue";
 import ReplyCommentCard from "../comment/ReplyCommentCard.vue";
 import CommentPasswordModal from "../comment/CommentPasswordModal.vue";
 import CommentUpdateModal from "../comment/CommentUpdateModal.vue";
 import ReplyInputModal from "./ReplyInputModal.vue";
+import { useAuthStore } from "@/stores/auth";
 import {
   commentPasswordConfirm,
   editUserComment,
@@ -130,6 +130,8 @@ import {
 } from "@/api/common";
 
 const { commentData } = defineProps(["commentData"]);
+const authStore = useAuthStore();
+
 let user = localStorage.getItem("Authorization");
 
 let commentRequestDTO = ref({
@@ -145,6 +147,11 @@ let commentId = ref(commentData.id);
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
+
+// 로그인 확인
+const showEditDeleteBtn = computed(() => {
+  return authStore.isLoggedIn && authStore.currentUser === commentData.email;
+});
 
 // 수정 모달창 오픈
 function openUpdateModal() {
@@ -243,6 +250,7 @@ async function createReplyComment(replyComment) {
         commentData.articleId
       );
       console.log(commentResponse);
+      closeModal();
     } else {
       if (password == "") {
         alert("비밀번호를 입력하세요");

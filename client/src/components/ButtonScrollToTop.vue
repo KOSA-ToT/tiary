@@ -1,6 +1,6 @@
 <template>
   <img src="../../public/images/topBtn.png" @click="scrollToTop" v-show="shouldShowButton" class="scroll-to-top-button">
-  <img src="../../public/images/topBtn2.png" @click="scrollToTop" v-show="shouldShowButton" class="scroll-to-top-button">
+  <!-- <img src="../../public/images/topBtn2.png" @click="scrollToTop" v-show="shouldShowButton" class="scroll-to-top-button"> -->
 </template>
 
 <script setup>

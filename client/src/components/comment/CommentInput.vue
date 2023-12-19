@@ -99,16 +99,6 @@ function resetInput() {
   transition: all 0.3s ease;
   background-color: #ff9800;
 }
-/* .btn:hover {
-  border-color: #ffad32;
-  background-color: #ffad32;
-} */
-
-/* .btn-outline {
-  background-color: transparent;
-  color: #ff9800;
-} */
-
 .btn:hover {
   background-color: #ff9800;
   color: #fff;
