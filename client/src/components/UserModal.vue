@@ -30,7 +30,7 @@
           <span class="sr-only">Close Modal</span>
         </button>
         <!-- 로고 -->
-        <img src="/images/logo.png" class="w-32 mx-auto" />
+        <img src="/images/header_logo.png" class="mt-12 mb-10 w-32 mx-auto" />
         <div class="mt-2 flex flex-col items-center">
           <h1 class="text-2xl xl:text-3xl font-extrabold">
             {{ task }}
@@ -46,7 +46,7 @@
       </div>
       <div v-if="isLoading" class="bg-white/60 flex items-center justify-center absolute top-0 right-0 left-0 bottom-0">
       <Loading>
-        <h1 class="text-4xl font-bold mt-20">이메일 전송중...</h1>
+        <h1 class="text-4xl font-bold mt-20">이메일 전송중...📨</h1>
       </Loading>
     </div>
     </div>
