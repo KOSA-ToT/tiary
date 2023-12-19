@@ -30,12 +30,29 @@ onMounted(async () => {
 );
 
 const randomArticle = ref([])
-onMounted( async () => {
-  const response = await axios.get('http://localhost:8088/article')
-  .then((response) => {
-    randomArticle.value = response.data;
-    console.log(randomArticle.value);
-  })
-})
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8088/article');
+    // response.data에서 6개의 랜덤 인덱스를 뽑아서 randomArticle.value에 할당
+    randomArticle.value = getRandomArticles(response.data, 6);
+  } catch (error) {
+    console.error('데이터를 불러오는 도중 오류가 발생했습니다:', error);
+  }
+});
+
+function getRandomArticles(articles, count) {
+  const result = [];
+  const visitedIndices = new Set();
+
+  while (result.length < count) {
+    const randomIndex = Math.floor(Math.random() * articles.length);
+
+    if (!visitedIndices.has(randomIndex)) {
+      result.push(articles[randomIndex]);
+      visitedIndices.add(randomIndex);
+    }
+  }
+  return result;
+}
 </script>
 <style scoped></style>
