@@ -66,7 +66,6 @@
               >
                 delete</span
               >
-
               <!-- 비회원이 작성한 댓글 -->
               <span
                 v-if="commentData.createdBy === 'anonymousUser'"
@@ -258,6 +257,7 @@ async function createReplyComment(replyComment) {
       }
       commentRequestDTO.value.password = replyComment.password;
       await createGuestComment(commentRequestDTO.value, commentData.articleId);
+      closeModal();
     }
   } catch (error) {
     console.log(error);
@@ -277,5 +277,4 @@ function padZero(num) {
   return num.toString().padStart(2, "0");
 }
 </script>
-
 <style scoped></style>
