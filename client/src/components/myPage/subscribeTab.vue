@@ -45,8 +45,8 @@ const toggleButtonSubscribedWriter = () => {
 </script>
 <style>
 .tab[aria-current="page"] {
-    background-color: #ffeefb;
+    background-color: #ffffff;
     /* 현재 페이지 버튼의 배경색을 변경 */
-    color: #c03ac5;
+    color: #ff9100;
     /* 현재 페이지 버튼의 텍스트 색상을 변경 */
 }</style>
