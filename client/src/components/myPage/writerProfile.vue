@@ -22,15 +22,19 @@
                                 </div>
                             </div>
                             <div class="flex flex-col mb-4">
-                                <button @click="subscribe(User.id.value)"
-                                    class="px-6 py-3 mb-1 mr-5 text-sm font-bold text-orange-500 uppercase transition-all duration-150 ease-linear bg-white border border-orange-500 border-solid rounded-full outline-none bg-opacity-40 hover:bg-orange-500 hover:text-white active:bg-orange-600 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-                                    </svg>
-                                </button>
-                                <h1 class="mr-6 text-2xl font-medium text-white">{{ User.nickname.value }}</h1>
+                              <div class="mb-1">
+                                  <h1 class="mr-6 text-2xl font-medium text-white">{{ User.nickname.value }}</h1>
+                                </div>
+                                <div>
+                                  <button @click="subscribe(User.id.value)"
+                                      class="px-6 py-3 mb-1 mr-5 text-sm font-bold text-orange-500 uppercase transition-all duration-150 ease-linear bg-white border border-orange-500 border-solid rounded-full outline-none bg-opacity-40 hover:bg-orange-500 hover:text-white active:bg-orange-600 focus:outline-none">
+                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                          stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                          <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                                      </svg>
+                                  </button>
+                                </div>
                             </div>
                             <img class="w-24 h-24 mb-6 rounded-full shadow-lg"
                                 :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + User.userPicture.value"
