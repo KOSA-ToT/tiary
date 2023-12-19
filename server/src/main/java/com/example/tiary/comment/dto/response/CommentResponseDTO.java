@@ -20,6 +20,7 @@ import lombok.ToString;
 @ToString
 public class CommentResponseDTO {
 	private Long id;
+	private Long userId;
 	private String content;
 	private String password;
 	private String commentType;
