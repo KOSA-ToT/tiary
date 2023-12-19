@@ -2,7 +2,7 @@
   <div>
     <!-- 커버 이미지 영역 -->
     <div v-if="article" class="h-64 bg-cover bg-center relative overflow-hidden">
-      <img src="/images/cover.png">
+      <img :src="getRandomDefaultImage()" class="opacity-70 blur-sm">
       <div class="absolute bottom-0 left-0 right-0 text-white text-center p-4">
         <h1 class="text-3xl font-bold mb-5">{{ article.title || '제목 없음' }}</h1>
 
@@ -133,6 +133,16 @@ const shouldShowEditDeleteButtons = computed(() => {
   // 사용자가 로그인했고, 현재 사용자와 게시물 작성자가 동일한 경우에만 표시
   return authStore.isLoggedIn && authStore.currentUser === article.value.email;
 });
+
+const defaultImageArray=[
+  '/images/cover/travle_1.jpeg',
+  '/images/cover/travle_2.jpeg',
+  '/images/cover/travle_3.jpeg'
+]
+function getRandomDefaultImage() {
+  const randomIndex = Math.floor(Math.random() * defaultImageArray.length);
+  return defaultImageArray[randomIndex];
+}
 </script>
 <style scoped>
 /* 추가된 스타일 */
