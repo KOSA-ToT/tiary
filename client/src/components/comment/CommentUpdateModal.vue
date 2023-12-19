@@ -9,8 +9,7 @@
           type="text"
           class="border rounded-lg w-5/6 h-20"
           v-model="content"
-          ></textarea
-        >
+        ></textarea>
       </div>
 
       <div class="flex justify-end items-center mt-3">
@@ -21,7 +20,7 @@
           Cancel
         </button>
         <button
-          class="px-4 py-2 ml-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md"
+          class="px-4 py-2 ml-2 btn btn-orange text-white text-sm font-medium rounded-md"
           @click="$emit('updateContent', content)"
         >
           Confirm
@@ -32,11 +31,36 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, ref, watch } from "vue";
 
-const content = ref("");
+const content = ref();
 const props = defineProps(["closeModal", "updateContent", "commentContent"]);
 
 defineEmits(["closeModal", "updateContent"]);
+
+// 댓글 내용이 변경될 때마다 content 값을 초기화
+watch(
+  () => props.commentContent.content,
+  () => {
+    content.value = props.commentContent.content;
+  },
+  { immediate: true }
+);
 </script>
-<style scoped></style>
+<style scoped>
+.btn {
+  min-width: 75px;
+  border: 1px solid orange;
+  transition: all 0.3s ease;
+  background-color: #ff9800;
+}
+.btn:hover {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.btn-orange {
+  background-color: transparent;
+  color: #ff9800;
+}
+</style>

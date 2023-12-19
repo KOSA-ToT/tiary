@@ -6,8 +6,17 @@
           <div class="p-3">
             <div class="flex gap-3 items-center">
               <img
-                src="https://avatars.githubusercontent.com/u/22263436?v=4"
-                class="object-cover w-10 h-10 rounded-full border-2 border-emerald-400 shadow-emerald-400"
+                v-if="commentData.userProfileImageUrl"
+                :src="
+                  'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' +
+                  commentData.userProfileImageUrl
+                "
+                class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
+              />
+              <img
+                v-else
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
               />
               <h3 class="font-bold">
                 {{
@@ -22,36 +31,36 @@
                       ? formatCreatedAt(commentData.createdAt)
                       : formatCreatedAt(commentData.modifiedAt)
                   }}
-
-                  <!-- {{ formatCreatedAt(commentData.createdAt) }} -->
                 </span>
               </h3>
             </div>
-            <p class="text-gray-600 mt-2">{{ commentData.content }}</p>
+            <p class="text-gray-600 mt-2">
+              {{ commentData.content }}
+            </p>
             <div
               class="text-sm text-gray-400 font-normal"
               v-if="commentData.children && commentData.children.length > 0"
               @click="showReplyComment"
             >
-              대댓글 개수: {{ commentData.children.length }}
               <ReplyCommentCard
                 v-for="(replyComment, index) in commentData.children"
                 :replyCommentData="commentData.children[index]"
               ></ReplyCommentCard>
             </div>
-            <button class="text-left text-blue-500" @click="replyToComment">
+            <button class="text-left text-orange-300" @click="replyToComment">
               Reply
             </button>
             <div class="text-right">
               <!-- 회원이 작성한 댓글 -->
-
               <span
+                v-if="showEditDeleteBtn"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openUpdateModal"
               >
-                edit&nbsp;&nbsp;
+                edit &nbsp;&nbsp;
               </span>
               <span
+                v-if="showEditDeleteBtn"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="deleteComment"
               >
@@ -59,19 +68,20 @@
               >
 
               <!-- 비회원이 작성한 댓글 -->
-
-              <!-- <span
+              <span
+                v-if="commentData.createdBy === 'anonymousUser'"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openModal('edit')"
               >
                 edit&nbsp;&nbsp;
               </span>
               <span
+                v-if="commentData.createdBy === 'anonymousUser'"
                 class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
                 @click="openModal('delete')"
               >
                 delete</span
-              > -->
+              >
             </div>
           </div>
         </div>
@@ -103,12 +113,12 @@
   </div>
 </template>
 <script setup>
-import axios from "axios";
-import { defineProps, ref } from "vue";
+import { defineProps, ref, computed } from "vue";
 import ReplyCommentCard from "../comment/ReplyCommentCard.vue";
 import CommentPasswordModal from "../comment/CommentPasswordModal.vue";
 import CommentUpdateModal from "../comment/CommentUpdateModal.vue";
 import ReplyInputModal from "./ReplyInputModal.vue";
+import { useAuthStore } from "@/stores/auth";
 import {
   commentPasswordConfirm,
   editUserComment,
@@ -120,6 +130,8 @@ import {
 } from "@/api/common";
 
 const { commentData } = defineProps(["commentData"]);
+const authStore = useAuthStore();
+
 let user = localStorage.getItem("Authorization");
 
 let commentRequestDTO = ref({
@@ -135,6 +147,11 @@ let commentId = ref(commentData.id);
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
+
+// 로그인 확인
+const showEditDeleteBtn = computed(() => {
+  return authStore.isLoggedIn && authStore.currentUser === commentData.email;
+});
 
 // 수정 모달창 오픈
 function openUpdateModal() {
@@ -233,6 +250,7 @@ async function createReplyComment(replyComment) {
         commentData.articleId
       );
       console.log(commentResponse);
+      closeModal();
     } else {
       if (password == "") {
         alert("비밀번호를 입력하세요");
@@ -244,16 +262,6 @@ async function createReplyComment(replyComment) {
   } catch (error) {
     console.log(error);
   }
-
-  // 비회원일 경우
-  // axios
-  //   .post(`http://localhost:8088/comment/guest/2`, commentRequestDTO.value)
-  //   .then((response) => {
-  //     console.log(response);
-  //     commentRequestDTO.value.content = "";
-  //     commentRequestDTO.value.password = "";
-  //   })
-  //   .catch((err) => console.log(err));
 }
 
 // 등록 시간 포맷
