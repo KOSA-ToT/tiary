@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,8 @@ import com.example.tiary.category.service.CategoryService;
 import com.example.tiary.global.batch.BatchService;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
+import com.example.tiary.global.pagination.PageResponseArticleDto;
+import com.example.tiary.global.pagination.PaginationService;
 import com.example.tiary.global.s3.service.S3UploadService;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UsersRepository;
@@ -49,6 +52,7 @@ public class ArticleServiceImpl implements ArticleService {
 	private final S3UploadService s3UploadService;
 	private final ArticleLikesService articleLikesService;
 	private final BatchService batchService;
+	private final PaginationService paginationService;
 
 	// 게시물 조회
 	@Transactional(readOnly = true)
@@ -87,10 +91,17 @@ public class ArticleServiceImpl implements ArticleService {
 	//카테고리로 조회
 	@Transactional(readOnly = true)
 	@Override
-	public List<ResponseArticleDto> readArticleFromCategoryCode(String categoryCode) {
-		List<Article> articles = articleRepository.findAllByCategory_CategoryCode(categoryCode);
+	public PageResponseArticleDto<ResponseArticleDto> readArticleFromCategoryCode(String categoryName,
+		Pageable pageable) {
+		Page<Article> articles = articleRepository.findAllByCategory_CategoryName(categoryName,
+			pageable);
+		List<ResponseArticleDto> responseArticleDtoList = getResponseArticleDtoAddImages(
+			articles.getContent());
+		List<Integer> barNumber = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),
+			articles.getTotalPages());
+
 		// Article과 이미지 경로를 조합하여 ResponseArticleDto 리스트 생성
-		return getResponseArticleDtoAddImages(articles);
+		return new PageResponseArticleDto<>(responseArticleDtoList,articles,barNumber);
 	}
 
 	//게시물에 이미지를 더하는 메서드

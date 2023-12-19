@@ -15,7 +15,7 @@
       <div class="flex flex-col items-center mb-6">
          <!-- Add your profile picture here -->
          <img src="/images/loading.gif" alt="Profile" class="w-16 h-16 rounded-full mb-2" />
-         <h5 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Your Name</h5>
+         <h5 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ authStore.currentUser }}</h5>
       </div>
       <!-- Write and Apply Buttons -->
       <div class="flex justify-center">
@@ -50,8 +50,10 @@
  
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
 const isSideBar = ref(false);
+const authStore = useAuthStore();
 
 function onOffSidebar() {
    isSideBar.value = !isSideBar.value;
