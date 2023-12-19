@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- 커버 이미지 영역 -->
-    <div v-if="article" class="h-64 bg-cover bg-center relative"
-      :style="{ 'background-image': `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('${article.headerImage}')`, 'background-color': showHeader ? 'rgba(169, 169, 169, 0.8)' : '' }">
-
+    <div v-if="article" class="h-64 bg-cover bg-center relative overflow-hidden">
+      <img src="/images/cover.png">
       <div class="absolute bottom-0 left-0 right-0 text-white text-center p-4">
         <h1 class="text-3xl font-bold mb-5">{{ article.title || '제목 없음' }}</h1>
+
         <div class="mb-4">
           <span class="ico_by">At </span>
           <span class="mr-5">
@@ -18,12 +18,14 @@
           <span class="ico_by">By </span>
           <span>{{ article.createdBy }}</span>
           <!-- <span v-if="authStore.isLoggedIn"> -->
-            <span v-if="true">
-            <span class="mx-2">•</span>
-            <router-link :to="{ name: 'ArticleEdit', params: { id: articleId }}">수정</router-link>
-            <span class="mx-2">•</span>
-            <button @click="deleteArticle">삭제</button>
-          </span>
+          
+<span v-if="shouldShowEditDeleteButtons">
+  <span class="mx-2">•</span>
+  <router-link :to="{ name: 'ArticleEdit', params: { id: articleId } }">수정</router-link>
+  <span class="mx-2">•</span>
+  <button @click="deleteArticle">삭제</button>
+</span>
+
         </div>
       </div>
       <!-- 헤더 영역 -->
@@ -37,7 +39,7 @@
       <div class="max-w-2xl mx-auto mt-4 p-4">
         <div class="flex flex-wrap justify-start items-end space-x-2">
           <span v-for="hashtag in article.hashtagList" :key="hashtag.id">
-            <div class="bg-blue-500 text-white p-2 rounded-full mb-2">
+            <div class="bg-amber-500 text-white p-2 rounded-full mb-2">
               #{{ hashtag.hashtagName }}
             </div>
           </span>
@@ -59,40 +61,38 @@
 import Header from '@/components/Header.vue';
 import recommendations from '@/components/article/Recommendations.vue';
 import comment from '@/components/comment/Comment.vue';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js';
 import router from '@/router';
 import { deleteArticleRequest } from '@/api/common';
+import { useAuthStore } from '@/stores/auth';
 
 const { articleId } = defineProps(['articleId']);
 const article = ref(null);
-
-
-// 로그인 상태 관리
 
 onMounted(async () => {
   try {
     const response = await axios.get(`http://localhost:8088/article/${articleId}`);
     article.value = response.data;
+    console.log(article);
   } catch (error) {
     console.error('글을 불러오는 데 실패했습니다:', error);
   }
 });
 
 // editArticle 및 deleteArticle 메소드 정의
-
 const deleteArticle = () => {
   // 삭제 로직 구현
-  try{
+  try {
     const response = deleteArticleRequest(articleId)
-    .then((response) => {
-      if(response.status == 205){
-        alert("게시물이 삭제되었습니다.")
-        router.go("/");
-      }
-    })
-  }catch{
+      .then((response) => {
+        if (response.status == 205) {
+          alert("게시물이 삭제되었습니다.")
+          router.go("/");
+        }
+      })
+  } catch {
     alert("에러입니다.")
   }
 };
@@ -121,10 +121,22 @@ const formatTimeDifference = (createdAt) => {
     return `${minutes} 분 전`;
   }
 };
-</script>
 
+// 로그인 상태 관리
+const authStore = useAuthStore();
+
+const shouldShowEditDeleteButtons = computed(() => {
+  // 사용자가 로그인했고, 현재 사용자와 게시물 작성자가 동일한 경우에만 표시
+  return authStore.isLoggedIn && authStore.currentUser === article.value.email;
+});
+</script>
 <style scoped>
 /* 추가된 스타일 */
+.bg-cover img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
 .bg-blue-500 {
   background-color: #3490dc;
 }
@@ -145,15 +157,7 @@ const formatTimeDifference = (createdAt) => {
   margin-bottom: 0.5rem;
 }
 
-.ico_by {
-  color: #bfbfbf;
-  font-family: Georgia;
-  font-size: 12px;
-  font-style: italic;
-  height: 15px;
-  margin-right: 4px;
-  width: 15px;
+.text-stroke {
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
-
-/* 기타 Tailwind CSS 클래스를 필요에 따라 추가할 수 있습니다. */
 </style>

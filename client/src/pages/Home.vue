@@ -1,5 +1,4 @@
 <template>
-   
   <div>
     <Header :threshold="100"></Header>
     <Slider></Slider>
@@ -7,12 +6,6 @@
     <RandomArticle :randomArticles="randomArticle"></RandomArticle>
     <Card></Card>
     <Footer></Footer>
-    <UserModal
-        v-if="userVars.isShowModal"
-        v-model:task="userVars.task"
-        v-model:isShowModal="userVars.isShowModal"
-        >
-    </UserModal>
   </div>
 </template>
 
@@ -20,29 +13,12 @@
 import Header from '@/components/Header.vue';
 import Slider from '@/components/Slider.vue';
 import Footer from '@/components/Footer.vue';
-import RandomArticle from '@/components/RandomArticle.vue';
+import RandomArticle from '@/components/home/RandomArticle.vue'
 import Card from '@/components/home/Card.vue';
-import UserModal from '@/components/UserModal.vue';
-import Category from '@/components/Category.vue';
+import Category from '@/components/home/Category.vue';
 
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
-// 유저
-const userVars = ref({
-    task: '',
-    isShowModal: false
-})
-
-function openModal(tasks) { 
-    userVars.value.task = tasks
-    userVars.value.isShowModal = true;
-}
-
-function logout() {
-  if(confirm("로그아웃 하시겠습니까?")) {
-    localStorage.removeItem('Authorization');
-  }
-}
 
 const categories = ref([])
 onMounted(async () => {

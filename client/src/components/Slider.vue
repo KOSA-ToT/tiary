@@ -3,10 +3,11 @@
     <!-- Carousel wrapper -->
     <div class="relative h-56 overflow-hidden md:h-96">
       <!-- Carousel items -->
-      <div v-for="(item, index) in items" :key="index"
-        :class="{ 'hidden': currentSlide !== index, 'duration-700 ease-in-out': true }" data-carousel-item>
-        <img :src="item.imageSrc" class="absolute inset-0 w-full h-full object-cover" alt="...">
-      </div>
+      <transition name="fade" mode="out-in">
+        <div :key="currentSlide" class="absolute inset-0">
+          <img :src="items[currentSlide].imageSrc" class="absolute inset-0 w-full h-full object-cover" alt="...">
+        </div>
+      </transition>
     </div>
 
     <!-- Slider controls -->
@@ -48,11 +49,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const items = [
-  { imageSrc: "/images/spring.jpg" },
-  { imageSrc: "/images/error.jpg" },
-  { imageSrc: "/images/logo.png" },
-  { imageSrc: "/images/dog.jpg" },
-  { imageSrc: "/images/spring.jpg" },
+  { imageSrc: "/images/slider1.png" },
+  { imageSrc: "/images/slider2.png" },
+  { imageSrc: "/images/slider3.png" },
+  { imageSrc: "/images/slider4.png" },
+  { imageSrc: "/images/slider5.png" },
 ];
 
 const totalSlides = items.length;
@@ -82,5 +83,11 @@ onMounted(() => {
   });
 });
 </script>
-
-<style scoped>/* Add any additional styles if needed */</style>
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>

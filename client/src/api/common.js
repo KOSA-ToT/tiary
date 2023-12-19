@@ -28,6 +28,10 @@ export const oauthTokenReq = async () => {
   return await instance.post("/auth/oauth2/access-token");
 };
 
+export const getUserInfoReq = async () => {
+  return await authInstance.get("/auth/user");
+};
+
 // comment
 
 export const getCommentList = async (articleId) => {

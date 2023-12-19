@@ -48,7 +48,7 @@ async function checkDupNick() {
         try {
           const loginDto = { email: email.value };
           const loginResponse = await loginReq(loginDto);
-          localStorage.setItem('authorization', loginResponse.headers.authorization);
+          localStorage.setItem('Authorization', loginResponse.headers.authorization);
           router.push('/');
         } catch (error) {
           console.log(error);

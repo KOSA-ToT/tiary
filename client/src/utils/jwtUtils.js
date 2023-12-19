@@ -17,3 +17,13 @@ export function userEmail(token) {
     console.log('토큰이 없습니다.');
   }
 }
+
+export function userId(token) {
+  if (token) {
+    const decodedPayload = parseJwt(token);
+    return decodedPayload.id;
+  } else {
+    console.log('토큰이 없습니다.');
+  }
+
+}

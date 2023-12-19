@@ -24,7 +24,7 @@ const router = createRouter({
     routes: [
         {path: '/', name : 'Home', component: Home},
         {path: '/error', component: Error},
-        { path: '/mypage/',
+        {path: '/mypage/',
                     component: MypageProfile,
                     children : [
                         {
@@ -51,11 +51,16 @@ const router = createRouter({
         {path: '/article-create', name:'ArticleCreate', component : ArticleCreate, props : true},
         {path: '/article-edit/:articleId', name:'ArticleEdit', component : ArticleEdit, props : true},
         {path: '/category' ,name: 'CategoryPage', component :       ArticleList , props : (route) =>
-        ({categoryCode : route.query.categoryCode})},
+        ({categoryName : route.query.categoryName})},
         {path: '/nickname-check/:email', name: 'Nickcheck', component: NickCheck},
         {path: '/auth/verify-email', component: VerifyEmail},
         {path: '/oauth/callback', component: OauthCallback},
     ],
     })
+
+router.beforeEach((to, from, next) => {
+    window.scrollTo(0,0);
+    next();
+});
 
 export default router;

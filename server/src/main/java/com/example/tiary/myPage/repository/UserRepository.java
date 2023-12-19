@@ -30,8 +30,8 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     //내 댓글 보기
     @Query("SELECT new com.example.tiary.myPage.dto.response.ResponseMyCommentDto(c.id, c.article.id, c.article.title, c.content, c.createdAt) " +
             "FROM Comment c " +
-            "JOIN Users u ON c.createdBy = u.nickname " +
+            "JOIN Users u ON c.users.id = u.id " +
             "JOIN Article a ON c.article.id = a.id " +  // 추가: Article 테이블 조인
-            "WHERE u.nickname = (SELECT u.nickname FROM Users u WHERE u.id = :userId)")
+            "WHERE u.id = :userId")
     Page<ResponseMyCommentDto> listMyComment(@Param("userId") Long userId, Pageable pageable);
 }
