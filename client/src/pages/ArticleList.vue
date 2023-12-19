@@ -18,18 +18,21 @@
         <div class="grid grid-cols-7 gap-1">
           <div class="col-start-2 col-end-5">
             <ul class="grid grid-cols-1 xl:grid-cols-1 gap-y-10 gap-x-6 items-start p-8 mt-12">
-              <li v-for="item in getArticle" :key="item.id"
-                class="relative flex flex-col sm:flex-row xl:flex-col items-start">
+              <li v-for="item in getArticle" :key="item.id" class="relative flex flex-col sm:flex-row xl:flex-col 
+      items-start
+      p-4 transition-all duration-300 hover:border-orange-300 hover:shadow-md">
+
                 <router-link :to="{ name: 'Post', params: { articleId: item.id } }" class="flex w-full">
                   <!-- 왼쪽 묶음 -->
-                  <div class="flex flex-col w-full">
+                  <div class="flex flex-col w-full
+                    justify-between">
                     <!-- 제목 -->
                     <h3 class="mb-1 text-slate-900 font-semibold dark:text-slate-200">
                       <span class="mb-1 block text-xl mb-3 leading-6 text-black">{{ item.title || 'No Title Available'
                       }}</span>
                     </h3>
                     <!-- 본문 -->
-                    <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6">
+                    <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6 lines-clamp-3">
                       <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
                     </div>
                     <!-- 메타데이터 -->
@@ -53,17 +56,16 @@
               </li>
             </ul>
           </div>
+          <div class="col-start-5 col-end-7 mt-24">
+            <div class="flex justify-center gap-2 flex-wrap p-4">
+              <span v-for="hashtag in getHashtag"
+                class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
+                #{{ hashtag.hashtagName || 'No Hashtag Available' }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="col-start-5 col-end-7 mt-24">
-    <div class="flex justify-center gap-2 flex-wrap p-4">
-      <span v-for="hashtag in getHashtag"
-        class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
-        #{{ hashtag.hashtagName || 'No Hashtag Available' }}
-      </span>
     </div>
   </div>
   <Footer />
@@ -161,5 +163,18 @@ onMounted(() => {
   font-size: 12px;
   overflow: hidden;
   padding-top: 20px;
+}
+
+.thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.lines-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
 }
 </style>

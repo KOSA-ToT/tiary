@@ -3,34 +3,23 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <a v-for="related in relatedArticles" :key="related.id" :href="'/article/' + related.articleId" class="sm:col-span-1">
         <div class="bg-white rounded-lg overflow-hidden shadow-md">
-          <div >
-          <!-- v-if="hasImages(related.content)" class="h-48 bg-cover bg-center" 
-          :style="{ 'background-image': `url('${getRandomImage(related.content)}')` }">
-        </div>
-          <div v-else class="h-48 bg-orange-500">
-             -->
-             <img
-              v-if="relatedArticles.imgPath && relatedArticles.imgPath.length > 0"
-              :src="getRandomImage(relatedArticles.imgPath)"
-              alt=""
-              style="object-fit: cover; object-position: center center;"
-            />
+          <div>
             <img
-              v-else
-              :src="getRandomDefaultImage()"
+              :src="getThumbnailImage(related.content)"
               alt=""
               style="object-fit: cover; object-position: center center;"
             />
           </div>
           <div class="p-4">
             <div class="font-bold text-xl mb-2 lines-clamp-2">{{ related.title }}</div>
-            <p class="text-gray-700 text-base lines-clamp-2" v-html="sanitizeHtml(related.content)"></p>
+            <div class="text-gray-700 text-base lines-clamp-2">{{ sanitizeHtml(related.content) }}</div>
           </div>
         </div>
       </a>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -39,44 +28,38 @@ const { articleId } = defineProps(['articleId']);
 const relatedArticles = ref([]);
 const defaultImageArray = ["/images/cat_1.jpg", "/images/cat_2.jpg", "/images/dog.jpg"];
 
-const fetchData = async () => {
+onMounted(() => {
+  fetchData(); // 초기 로드
+});
+
+async function fetchData() {
   try {
     const response = await axios.get(`http://localhost:8089/batch/recommendations/${articleId}`);
     relatedArticles.value = response.data.responseRelatedArticleDtoList;
   } catch (error) {
     console.error('글을 불러오는 데 실패했습니다:', error);
   }
-};
+}
 
-onMounted(() => {
-  fetchData(); // 초기 로드
-});
+function getThumbnailImage(content) {
+  const match = content.match(/<img[^>]+src="([^">]+)"/);
+  return match ? match[1] : getRandomDefaultImage();
+}
 
-const sanitizeHtml = (html) => {
+function sanitizeHtml(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  
-  // 텍스트 노드만 추출
   const textNodes = [...doc.body.childNodes].filter(node => node.nodeType === Node.TEXT_NODE);
-  
-  // 추출한 텍스트 노드들을 합쳐서 반환
   return textNodes.map(node => node.nodeValue).join(' ');
-};
-
-function getRandomImage(imgPathArray) {
-  const randomIndex = Math.floor(Math.random() * imgPathArray.length);
-  return imgPathArray[randomIndex];
-};
+}
 
 function getRandomDefaultImage() {
   const randomIndex = Math.floor(Math.random() * defaultImageArray.length);
   return defaultImageArray[randomIndex];
-};
-
+}
 </script>
 
 <style scoped>
-/* CSS 파일이나 컴포넌트 내에서 사용 가능 */
 .lines-clamp-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
