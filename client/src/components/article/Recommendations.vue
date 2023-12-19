@@ -3,8 +3,25 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <a v-for="related in relatedArticles" :key="related.id" :href="'/article/' + related.articleId" class="sm:col-span-1">
         <div class="bg-white rounded-lg overflow-hidden shadow-md">
-          <div v-if="related.imageUrl" class="h-48 bg-cover bg-center" :style="{ 'background-image': `url('${related.imageUrl}')` }"></div>
-          <div v-else class="h-48 bg-orange-500"></div>
+          <div >
+          <!-- v-if="hasImages(related.content)" class="h-48 bg-cover bg-center" 
+          :style="{ 'background-image': `url('${getRandomImage(related.content)}')` }">
+        </div>
+          <div v-else class="h-48 bg-orange-500">
+             -->
+             <img
+              v-if="relatedArticles.imgPath && relatedArticles.imgPath.length > 0"
+              :src="getRandomImage(relatedArticles.imgPath)"
+              alt=""
+              style="object-fit: cover; object-position: center center;"
+            />
+            <img
+              v-else
+              :src="getRandomDefaultImage()"
+              alt=""
+              style="object-fit: cover; object-position: center center;"
+            />
+          </div>
           <div class="p-4">
             <div class="font-bold text-xl mb-2 lines-clamp-2">{{ related.title }}</div>
             <p class="text-gray-700 text-base lines-clamp-2" v-html="sanitizeHtml(related.content)"></p>
@@ -14,13 +31,13 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const { articleId } = defineProps(['articleId']);
 const relatedArticles = ref([]);
+const defaultImageArray = ["/images/cat_1.jpg", "/images/cat_2.jpg", "/images/dog.jpg"];
 
 const fetchData = async () => {
   try {
@@ -45,6 +62,17 @@ const sanitizeHtml = (html) => {
   // 추출한 텍스트 노드들을 합쳐서 반환
   return textNodes.map(node => node.nodeValue).join(' ');
 };
+
+function getRandomImage(imgPathArray) {
+  const randomIndex = Math.floor(Math.random() * imgPathArray.length);
+  return imgPathArray[randomIndex];
+};
+
+function getRandomDefaultImage() {
+  const randomIndex = Math.floor(Math.random() * defaultImageArray.length);
+  return defaultImageArray[randomIndex];
+};
+
 </script>
 
 <style scoped>

@@ -116,87 +116,51 @@ function getUserPictureUrl() {
 }
 
 onMounted(() => {
-   // 사이드바 내부에서의 클릭이면, 사이드바를 닫지 않음
-   // 사이드바 외부에서의 클릭이면, 사이드바를 닫음
-   const sidebar = document.getElementById('sideBar');
-   const sidebtn = document.getElementById('sideBtn');
-   window.addEventListener('click', closeSidebar);
+  // 사이드바 내부에서의 클릭이면, 사이드바를 닫지 않음
+  // 사이드바 외부에서의 클릭이면, 사이드바를 닫음
+  const sidebar = document.getElementById("sideBar");
+  const sidebtn = document.getElementById("sideBtn");
+  window.addEventListener("click", closeSidebar);
 
-   // 사이드바 외부에서의 클릭 && 사이드바 전용 버튼이 아닌 경우(사이드바 오픈을 막지 않기 위함)  
-   function closeSidebar(event) {
-      const isClickInsideSidebar = sidebar.contains(event.target);
-      const isClickSidebtn = sidebtn.contains(event.target);
-      if (!isClickInsideSidebar && !isClickSidebtn) {
-         isSideBar.value = false;
-      }
-   }
+  // 사이드바 외부에서의 클릭 && 사이드바 전용 버튼이 아닌 경우(사이드바 오픈을 막지 않기 위함)
+  function closeSidebar(event) {
+    const isClickInsideSidebar = sidebar.contains(event.target);
+    const isClickSidebtn = sidebtn.contains(event.target);
+    if (!isClickInsideSidebar && !isClickSidebtn) {
+      isSideBar.value = false;
+    }
+  }
 });
 </script>
 <style scoped>
-/* Add your own styles for icons, etc. */
-.icon-dashboard::before {
-   content: url('/path/to/dashboard-icon.svg');
-   /* Replace with your own dashboard icon */
-}
-
-.icon-kanban::before {
-   content: url('/path/to/kanban-icon.svg');
-   /* Replace with your own kanban icon */
-}
-
-.icon-inbox::before {
-   content: url('/path/to/inbox-icon.svg');
-   /* Replace with your own inbox icon */
-}
-
-.icon-users::before {
-   content: url('/path/to/users-icon.svg');
-   /* Replace with your own users icon */
-}
-
-.icon-products::before {
-   content: url('/path/to/products-icon.svg');
-   /* Replace with your own products icon */
-}
-
-.icon-signin::before {
-   content: url('/path/to/signin-icon.svg');
-   /* Replace with your own sign-in icon */
-}
-
-.icon-signup::before {
-   content: url('/path/to/signup-icon.svg');
-   /* Replace with your own sign-up icon */
-}
-
 /* 추가된 스타일 */
 .btn {
-   margin-right: 5px;
-   padding: 5px 16px;
-   /* padding 수정 */
-   min-width: 75px;
-   /* 최소 너비 추가 */
-   border: 1px solid orange;
-   border-radius: 30px;
-   transition: all 0.3s ease;
+  margin-right: 5px;
+  padding: 5px 16px;
+  /* padding 수정 */
+  min-width: 75px;
+  /* 최소 너비 추가 */
+  border: 1px solid orange;
+  border-radius: 30px;
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
-   border-color: #ff9800;
+  border-color: #ff9800;
 }
 
 .btn-outline {
-   background-color: transparent;
-   color: #ff9800;
+  background-color: transparent;
+  color: #ff9800;
 }
 
 .btn-outline:hover {
-   background-color: #ff9800;
-   color: #fff;
+  background-color: #ff9800;
+  color: #fff;
 }
 
 .btn-orange {
-   background-color: transparent;
-   color: #ff9800;
+  background-color: transparent;
+  color: #ff9800;
 }
 </style>

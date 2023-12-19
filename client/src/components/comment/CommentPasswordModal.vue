@@ -4,7 +4,7 @@
       <div class="flex">
         <div>
           <svg
-            class="w-6 h-6 fill-current text-blue-500"
+            class="w-6 h-6 fill-current text-orange-300"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
@@ -32,7 +32,7 @@
           Cancel
         </button>
         <button
-          class="px-4 py-2 ml-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md"
+          class="px-4 py-2 ml-2 btn btn-orange text-white text-sm font-medium rounded-md"
           @click="$emit('submitPassword', password)"
         >
           Confirm
@@ -49,4 +49,20 @@ defineEmits(["closeModal", "submitPassword"]);
 
 const password = ref("");
 </script>
-<style scoped></style>
+<style scoped>
+.btn {
+  min-width: 75px;
+  border: 1px solid orange;
+  transition: all 0.3s ease;
+  background-color: #ff9800;
+}
+.btn:hover {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.btn-orange {
+  background-color: transparent;
+  color: #ff9800;
+}
+</style>
