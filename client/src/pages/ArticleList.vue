@@ -15,101 +15,57 @@
           <h2 class="text-3xl mt-20 mb-12 font-semibold">{{ categoryName }}</h2>
           <hr>
         </div>
-          <div class="grid grid-cols-7 gap-1">
-            <div class="col-start-2 col-end-5">
-              <ul class="grid grid-cols-1 xl:grid-cols-1 gap-y-10 gap-x-6 items-start p-8 mt-12">
-                <li v-for="item in getArticle" :key="item.id"
-                  class="relative flex flex-col sm:flex-row xl:flex-col items-start">
-                  <router-link :to="{ name: 'Post', params: { articleId: item.id } }" class="flex w-full">
-                    <!-- 왼쪽 묶음 -->
-                    <div class="flex flex-col w-full">
-                      <!-- 제목 -->
-                      <h3 class="mb-1 text-slate-900 font-semibold dark:text-slate-200">
-                        <span class="mb-1 block text-xl mb-3 leading-6 text-black">{{ item.title || 'No Title Available'
-                        }}</span>
-                      </h3>
-                      <!-- 본문 -->
-                      <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6">
-                        <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
-                      </div>
-                      <!-- 메타데이터 -->
-                      <div>
-                        <span class="ico_dot"></span>
-                        <span class="publish_time">{{ item.createdAt ? dateFormat.formatCreatedAt(item.createdAt) : 'NoDate Available' }}</span>
-                        <span class="ico_dot"></span>
-                        <span class="ico_by">by</span>
-                        <span class="name_txt">{{ item.createdBy }}</span>
-                      </div>
+        <div class="grid grid-cols-7 gap-1">
+          <div class="col-start-2 col-end-5">
+            <ul class="grid grid-cols-1 xl:grid-cols-1 gap-y-10 gap-x-6 items-start p-8 mt-12">
+              <li v-for="item in getArticle" :key="item.id"
+                class="relative flex flex-col sm:flex-row xl:flex-col items-start">
+                <router-link :to="{ name: 'Post', params: { articleId: item.id } }" class="flex w-full">
+                  <!-- 왼쪽 묶음 -->
+                  <div class="flex flex-col w-full">
+                    <!-- 제목 -->
+                    <h3 class="mb-1 text-slate-900 font-semibold dark:text-slate-200">
+                      <span class="mb-1 block text-xl mb-3 leading-6 text-black">{{ item.title || 'No Title Available'
+                      }}</span>
+                    </h3>
+                    <!-- 본문 -->
+                    <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6">
+                      <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
                     </div>
-                    <!-- 오른쪽 이미지 -->
-                    <div class="ml-6">
-                      <img v-if="item.imgPath && item.imgPath.length > 0" :src="getRandomImage(item.imgPath)" alt=""
-                        class="shadow-md rounded-lg bg-slate-50 w-250 h-250 xl:w-[250px] xl:h-[250px] object-contain"
-                        width="250" height="250" />
+                    <!-- 메타데이터 -->
+                    <div>
+                      <span class="ico_dot"></span>
+                      <span class="publish_time">{{ item.createdAt ? dateFormat.formatCreatedAt(item.createdAt) :
+                        'NoDateAvailable' }}</span>
+                      <span class="ico_dot"></span>
+                      <span class="ico_by">by</span>
+                      <span class="name_txt">{{ item.createdBy }}</span>
                     </div>
-                  </router-link>
-                  <hr class="my-4 border-gray-300" v-if="getArticle.indexOf(item) !== getArticle.length - 1">
-                </li>
-              </ul>
-            </div>
-            </div>
-            </div>
-    <div v-if="getArticle.length === 0" class="flex justify-center items-center h-full">
-      <Loading></Loading>
-      <!-- <img src="/images/loading.gif" class="mt-24" alt="Loading..." />-->
-      게시물이 존재하지 않습니다 :(
-    </div>
-    <div v-else>
-      <div class="grid grid-cols-9 gap-1">
-        <div class="col-start-2 col-end-7">
-          <ul class="grid grid-cols-1 xl:grid-cols-1 gap-y-10 gap-x-6 items-start p-8 mt-24">
-            <li v-for="item in getArticle" :key="item.id"
-              class="relative flex flex-col sm:flex-row xl:flex-col items-start">
-              <router-link :to="{ name: 'Post', params: { articleId: item.id } }" class="flex w-full">
-                <!-- 왼쪽 묶음 -->
-                <div class="flex flex-col w-full">
-                  <!-- 제목 -->
-                  <h3 class="mb-1 text-slate-900 font-semibold dark:text-slate-200">
-                    <span class="mb-1 block text-xl mb-3 leading-6 text-black">{{ item.title || 'No Title Available'
-                    }}</span>
-                  </h3>
-                  <!-- 본문 -->
-                  <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6">
-                    <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
                   </div>
-                  <!-- 메타데이터 -->
-                  <div>
-                    <span class="ico_dot"></span>
-                    <span class="publish_time">{{ item.createdAt ? dateFormat.formatCreatedAt(item.createdAt) : 'No Date Available' }}</span>
-                    <span class="ico_dot"></span>
-                    <span class="ico_by">by</span>
-                    <span class="name_txt">{{ item.createdBy }}</span>
+                  <!-- 오른쪽 이미지 -->
+                  <div class="ml-6">
+                    <img v-if="item.imgPath && item.imgPath.length > 0" :src="getRandomImage(item.imgPath)" alt=""
+                      class="shadow-md rounded-lg bg-slate-50 w-250 h-250 xl:w-[250px] xl:h-[250px] object-contain"
+                      width="250" height="250" />
                   </div>
-                </div>
-                <!-- 오른쪽 이미지 -->
-                <div class="ml-6">
-                  <img v-if="item.imgPath && item.imgPath.length > 0" :src="getRandomImage(item.imgPath)" alt=""
-                    class="shadow-md rounded-lg bg-slate-50 w-250 h-250 xl:w-[250px] xl:h-[250px] object-contain"
-                    width="250" height="250" />
-                </div>
-
-              </router-link>
-            </li>
-          </ul>
-        </div>
-
-            <div class="col-start-5 col-end-7 mt-24">
-              <div class="flex justify-center gap-2 flex-wrap p-4">
-                <span v-for="hashtag in getHashtag"
-                  class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
-                  #{{ hashtag.hashtagName || 'No Hashtag Available' }}
-                </span>
-              </div>
-            </div>
+                </router-link>
+                <hr class="my-4 border-gray-300" v-if="getArticle.indexOf(item) !== getArticle.length - 1">
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="col-start-5 col-end-7 mt-24">
+    <div class="flex justify-center gap-2 flex-wrap p-4">
+      <span v-for="hashtag in getHashtag"
+        class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
+        #{{ hashtag.hashtagName || 'No Hashtag Available' }}
+      </span>
+    </div>
+  </div>
   <Footer />
 </template>
 

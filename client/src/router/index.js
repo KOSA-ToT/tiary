@@ -7,7 +7,6 @@ import MyInfoView from '@/components/myPage/myInfo.vue'
 import MyPostView from '@/components/myPage/myPost.vue'
 import MyCommentView from '@/components/myPage/myComment.vue'
 import MySubscriberView from '@/components/myPage/mySubscriber.vue'
-import WriterProfile from '@/components/myPage/writerProfile.vue'
 import Comment from '@/components/comment/Comment.vue'
 
 import ArticleList from '@/pages/ArticleList.vue'
@@ -44,14 +43,13 @@ const router = createRouter({
                             component:  MySubscriberView
                         }
                     ]},
-        {path: '/writer-page/:id', component: WriterProfile},
         {path: '/article-test', component: Comment},
         {path: '/articles', component : ArticleList},
         {path: '/article/:articleId' , name: 'Post', component : Post, props : true },
         {path: '/article-create', name:'ArticleCreate', component : ArticleCreate, props : true},
         {path: '/article-edit/:articleId', name:'ArticleEdit', component : ArticleEdit, props : true},
         {path: '/category' ,name: 'CategoryPage', component :       ArticleList , props : (route) =>
-        ({categoryCode : route.query.categoryCode})},
+        ({categoryName : route.query.categoryName})},
         {path: '/nickname-check/:email', name: 'Nickcheck', component: NickCheck},
         {path: '/auth/verify-email', component: VerifyEmail},
         {path: '/oauth/callback', component: OauthCallback},
