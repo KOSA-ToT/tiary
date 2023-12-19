@@ -100,7 +100,6 @@ async function getUserInfo() {
       const res = await getUserInfoReq();
       return res.data;
    } catch (err) {
-      console.log(err);
    }
 }
 
