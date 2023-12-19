@@ -30,8 +30,8 @@
                     </h3>
                     <!-- 본문 -->
                     <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6 lines-clamp-3">
-  <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
-</div>
+                      <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
+                    </div>
                     <!-- 메타데이터 -->
                     <div>
                       <span class="ico_dot"></span>
@@ -53,18 +53,19 @@
               </li>
             </ul>
           </div>
+          <div class="col-start-5 col-end-7 mt-24">
+            <div class="flex justify-center gap-2 flex-wrap p-4">
+              <span v-for="hashtag in getHashtag"
+                class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
+                #{{ hashtag.hashtagName || 'No Hashtag Available' }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-start-5 col-end-7 mt-24">
-    <div class="flex justify-center gap-2 flex-wrap p-4">
-      <span v-for="hashtag in getHashtag"
-        class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
-        #{{ hashtag.hashtagName || 'No Hashtag Available' }}
-      </span>
-    </div>
+
   </div>
   <Footer />
 </template>
@@ -162,6 +163,7 @@ onMounted(() => {
   overflow: hidden;
   padding-top: 20px;
 }
+
 .thumbnails {
   display: flex;
   flex-wrap: wrap;
