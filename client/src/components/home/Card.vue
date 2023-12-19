@@ -50,15 +50,15 @@
       <div class="flex flex-col overflow-hidden shadow-md hover:shadow-orange-300">
         <a href="/">
           <div class="flex-shrink-0">
-            <img class="object-cover h-64 w-full" src="/images/dog.jpg" alt="">
+            <img class="object-cover h-64 w-full" src="/images/spring.jpg" alt="">
           </div>
           <div class="flex flex-1 flex-col bg-white p-6">
             <div class="flex-1">
               <div class="flex flex-col justify-center items-center">
                 <p class="text-sm font-medium text-gray-400">문화와 예술</p>
                 <hr class="gray-300 my-2 w-3/4">
-                <p class="text-xl font-semibold text-gray-900">아쿠아리움 갔다왔어요!</p>
-                <p class="mt-3 text-base text-gray-500">요즘 핫하다는 아쿠아리움 갔다왔어요 ㅎ ㅎ 우리나라에 있는 아쿠아리움 중에 가장 큰 아쿠아리움이라고 해요! 우리 애도 어찌나 좋아하던지 방방 뛰어다니더라구요 ㅎㅎ 말리느라 고생했어요</p>
+                <p class="text-xl font-semibold text-gray-900">우리 봄이 볼 사람 ^0^~</p>
+                <p class="mt-3 text-base text-gray-500">우리 김씨네 자랑 봄이입니다 ㅎ ㅎ 만나는 사람마다 귀엽다고 해요! 어제는 올림픽 공원 갔다왔는데, 봄이가 엄청 좋아했어요! 방방 뛰어다니더라구요 ㅎㅎ 말리느라 고생했어요</p>
               </div>
             </div>
             <!-- 해시태그 -->
