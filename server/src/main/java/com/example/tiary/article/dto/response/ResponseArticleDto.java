@@ -23,6 +23,7 @@ public class ResponseArticleDto {
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private String createdBy;
+	private String email;
 	private String modifiedBy;
 	private List<ResponseHashtagDto> hashtagList;
 	private List<String> imgPath;
@@ -36,6 +37,7 @@ public class ResponseArticleDto {
 			.createdAt(article.getCreatedAt())
 			.modifiedAt(article.getModifiedAt())
 			.createdBy(article.getCreatedBy())
+			.email(article.getUsers().getEmail())
 			.modifiedBy(article.getModifiedBy())
 			.hashtagList(article.getArticleHashtags().stream().map(ResponseHashtagDto::from).toList())
 			.build();

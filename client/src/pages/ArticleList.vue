@@ -2,7 +2,11 @@
   <Header :threshold="50"></Header>
   <div class="min-h-screen">
     <div v-show="!isLoading">
-      <div v-if="getArticle.length === 0" class="flex justify-center items-center h-full">
+      <div v-if="getArticle.length === 0" class="flex flex-col justify-center items-center h-full">
+        <div class="text-center mt-4">
+          <h2 class="text-3xl mt-20 mb-12 font-semibold">{{ categoryName }}</h2>
+          <hr>
+        </div>
         <img src="/images/loading.gif" class="mt-24" alt="Loading..." />
         게시물이 존재하지 않습니다 :(
       </div>
@@ -14,7 +18,7 @@
           <div class="grid grid-cols-7 gap-1">
             <div class="col-start-2 col-end-5">
               <ul class="grid grid-cols-1 xl:grid-cols-1 gap-y-10 gap-x-6 items-start p-8 mt-12">
-                <li v-for="item in getArticle.data" :key="item.id"
+                <li v-for="item in getArticle" :key="item.id"
                   class="relative flex flex-col sm:flex-row xl:flex-col items-start">
                   <router-link :to="{ name: 'Post', params: { articleId: item.id } }" class="flex w-full">
                     <!-- 왼쪽 묶음 -->
@@ -43,8 +47,8 @@
                         class="shadow-md rounded-lg bg-slate-50 w-250 h-250 xl:w-[250px] xl:h-[250px] object-contain"
                         width="250" height="250" />
                     </div>
-
                   </router-link>
+                  <hr class="my-4 border-gray-300" v-if="getArticle.indexOf(item) !== getArticle.length - 1">
                 </li>
               </ul>
             </div>
@@ -52,7 +56,7 @@
             <div class="col-start-5 col-end-7 mt-24">
               <div class="flex justify-center gap-2 flex-wrap p-4">
                 <span v-for="hashtag in getHashtag"
-                  class="bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-400">
+                  class="bg-orange-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-50 hover:text-gray-0 hover:bg-orange-400">
                   #{{ hashtag.hashtagName || 'No Hashtag Available' }}
                 </span>
               </div>
@@ -87,7 +91,7 @@ async function fetchList(e) {
   const response = axios.get(apiUrl);
   const data = (await response).data;
 
-  getArticle.value = data;
+  getArticle.value = data.data;
   isLoading.value = false;
 }
 
@@ -113,7 +117,7 @@ function getRandomImage(imgPathArray) {
   return imgPathArray[randomIndex];
 }
 
-onMounted(() => {
+onMounted(() => {    
   // 페이지가 전체적으로 렌더링되는 데 500ms의 대기 시간을 줌
   setTimeout(() => {
     // 이 시점에서 렌더링이 완료된 상태
