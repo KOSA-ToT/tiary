@@ -2,6 +2,10 @@ package com.example.tiary.category.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +30,13 @@ public class CategoryController {
 
 	@GetMapping
 
-	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "categoryCode" , required = false) String categoryCode) {
+	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "categoryName" , required = false) String categoryName,
+		@PageableDefault Pageable pageable) {
 		List<Category> categoryList;
-		if (categoryCode != null) {
-			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryCode), HttpStatus.OK);
+		if (categoryName != null) {
+			Pageable pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+				Sort.by("createdAt").descending());
+			return new ResponseEntity(articleService.readArticleFromCategoryCode(categoryName, pageRequest), HttpStatus.OK);
 		}
 		categoryList = categoryService.readCategoryList();
 		return new ResponseEntity<>(categoryList,HttpStatus.OK);

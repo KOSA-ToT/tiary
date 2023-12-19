@@ -16,7 +16,7 @@ public interface ArticleHashtagRepository extends JpaRepository<ArticleHashtag, 
 
 	List<ArticleHashtag> findAllByHashtag_HashtagName(String hashtagName);
 
-	@Query("SELECT DISTINCT h FROM Article a JOIN a.articleHashtags ah JOIN ah.hashtag h JOIN a.category c WHERE c.categoryCode = :categoryCode")
-	List<Hashtag> findDistinctHashtagsByCategoryCode(@Param("categoryCode") String categoryCode);
+	@Query("SELECT DISTINCT h FROM Article a JOIN a.articleHashtags ah JOIN ah.hashtag h JOIN a.category c WHERE c.categoryName = :categoryName")
+	List<Hashtag> findDistinctHashtagsByCategoryName(@Param("categoryName") String categoryName);
 
 }

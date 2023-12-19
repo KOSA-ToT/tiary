@@ -35,16 +35,16 @@ public class HashtagServiceImpl implements HashtagService {
 	// 해시태그 조회 아티클의 해시태그를 기준으로
 	@Transactional(readOnly = true)
 	@Override
-	public List<ResponseHashtagDto> readHashtag(String categoryCode){
-		List<ResponseHashtagDto> allResponseHashtagDto = readAllHashtag(categoryCode);
+	public List<ResponseHashtagDto> readHashtag(String categoryName){
+		List<ResponseHashtagDto> allResponseHashtagDto = readAllHashtag(categoryName);
 
 		return getRandomHashtag(allResponseHashtagDto,6);
 	}
 	@Transactional(readOnly = true)
 	@Override
-	public List<ResponseHashtagDto> readAllHashtag(String categoryCode) {
+	public List<ResponseHashtagDto> readAllHashtag(String categoryName) {
 		return articleHashtagRepository
-			.findDistinctHashtagsByCategoryCode(categoryCode)
+			.findDistinctHashtagsByCategoryName(categoryName)
 			.stream()
 			.map(ResponseHashtagDto::from)
 			.toList();
