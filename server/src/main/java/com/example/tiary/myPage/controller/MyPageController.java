@@ -21,6 +21,7 @@ import com.example.tiary.article.service.ArticleService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -200,12 +201,16 @@ public class MyPageController {
     //구독하기
     @GetMapping("/{userId}/subscribe")
     public ResponseEntity subscribeWriter(@PathVariable("userId") Long writerId, @AuthenticationPrincipal UserDto user){
-        try{
-            return new ResponseEntity<>(subscribeService.addSubscribe(writerId,user.getUsers().getId()),
-                    HttpStatus.CREATED);
-        }catch(Exception e){
-            log.error("에러 : "+e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구독 실패했습니다.");
+        if(Objects.equals(writerId, user.getUsers().getId())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("구독 실패했습니다.");
+        }else{
+            try{
+                return new ResponseEntity<>(subscribeService.addSubscribe(writerId,user.getUsers().getId()),
+                        HttpStatus.CREATED);
+            }catch(Exception e){
+                log.error("에러 : "+e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구독 실패했습니다.");
+            }
         }
     }
     //구독 취소하기

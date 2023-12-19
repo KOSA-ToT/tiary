@@ -21,7 +21,9 @@
             }}
           </span>
           <span class="ico_by">By </span>
-          <span>{{ article.createdBy }}</span>
+          <router-link :to="'/writer-page/' + article.userId">
+            <span>{{ article.createdBy }}</span>
+          </router-link>
           <!-- <span v-if="authStore.isLoggedIn"> -->
 
           <span v-if="shouldShowEditDeleteButtons">
