@@ -156,7 +156,7 @@ function closeModal() {
 // 비밀번호 검증
 async function checkPassword(password) {
   commentRequestDTO.value.password = password;
-  console.log("비밀번호", commentRequestDTO.value.password);
+  // console.log("비밀번호", commentRequestDTO.value.password);
   try {
     const passwordConfirmResponse = await commentPasswordConfirm(
       commentRequestDTO.value,

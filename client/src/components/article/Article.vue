@@ -1,18 +1,23 @@
 <template>
   <div>
     <!-- 커버 이미지 영역 -->
-    <div v-if="article" class="h-64 bg-cover bg-center relative overflow-hidden">
-      <img src="/images/cover.png">
+    <div
+      v-if="article"
+      class="h-64 bg-cover bg-center relative overflow-hidden"
+    >
+      <img :src="getRandomDefaultImage()" class="opacity-70 blur-sm" />
       <div class="absolute bottom-0 left-0 right-0 text-white text-center p-4">
-        <h1 class="text-3xl font-bold mb-5">{{ article.title || '제목 없음' }}</h1>
+        <h1 class="text-3xl font-bold mb-5">
+          {{ article.title || "제목 없음" }}
+        </h1>
 
         <div class="mb-4">
           <span class="ico_by">At </span>
           <span class="mr-5">
             {{
               isWithinSixHours(article.createdAt)
-              ? formatTimeDifference(article.createdAt)
-              : dateFormat.formatCreatedAt(article.createdAt)
+                ? formatTimeDifference(article.createdAt)
+                : dateFormat.formatCreatedAt(article.createdAt)
             }}
           </span>
           <span class="ico_by">By </span>
@@ -21,11 +26,13 @@
 
           <span v-if="shouldShowEditDeleteButtons">
             <span class="mx-2">•</span>
-            <router-link :to="{ name: 'ArticleEdit', params: { id: articleId } }">수정</router-link>
+            <router-link
+              :to="{ name: 'ArticleEdit', params: { id: articleId } }"
+              >수정</router-link
+            >
             <span class="mx-2">•</span>
             <button @click="deleteArticle">삭제</button>
           </span>
-
         </div>
       </div>
       <!-- 헤더 영역 -->
@@ -34,9 +41,14 @@
 
     <!-- 글 내용 -->
 
-    <div v-if="article" class="max-w-2xl mx-auto p-4 bg-white shadow-lg overflow-hidden">
-      <div class="content prose prose-sm max-w-700 mx-auto" v-html="article.content || '내용 없음'"></div>
-
+    <div
+      v-if="article"
+      class="max-w-2xl mx-auto p-4 bg-white shadow-lg overflow-hidden"
+    >
+      <div
+        class="content prose prose-sm max-w-700 mx-auto"
+        v-html="article.content || '내용 없음'"
+      ></div>
 
       <!-- 해시태그 영역 -->
       <div class="max-w-2xl mx-auto mt-4 p-4">
@@ -61,27 +73,29 @@
 </template>
 
 <script setup>
-import Header from '@/components/Header.vue';
-import recommendations from '@/components/article/Recommendations.vue';
-import comment from '@/components/comment/Comment.vue';
-import { ref, onMounted, computed } from 'vue';
-import axios from 'axios';
-import * as dateFormat from '@/utils/dateformat.js';
-import router from '@/router';
+import Header from "@/components/Header.vue";
+import recommendations from "@/components/article/Recommendations.vue";
+import comment from "@/components/comment/Comment.vue";
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
+import * as dateFormat from "@/utils/dateformat.js";
+import router from "@/router";
 
-import { deleteArticleRequest } from '@/api/common';
-import { useAuthStore } from '@/stores/auth';
+import { deleteArticleRequest } from "@/api/common";
+import { useAuthStore } from "@/stores/auth";
 
-const { articleId } = defineProps(['articleId']);
+const { articleId } = defineProps(["articleId"]);
 const article = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:8088/article/${articleId}`);
+    const response = await axios.get(
+      `http://localhost:8088/article/${articleId}`
+    );
     article.value = response.data;
     console.log(article);
   } catch (error) {
-    console.error('글을 불러오는 데 실패했습니다:', error);
+    console.error("글을 불러오는 데 실패했습니다:", error);
   }
 });
 
@@ -89,15 +103,14 @@ onMounted(async () => {
 const deleteArticle = () => {
   // 삭제 로직 구현
   try {
-    const response = deleteArticleRequest(articleId)
-      .then((response) => {
-        if (response.status == 205) {
-          alert("게시물이 삭제되었습니다.")
-          router.go("/");
-        }
-      })
+    const response = deleteArticleRequest(articleId).then((response) => {
+      if (response.status == 205) {
+        alert("게시물이 삭제되었습니다.");
+        router.go("/");
+      }
+    });
   } catch {
-    alert("에러입니다.")
+    alert("에러입니다.");
   }
 };
 
@@ -133,6 +146,28 @@ const shouldShowEditDeleteButtons = computed(() => {
   // 사용자가 로그인했고, 현재 사용자와 게시물 작성자가 동일한 경우에만 표시
   return authStore.isLoggedIn && authStore.currentUser === article.value.email;
 });
+
+const defaultImageArray = [
+  "/images/cover/travle_1.jpeg",
+  "/images/cover/travle_2.jpeg",
+  "/images/cover/travle_3.jpeg",
+  "/images/cover/culture_1.jpg",
+  "/images/cover/culture_2.jpg",
+  "/images/cover/culture_3.jpg",
+  "/images/cover/economy_1.jpg",
+  "/images/cover/economy_1.jpg",
+  "/images/cover/economy_1.jpg",
+  "/images/cover/health_1.jpg",
+  "/images/cover/health_2.jpg",
+  "/images/cover/health_3.jpg",
+  "/images/cover/tech_1.jpg",
+  "/images/cover/tech_2.jpg",
+  "/images/cover/tech_3.jpg",
+];
+function getRandomDefaultImage() {
+  const randomIndex = Math.floor(Math.random() * defaultImageArray.length);
+  return defaultImageArray[randomIndex];
+}
 </script>
 <style scoped>
 /* 추가된 스타일 */
@@ -163,6 +198,7 @@ const shouldShowEditDeleteButtons = computed(() => {
 }
 
 .text-stroke {
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 </style>
