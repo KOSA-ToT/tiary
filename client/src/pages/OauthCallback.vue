@@ -12,7 +12,7 @@ import router from '@/router';
 onMounted (() => {
   setTimeout(() => {
     oauthProvideToken();
-  }, 2000);
+  }, 500);
 });
 
 async function oauthProvideToken(){

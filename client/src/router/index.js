@@ -24,7 +24,7 @@ const router = createRouter({
     routes: [
         {path: '/', name : 'Home', component: Home},
         {path: '/error', component: Error},
-        { path: '/mypage/',
+        {path: '/mypage/',
                     component: MypageProfile,
                     children : [
                         {
@@ -57,5 +57,10 @@ const router = createRouter({
         {path: '/oauth/callback', component: OauthCallback},
     ],
     })
+
+router.beforeEach((to, from, next) => {
+    window.scrollTo(0,0);
+    next();
+});
 
 export default router;

@@ -22,7 +22,7 @@
         <div v-if="authStore.isLoggedIn" class="meta text-right space-x-4">
           <span>{{ userVars.task }}</span>
           <button @click="articleCreate" class="btn btn-outline btn-orange">글 작성</button>
-          <button @click="logoutHeader" class="btn btn-outline btn-orange">로그아웃</button>
+          <button @click="alertLogout" class="btn btn-outline btn-orange">로그아웃</button>
         </div>
 
         <div v-else class="space-x-4">
@@ -57,7 +57,7 @@ const userVars = ref({
   isShowModal: false
 });
 
-const { logout, login } = authStore;
+const { alertLogout, login } = authStore;
 
 function openModal(tasks) {
   userVars.value.task = tasks;
@@ -66,13 +66,13 @@ function openModal(tasks) {
 function articleCreate() {
   router.push('/article-create');
 }
-function logoutHeader() {
-  if (confirm('로그아웃 하시겠습니까?')) {
-    localStorage.removeItem('Authorization');
-    window.location.reload();
-    logout();
-  }
-}
+// function logoutHeader() {
+//   if (confirm('로그아웃 하시겠습니까?')) {
+//     localStorage.removeItem('Authorization');
+//     window.location.reload();
+//     logout();
+//   }
+// }
 
 // 컴포넌트가 렌더링될 때마다 로그인 상태를 동적으로 감시
 watchEffect(() => {
