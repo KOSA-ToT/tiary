@@ -31,7 +31,7 @@
         class="text-white py-2 px-4 bg-green-500 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
         수정하기
       </button>
-      <button
+      <button @click.prevent="deleteArticle"
         class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
         취소
       </button>
@@ -45,6 +45,7 @@ import axios from 'axios';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import router from '@/router';
+import { patchArticleRequest } from '@/api/common.js'
 
 //컬러
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -132,10 +133,6 @@ onMounted(
   }
 )
 
-
-
-
-
 function postArticle() {
   const requestArticleDto = {
     title: title.value,
@@ -149,20 +146,23 @@ function postArticle() {
     alert('에디터 내용을 입력해 주세요.');
     throw new Error('editor content is required!');
   }
-  const auth = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlkIjoxLCJleHAiOjE3MDIzNjMzNzIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20ifQ.--PQsHLQ";
-
-  axios.patch('http://localhost:8088/article/' + props.articleId, requestArticleDto, {
-    headers: {
-      Authorization: auth
-    }
-  })
-    .then((response) => {
-      if (response.status == 201) {
-        alert("확인")
+  try {
+    const response = patchArticleRequest(requestArticleDto).then((response) => {
+      console.log(response);
+      if (response.status == 205) {
+        alert("게시물이 작성되었습니다.");
+        console.log(response.data);
+        router.push("/article/" + response.data.id);
       }
-    })
+    });
+  } catch {
+    alert(response.status);
+    return;
+  }
 }
-
+function backArticle(){
+  router.push('/');
+}
 watch(
   () => window.matchMedia('(prefers-color-scheme: dark)').matches,
   (dark) => {

@@ -18,13 +18,13 @@
           <span class="ico_by">By </span>
           <span>{{ article.createdBy }}</span>
           <!-- <span v-if="authStore.isLoggedIn"> -->
-          
-<span v-if="shouldShowEditDeleteButtons">
-  <span class="mx-2">•</span>
-  <router-link :to="{ name: 'ArticleEdit', params: { id: articleId } }">수정</router-link>
-  <span class="mx-2">•</span>
-  <button @click="deleteArticle">삭제</button>
-</span>
+
+          <span v-if="shouldShowEditDeleteButtons">
+            <span class="mx-2">•</span>
+            <router-link :to="{ name: 'ArticleEdit', params: { id: articleId } }">수정</router-link>
+            <span class="mx-2">•</span>
+            <button @click="deleteArticle">삭제</button>
+          </span>
 
         </div>
       </div>
@@ -33,8 +33,11 @@
     </div>
 
     <!-- 글 내용 -->
-    <div v-if="article" class="max-w-2xl mx-auto  p-4 bg-white shadow-lg">
-      <div class="content prose prose-sm" v-html="article.content || '내용 없음'"></div>
+
+    <div v-if="article" class="max-w-2xl mx-auto p-4 bg-white shadow-lg overflow-hidden">
+      <div class="content prose prose-sm max-w-700 mx-auto" v-html="article.content || '내용 없음'"></div>
+
+
       <!-- 해시태그 영역 -->
       <div class="max-w-2xl mx-auto mt-4 p-4">
         <div class="flex flex-wrap justify-start items-end space-x-2">
@@ -65,6 +68,7 @@ import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js';
 import router from '@/router';
+
 import { deleteArticleRequest } from '@/api/common';
 import { useAuthStore } from '@/stores/auth';
 
@@ -137,6 +141,7 @@ const shouldShowEditDeleteButtons = computed(() => {
   width: 100%;
   height: 100%;
 }
+
 .bg-blue-500 {
   background-color: #3490dc;
 }
