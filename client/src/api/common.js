@@ -87,6 +87,10 @@ export const postArticleRequest = async (requestArticleDto) => {
   return await authInstance.post("/article", requestArticleDto);
 };
 
+export const patchArticleRequest = async (requestArticleDto) => {
+  return await authInstance.patch("/article", requestArticleDto)
+}
+
 export const deleteArticleRequest = async (articleId) => {
   return await authInstance.delete("/article/" + articleId);
 };

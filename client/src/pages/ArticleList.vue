@@ -29,9 +29,9 @@
                       }}</span>
                     </h3>
                     <!-- 본문 -->
-                    <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6">
-                      <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
-                    </div>
+                    <div class="prose prose-slate prose-sm text-slate-600 dark:prose-dark mb-6 lines-clamp-3">
+  <p v-html="sanitizeHTML(item.content) || 'No Content Available'"></p>
+</div>
                     <!-- 메타데이터 -->
                     <div>
                       <span class="ico_dot"></span>
@@ -161,5 +161,17 @@ onMounted(() => {
   font-size: 12px;
   overflow: hidden;
   padding-top: 20px;
+}
+.thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.lines-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
 }
 </style>
