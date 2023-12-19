@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class ResponseMyCommentDto {
+    private Long id;
     private Long articleId;
     private String title;
     private String content;

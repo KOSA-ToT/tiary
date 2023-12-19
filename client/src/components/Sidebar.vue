@@ -14,7 +14,7 @@
       <!-- Profile Section -->
       <div class="flex flex-col items-center mb-6">
          <!-- Add your profile picture here -->
-         <img src="/images/loading.gif" alt="Profile" class="w-16 h-16 rounded-full mb-2" />
+         <img src="/images/loading.gif" alt="Profile" class="w-16 h-16 mb-2 rounded-full" />
          <h5 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Your Name</h5>
       </div>
       <!-- Write and Apply Buttons -->
@@ -29,7 +29,7 @@
       <ul class="space-y-2">
          <li v-for="link in links" :key="link.text">
             <router-link :to="link.to"
-               class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               class="flex items-center p-3 text-gray-800 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                <span
                   class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   :class="link.iconClass"></span>

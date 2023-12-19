@@ -1,5 +1,6 @@
 package com.example.tiary.myPage.service.impl;
 
+import com.example.tiary.article.entity.Article;
 import com.example.tiary.global.exception.BusinessLogicException;
 import com.example.tiary.global.exception.ExceptionCode;
 import com.example.tiary.global.s3.service.S3UploadService;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,14 +50,6 @@ public class UserServiceImpl implements UserService {
         return user.isPresent();
     }
 
-    //유저 이메일 중복 확인
-    @Transactional(readOnly = true)
-    @Override
-    public boolean isEmailDuplicate(String email){
-        Optional<Users> user = userRepository.findByEmail(email);
-        return user.isPresent();
-    }
-
     //이메일 정보 수정
     @Transactional
     @Override
@@ -76,15 +68,6 @@ public class UserServiceImpl implements UserService {
         users.updateNickname(requestUserDto.getNickname());
         return userRepository.save(users);
     }
-//    //이미지 경로 수정
-//    @Transactional
-//    @Override
-//    public Users editProfileImg(RequestUserDto requestUserDto, Long userId){
-//        Users users = userRepository.findById(userId)
-//                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
-//        users.updateProfileImg(requestUserDto.getUserPicture());
-//        return userRepository.save(users);
-//    }
     //내 글 보기
     @Transactional
     @Override
@@ -96,8 +79,8 @@ public class UserServiceImpl implements UserService {
     //내 댓글 보기
     @Transactional
     @Override
-    public List<ResponseMyCommentDto> showMyComment(Long userId){
-        List<ResponseMyCommentDto> myCommentList= userRepository.listMyComment(userId);
+    public Page<ResponseMyCommentDto> showMyComment(Long userId, Pageable pageable){
+        Page<ResponseMyCommentDto> myCommentList= userRepository.listMyComment(userId, pageable);
         return myCommentList;
     }
 

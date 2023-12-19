@@ -12,6 +12,7 @@ import java.util.List;
 @ToString
 @Builder
 public class ResponseMyArticleDto {
+    private Long id;
     private String title;
     private Long categoryId;
     private String content;
