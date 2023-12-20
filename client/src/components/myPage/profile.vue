@@ -3,11 +3,11 @@
     <Header :threshold="100"></Header>
 	<div class="flex items-center">
 		<section class="w-full pt-5 bg-center bg-cover py-15"
-			style="background-image: url('https://source.unsplash.com/random');">
+			style="background-image: url('https://picsum.photos/1440/190/?blur=1?random=1​');">
 			<div class="container mx-auto text-center text-white">
 				<div class="max-w-screen-md px-4 mx-auto mt-12 text-lg leading-relaxed text-gray-700 lg:px-0">
 					<div class="flex items-center justify-end px-12">
-						<h1 class="mt-6 mr-6 text-2xl font-medium text-white">{{ User.nickname.value }}</h1>
+						<h1 class="mt-6 mr-6 text-2xl font-bold text-white text-outline">{{ User.nickname.value }}</h1>
 						<img class="w-24 h-24 mb-6 rounded-full shadow-lg"
 							:src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + User.userPicture.value" alt="">
 					</div>
@@ -74,3 +74,8 @@ onBeforeMount(()=>{
 	id.value = route.params.id;
 });
 </script>
+<style>
+  .text-outline {
+    -webkit-text-stroke: 0.8px rgb(189, 116, 48); /* 외곽선 색상 및 두께를 조절할 수 있습니다. */
+  }
+</style>

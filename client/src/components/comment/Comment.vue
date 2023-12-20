@@ -1,11 +1,12 @@
 <template>
-  <div class="w-fullbg-white rounded-lg border p-1 md:p-3">
-    <h3 class="font-semibold p-1">Comment</h3>
+  <div class="p-1 border rounded-lg w-fullbg-white md:p-3">
+    <h3 class="p-1 font-semibold">Comment</h3>
     <CommentCard
       v-for="comment in commentList.value"
       :key="comment.id"
       :commentData="{
         id: comment.id,
+        userId: comment.userId,
         articleId: comment.articleId,
         commentType: comment.commentType,
         children: comment.children,
@@ -16,10 +17,12 @@
         userProfileImageUrl: comment.userProfileImageUrl,
         email: comment.email,
       }"
+      @editComment="handleCommentEdit"
+      @deleteComment="handleCommentDelete"
     >
     </CommentCard>
 
-    <CommentInput></CommentInput>
+    <CommentInput @createComment="handleCommentCreated"></CommentInput>
   </div>
 </template>
 
@@ -41,7 +44,8 @@ onMounted(async () => {
   await getCommentLists();
 });
 
-// // 새로고침 안하고 바로 불러오기
+// 새로고침 안하고 바로 불러오기
+
 // watch(
 //   () => commentList.value,
 //   (newVal, oldVal) => {
@@ -52,6 +56,22 @@ onMounted(async () => {
 //   },
 //   { deep: true, immediate: true }
 // );
+
+// 댓글이 생성될 때 호출되는 이벤트 핸들러
+// 댓글이 생성되면 commentList 다시 불러오기
+async function handleCommentCreated() {
+  await getCommentLists();
+}
+
+// 댓글이 수정되면 commentList 다시 불러오기
+async function handleCommentEdit() {
+  await getCommentLists();
+}
+
+// 댓글이 삭제되면 commentList 다시 불러오기
+async function handleCommentDelete() {
+  await getCommentLists();
+}
 
 // comment 불러오기
 async function getCommentLists() {

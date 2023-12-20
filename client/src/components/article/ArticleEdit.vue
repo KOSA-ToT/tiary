@@ -147,7 +147,7 @@ function postArticle() {
     throw new Error('editor content is required!');
   }
   try {
-    const response = patchArticleRequest(requestArticleDto).then((response) => {
+    const response = patchArticleRequest( props.articleId,requestArticleDto).then((response) => {
       console.log(response);
       if (response.status == 205) {
         alert("게시물이 작성되었습니다.");

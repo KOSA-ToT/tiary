@@ -1,112 +1,79 @@
 <template>
   <div>
-    <div class="gap-100 m-3">
+    <div class="m-3 gap-100">
       <div>
-        <div class="w-full border rounded-md mb-3">
+        <div class="w-full mb-3 border rounded-md">
           <div class="p-3">
-            <div class="flex gap-3 items-center">
-              <img
-                v-if="commentData.userProfileImageUrl"
-                :src="
+
+            <div class="flex items-center gap-3"><router-link :to="'/writer-page/' + commentData.userId"
+                v-if="commentData.userProfileImageUrl">
+                <img v-if="commentData.userProfileImageUrl" :src="
                   'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' +
                   commentData.userProfileImageUrl
                 "
-                class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
-              />
-              <img
-                v-else
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
-                class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
-              />
+                  class="object-cover w-10 h-10 border-2 border-orange-300 rounded-full shadow-emerald-400" /></router-link>
+              <img v-else src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                class="object-cover w-10 h-10 border-2 border-orange-300 rounded-full shadow-emerald-400" />
               <h3 class="font-bold">
                 {{
                   commentData.createdBy === "anonymousUser"
-                    ? "Guest"
-                    : commentData.createdBy
+                  ? "Guest"
+                  : commentData.createdBy
                 }}
                 <br />
-                <span class="text-sm text-gray-400 font-normal">
+                <span class="text-sm font-normal text-gray-400">
                   {{
                     commentData.createdAt == commentData.modifiedAt
-                      ? formatCreatedAt(commentData.createdAt)
-                      : formatCreatedAt(commentData.modifiedAt)
+                    ? formatCreatedAt(commentData.createdAt)
+                    : formatCreatedAt(commentData.modifiedAt)
                   }}
                 </span>
               </h3>
             </div>
-            <p class="text-gray-600 mt-2">
+            <p class="mt-2 text-gray-600">
               {{ commentData.content }}
             </p>
-            <div
-              class="text-sm text-gray-400 font-normal"
-              v-if="commentData.children && commentData.children.length > 0"
-              @click="showReplyComment"
-            >
-              <ReplyCommentCard
-                v-for="(replyComment, index) in commentData.children"
-                :replyCommentData="commentData.children[index]"
-              ></ReplyCommentCard>
+            <div class="text-sm font-normal text-gray-400" v-if="commentData.children && commentData.children.length > 0"
+              @click="showReplyComment">
+              <ReplyCommentCard v-for="(replyComment, index) in commentData.children"
+                :replyCommentData="commentData.children[index]"></ReplyCommentCard>
             </div>
             <button class="text-left text-orange-300" @click="replyToComment">
               Reply
             </button>
             <div class="text-right">
               <!-- 회원이 작성한 댓글 -->
-              <span
-                v-if="showEditDeleteBtn"
-                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
-                @click="openUpdateModal"
-              >
+              <span v-if="showEditDeleteBtn" class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"
+                @click="openUpdateModal">
                 edit &nbsp;&nbsp;
               </span>
-              <span
-                v-if="showEditDeleteBtn"
-                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
-                @click="deleteComment"
-              >
-                delete</span
-              >
+              <span v-if="showEditDeleteBtn" class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"
+                @click="deleteComment">
+                delete</span>
               <!-- 비회원이 작성한 댓글 -->
-              <span
-                v-if="commentData.createdBy === 'anonymousUser'"
-                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
-                @click="openModal('edit')"
-              >
+              <span v-if="commentData.createdBy === 'anonymousUser'"
+                class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700" @click="openModal('edit'),editComment, deleteComment"  >
                 edit&nbsp;&nbsp;
               </span>
-              <span
-                v-if="commentData.createdBy === 'anonymousUser'"
-                class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
-                @click="openModal('delete')"
-              >
-                delete</span
-              >
+              <span v-if="commentData.createdBy === 'anonymousUser'"
+                class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700" @click="openModal('delete')">
+                delete</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="my-0 flex justify-center">
-        <CommentPasswordModal
-          v-if="isPasswordModalOpen"
-          @closeModal="closeModal"
-          @submitPassword="checkPassword"
-        ></CommentPasswordModal>
+      <div class="flex justify-center my-0">
+        <CommentPasswordModal v-if="isPasswordModalOpen" @closeModal="closeModal" @submitPassword="checkPassword">
+        </CommentPasswordModal>
 
-        <CommentUpdateModal
-          v-if="isUpdateModalOpen"
-          @closeModal="closeModal"
-          @updateContent="editComment"
+        <CommentUpdateModal v-if="isUpdateModalOpen" @closeModal="closeModal" @updateContent="editComment"
           :commentContent="{
             content: commentData.content,
-          }"
-        >
+          }">
         </CommentUpdateModal>
 
-        <ReplyInputModal
-          v-if="isReplyModalOpen"
-          @closeModal="closeModal"
-          @createReplyComment="createReplyComment"
-        ></ReplyInputModal>
+        <ReplyInputModal v-if="isReplyModalOpen" @closeModal="closeModal" @createReplyComment="createReplyComment">
+        </ReplyInputModal>
       </div>
     </div>
   </div>
@@ -129,9 +96,15 @@ import {
 } from "@/api/common";
 
 const { commentData } = defineProps(["commentData"]);
+const emit = defineEmits(["editComment", "deleteComment"])
+
 const authStore = useAuthStore();
 
 let user = localStorage.getItem("Authorization");
+
+const mode = ref("");
+
+let commentId = ref(commentData.id);
 
 let commentRequestDTO = ref({
   content: "",
@@ -139,10 +112,7 @@ let commentRequestDTO = ref({
   parentId: "",
 });
 
-const mode = ref("");
-
-let commentId = ref(commentData.id);
-
+// 모달창
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
@@ -205,6 +175,7 @@ async function editComment(content) {
     );
     console.log("Comment updated successfully", editCommentResponse);
     closeModal();
+    emit("editComment")
   } catch (error) {
     console.log("failed edit comment", error);
   }
@@ -221,6 +192,7 @@ async function deleteComment() {
     console.log(response);
     closeModal();
     alert("성공적으로 삭제되었습니다.");
+    emit("deleteComment")
   } catch (error) {
     console.error("Error deleting comment", error);
   }

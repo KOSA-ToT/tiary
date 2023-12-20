@@ -84,6 +84,7 @@ public class CommentService {
 			// 프로필 이미지 URL 추가
 			if (comment.getUsers() != null) {
 				commentResponseDTO.setUserProfileImageUrl(comment.getUsers().getUserPicture());
+				commentResponseDTO.setUserId(comment.getUsers().getId());
 			}
 
 			// 부모 댓글이 있는 경우(부모 댓글 id를 가진 댓글 children에 넣음

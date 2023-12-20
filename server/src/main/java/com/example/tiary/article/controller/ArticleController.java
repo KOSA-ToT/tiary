@@ -29,72 +29,70 @@ import com.example.tiary.users.entity.Users;
 @RequestMapping("/article")
 public class ArticleController {
 
-	private final ArticleService articleService;
-	private final ArticleLikesService articleLikesService;
+    private final ArticleService articleService;
+    private final ArticleLikesService articleLikesService;
 
-	public ArticleController(ArticleService articleService, ArticleLikesService articleLikesService) {
-		this.articleService = articleService;
-		this.articleLikesService = articleLikesService;
-	}
+    public ArticleController(ArticleService articleService, ArticleLikesService articleLikesService) {
+        this.articleService = articleService;
+        this.articleLikesService = articleLikesService;
+    }
 
-	//게시물 리스트 조회
-	@GetMapping
-	public ResponseEntity getArticleList(@RequestParam(value = "hashtag", required = false) String hashtag) {
+    //게시물 리스트 조회
+    @GetMapping
+    public ResponseEntity getArticleList(@RequestParam(value = "hashtag", required = false) String hashtag) {
 
-		if (hashtag != null) {
-			return new ResponseEntity(articleService.readArticleFromHashtag(hashtag), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(articleService.readArticleList(), HttpStatus.OK);
-	}
+        if (hashtag != null) {
+            return new ResponseEntity(articleService.readArticleFromHashtag(hashtag), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(articleService.readArticleList(), HttpStatus.OK);
+    }
 
-	//게시물 단건 조회
-	@GetMapping("/{article-id}")
-	public ResponseEntity getArticle(@PathVariable("article-id") Long id) {
-		return new ResponseEntity<>(articleService.readArticle(id), HttpStatus.OK);
-	}
+    //게시물 단건 조회
+    @GetMapping("/{article-id}")
+    public ResponseEntity getArticle(@PathVariable("article-id") Long id) {
+        return new ResponseEntity<>(articleService.readArticle(id), HttpStatus.OK);
+    }
 
-	//게시물 등록
-	@PostMapping
-	public ResponseEntity postArticle(
-		@RequestBody RequestArticleDto requestArticleDto,
-		@AuthenticationPrincipal UserDto user) throws
-		IOException {
+    //게시물 등록
+    @PostMapping
+    public ResponseEntity postArticle(
+            @RequestBody RequestArticleDto requestArticleDto,
+            @AuthenticationPrincipal UserDto user) throws
+            IOException {
 
-		return new ResponseEntity<>(
-			articleService.createArticle(user.getUsers().getId(), requestArticleDto,requestArticleDto.getStoreName()),
-			HttpStatus.CREATED);
-	}
+        return new ResponseEntity<>(
+                articleService.createArticle(user.getUsers().getId(), requestArticleDto, requestArticleDto.getStoreName()),
+                HttpStatus.CREATED);
+    }
 
-	//게시물 수정
-	@PatchMapping(value = "/{article-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,
-		MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity patchArticle(@PathVariable("article-id") Long articleId,
-		@RequestPart("requestArticleDto") RequestArticleDto requestArticleDto,
-		@RequestPart(value = "images", required = false) List<MultipartFile> multipartFileList,
-		@AuthenticationPrincipal UserDto user) throws IOException {
-		return new ResponseEntity<>(
-			articleService.updateArticle(user.getUsers().getId(), articleId, requestArticleDto, multipartFileList),
-			HttpStatus.OK);
-	}
+    //게시물 수정
+    @PatchMapping("/{article-id}")
+    public ResponseEntity patchArticle(@PathVariable("article-id") Long articleId,
+                                       @RequestBody RequestArticleDto requestArticleDto,
+                                       @AuthenticationPrincipal UserDto user) throws IOException {
+        return new ResponseEntity<>(
+                articleService.updateArticle(user.getUsers().getId(), articleId, requestArticleDto, requestArticleDto.getStoreName()),
+                HttpStatus.RESET_CONTENT);
+    }
 
-	//게시물 삭제
-	@DeleteMapping("/{article-id}")
-	public ResponseEntity deleteArticle(@PathVariable("article-id") Long articleId,
-		@AuthenticationPrincipal UserDto users) {
+    //게시물 삭제
+    @DeleteMapping("/{article-id}")
+    public ResponseEntity deleteArticle(@PathVariable("article-id") Long articleId,
+                                        @AuthenticationPrincipal UserDto users) {
 
-		return new ResponseEntity<>(articleService.deleteArticle(articleId,users.getUsers().getId()), HttpStatus.RESET_CONTENT);
-	}
+        return new ResponseEntity<>(articleService.deleteArticle(articleId, users.getUsers().getId()), HttpStatus.RESET_CONTENT);
+    }
 
-	@GetMapping("/{article-id}/likes")
-	public ResponseEntity pushLikesArticle(@PathVariable("article-id") Long articleId,
-		@AuthenticationPrincipal UserDto users,
-		@RequestParam("check") String check) {
+    @GetMapping("/{article-id}/likes")
+    public ResponseEntity pushLikesArticle(@PathVariable("article-id") Long articleId,
+                                           @AuthenticationPrincipal UserDto users,
+                                           @RequestParam("check") String check) {
 
-		if (check.equals("likes")) {
-			articleLikesService.choiceLikes(articleId, users.getUsers().getId());
-		} else {
-			articleLikesService.cancleLikes(articleId, users.getUsers().getId());
-		}
-		return new ResponseEntity(HttpStatus.OK);
-	}
+        if (check.equals("likes")) {
+            articleLikesService.choiceLikes(articleId, users.getUsers().getId());
+        } else {
+            articleLikesService.cancleLikes(articleId, users.getUsers().getId());
+        }
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
