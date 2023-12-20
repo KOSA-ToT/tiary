@@ -154,8 +154,7 @@ public class ArticleServiceImpl implements ArticleService {
 	// 게시물 수정
 	@Transactional
 	@Override
-	public Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto,
-		List<MultipartFile> multipartFiles) throws IOException {
+	public Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto, List<String> storeNameList ) throws IOException {
 		Users user = usersRepository.findById(usersId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
@@ -168,13 +167,20 @@ public class ArticleServiceImpl implements ArticleService {
 		Optional.ofNullable(requestArticleDto.getTitle()).ifPresent(article::updateTitle);
 		Optional.ofNullable(requestArticleDto.getContent()).ifPresent(article::updateContent);
 
+		if (storeNameList != null) {
+			for (String storeName : storeNameList) {
+				ArticleImage articleImage = ArticleImage.of(storeName, article);
+				articleImageRepository.save(articleImage);
+			}
+		}
+
 		if (requestArticleDto.getCategoryCode() != null) {
 			Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
 			article.updateCategory(category);
 		}
 
-		uploadArticleImages(articleId, multipartFiles);
 		updateArticleHashtags(requestArticleDto, article);
+		batchService.updateRecommendationsAsync(article.getId());
 
 		return articleRepository.save(article);
 	}
