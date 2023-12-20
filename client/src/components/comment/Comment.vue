@@ -1,11 +1,12 @@
 <template>
-  <div class="w-fullbg-white rounded-lg border p-1 md:p-3">
-    <h3 class="font-semibold p-1">Comment</h3>
+  <div class="p-1 border rounded-lg w-fullbg-white md:p-3">
+    <h3 class="p-1 font-semibold">Comment</h3>
     <CommentCard
       v-for="comment in commentList.value"
       :key="comment.id"
       :commentData="{
         id: comment.id,
+        userId: comment.userId,
         articleId: comment.articleId,
         commentType: comment.commentType,
         children: comment.children,

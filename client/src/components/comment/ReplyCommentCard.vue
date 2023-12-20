@@ -1,21 +1,21 @@
 <template>
   <!-- Reply Container  -->
-  <div class="text-gray-300 font-bold pl-14">|</div>
-  <div class="border ml-5 rounded-md">
+  <div class="font-bold text-gray-300 pl-14">|</div>
+  <div class="ml-5 border rounded-md">
     <div class="p-3">
-      <div class="flex gap-3 items-center">
+      <div class="flex items-center gap-3"><router-link :to="'/writer-page/' + replyCommentData.userId" v-if="replyCommentData.userProfileImageUrl">
         <img
           v-if="replyCommentData.userProfileImageUrl"
           :src="
             'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' +
             replyCommentData.userProfileImageUrl
           "
-          class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
-        />
+          class="object-cover w-10 h-10 border-2 border-orange-300 rounded-full shadow-emerald-400"
+        /></router-link>
         <img
           v-else
           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
-          class="object-cover w-10 h-10 rounded-full border-2 border-orange-300 shadow-emerald-400"
+          class="object-cover w-10 h-10 border-2 border-orange-300 rounded-full shadow-emerald-400"
         />
 
         <h3 class="font-bold">
@@ -25,7 +25,7 @@
               : replyCommentData.createdBy
           }}
           <br />
-          <span class="text-sm text-gray-400 font-normal">
+          <span class="text-sm font-normal text-gray-400">
             {{
               replyCommentData.createdAt == replyCommentData.modifiedAt
                 ? formatCreatedAt(replyCommentData.createdAt)
@@ -34,7 +34,7 @@
           </span>
         </h3>
       </div>
-      <p class="text-gray-600 mt-2">{{ replyCommentData.content }}</p>
+      <p class="mt-2 text-gray-600">{{ replyCommentData.content }}</p>
       <!-- <button class="text-left text-blue-500" @click="replyToComment">
         Reply
       </button> -->
@@ -43,14 +43,14 @@
 
         <span
         v-if="showEditDeleteBtn"
-          class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+          class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"
           @click="openUpdateModal"
         >
           edit&nbsp;&nbsp;
         </span>
         <span
         v-if="showEditDeleteBtn"
-          class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+          class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"
           @click="deleteComment"
         >
           delete</span
@@ -58,20 +58,20 @@
         <!-- 비회원이 작성한 댓글 -->
         <span
           v-if="replyCommentData.createdBy === 'anonymousUser'"
-          class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+          class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"
           @click="openModal('edit')"
         >
           edit&nbsp;&nbsp;
         </span>
         <span
           v-if="replyCommentData.createdBy === 'anonymousUser'"
-          class="text-sm text-gray-400 hover:text-gray-700 font-normal cursor-pointer"
+          class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"
           @click="openModal('delete')"
         >
           delete</span
         >
       </div>
-      <div class="my-0 flex justify-center">
+      <div class="flex justify-center my-0">
         <CommentPasswordModal
           v-if="isPasswordModalOpen"
           @closeModal="closeModal"

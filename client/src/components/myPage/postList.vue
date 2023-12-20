@@ -2,10 +2,10 @@
     <!-- Container for demo purpose -->
     <div class="max-w-screen-md px-4 mx-auto mt-12 text-lg leading-relaxed text-gray-700 lg:px-0">
         <p class="pb-6">
-        <div class="container mx-auto my-24 md:px-6">
+        <div class="container mx-auto my-12 md:px-6">
             <!-- Section: Design Block -->
-            <section class="mb-32 text-center md:text-left">
-                <h2 class="mb-12 text-lg font-bold text-zinc-600">작성글</h2>
+            <section class="mb-12 text-center md:text-left">
+                <h2 class="mb-12 ml-12 text-lg font-bold text-orange-500">{{props.user.nickname.value}}님의 글</h2>
                 <div class="flex justify-end">
                     <!-- <button @click="deleteSelected"
                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">삭제</button>
@@ -21,8 +21,8 @@
                             data-te-ripple-init data-te-ripple-color="light">
                             <img :src="'https://tiary-images.s3.ap-northeast-2.amazonaws.com/' + post.imgUrl"
                                 class="object-cover w-full h-28" alt="" v-if="post.imgUrl" />
-                            <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/018.jpg"
-                                class="object-cover w-full h-full" alt="" v-else />
+                            <img src="/images/dog.jpg"
+                                class="object-cover w-full h-28" alt="" v-else />
                             <router-link :to="'/article/' + post.id">
                                 <div
                                     class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="w-full px-3 mb-6 mr-auto shrink-0 grow-0 basis-auto md:mb-0 md:w-9/12 xl:w-7/12">
-                        <h5 class="mb-3 text-lg font-bold">{{ post.title }}</h5>
+                        <h5 class="mb-3 text-base font-bold">{{ post.title }}</h5>
                         <div
                             class="flex items-center justify-center mb-3 text-sm font-medium text-danger dark:text-danger-500 md:justify-start">
                             <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" v-if="post.categoryId == 1"
@@ -402,7 +402,7 @@
                             </div>
 
                         </div>
-                        <p class="mb-6 text-neutral-500 dark:text-neutral-300">
+                        <p class="mb-6 text-sm text-neutral-500 dark:text-neutral-300">
                             <small>작성일시 : {{ formatCreatedAt(post.createdAt) }}</small>
                         </p>
 
@@ -413,11 +413,11 @@
 
             <!-- Section: Design Block -->
             <section v-if="totalPages != 0"><!-- 페이징 -->
-                <div class="flex items-center justify-between px-4 py-3 sm:px-6 bg-back">
+                <div class="flex items-center justify-between px-4 sm:px-6 bg-back">
                     <div class="flex justify-between flex-1 sm:hidden">
-                        <a
+                        <a @click="prevPage"
                             class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Previous</a>
-                        <a
+                        <a @click="nextPage"
                             class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Next</a>
                     </div>
                     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
