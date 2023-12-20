@@ -52,7 +52,7 @@
                 delete</span>
               <!-- 비회원이 작성한 댓글 -->
               <span v-if="commentData.createdBy === 'anonymousUser'"
-                class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700" @click="openModal('edit')">
+                class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700" @click="openModal('edit'),editComment, deleteComment"  >
                 edit&nbsp;&nbsp;
               </span>
               <span v-if="commentData.createdBy === 'anonymousUser'"
@@ -96,9 +96,15 @@ import {
 } from "@/api/common";
 
 const { commentData } = defineProps(["commentData"]);
+const emit = defineEmits(["editComment", "deleteComment"])
+
 const authStore = useAuthStore();
 
 let user = localStorage.getItem("Authorization");
+
+const mode = ref("");
+
+let commentId = ref(commentData.id);
 
 let commentRequestDTO = ref({
   content: "",
@@ -106,10 +112,7 @@ let commentRequestDTO = ref({
   parentId: "",
 });
 
-const mode = ref("");
-
-let commentId = ref(commentData.id);
-
+// 모달창
 let isPasswordModalOpen = ref(false);
 let isUpdateModalOpen = ref(false);
 let isReplyModalOpen = ref(false);
@@ -172,6 +175,7 @@ async function editComment(content) {
     );
     console.log("Comment updated successfully", editCommentResponse);
     closeModal();
+    emit("editComment")
   } catch (error) {
     console.log("failed edit comment", error);
   }
@@ -188,6 +192,7 @@ async function deleteComment() {
     console.log(response);
     closeModal();
     alert("성공적으로 삭제되었습니다.");
+    emit("deleteComment")
   } catch (error) {
     console.error("Error deleting comment", error);
   }

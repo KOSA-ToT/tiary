@@ -35,12 +35,12 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { ref } from "vue";
 import { createUserComment, createGuestComment } from "@/api/common";
 import { useRoute } from "vue-router";
+import router from "@/router";
 
-defineEmits(["createComment", "submitPassword"]);
+const emit = defineEmits(["createComment", "submitPassword"]);
 
 const user = localStorage.getItem("Authorization");
 const currentRoute = useRoute();
@@ -75,7 +75,7 @@ async function createComment() {
       }
       await createGuestComment(commentRequestDTO.value, articleId);
     }
-
+    emit("createComment");
     resetInput();
   } catch (error) {
     console.error(error);

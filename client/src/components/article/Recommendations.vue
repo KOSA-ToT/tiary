@@ -1,3 +1,4 @@
+
 <template>
   <div v-if="relatedArticles.length > 0" class="max-w-2xl mx-auto mt-4 p-4">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
