@@ -39,7 +39,7 @@
 <script setup>
 const { randomArticles } = defineProps(['randomArticles']);
 
-const defaultImageArray = ["/images/cat_1.jpg", "/images/cat_2.jpg", "/images/dog.jpg"];
+const defaultImageArray = ["/images/cat_1.jpg", "/images/cat_2.jpg", "/images/dog.jpg"]; // 여기 이미지 추가
 
 function getRandomArticles(articles, count) {
   // 배열을 랜덤으로 섞은 후, 필요한 개수만큼 자름

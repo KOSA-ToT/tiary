@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ResponseArticleDto {
 	private Long id;
+	private Long userId;
 	private String title;
 	private String content;
 	private int view;
@@ -31,6 +32,7 @@ public class ResponseArticleDto {
 	public static ResponseArticleDto from(Article article) {
 		return ResponseArticleDto.builder()
 			.id(article.getId())
+			.userId(article.getUsers().getId())
 			.title(article.getTitle())
 			.content(article.getContent())
 			.view(article.getView())
