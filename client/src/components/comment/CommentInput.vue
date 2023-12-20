@@ -38,6 +38,7 @@
 import { ref } from "vue";
 import { createUserComment, createGuestComment } from "@/api/common";
 import { useRoute } from "vue-router";
+import router from "@/router";
 
 const emit = defineEmits(["createComment", "submitPassword"]);
 
