@@ -20,7 +20,7 @@
     >
     </CommentCard>
 
-    <CommentInput></CommentInput>
+    <CommentInput @createComment="handleCommentCreated"></CommentInput>
   </div>
 </template>
 
@@ -53,6 +53,12 @@ onMounted(async () => {
 //   },
 //   { deep: true, immediate: true }
 // );
+
+// 댓글이 생성될 때 호출되는 이벤트 핸들러
+async function handleCommentCreated() {
+  // 댓글이 생성될 때만 commentList 다시 불러오기
+  await getCommentLists();
+}
 
 // comment 불러오기
 async function getCommentLists() {
