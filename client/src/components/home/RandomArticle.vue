@@ -29,7 +29,7 @@
           font-weight: 400;">
             {{ article.title }}</p>
           <p class="text-lg text-gray-600" 
-          v-html="clampLines(stripHTML(article.content), 1)"></p>
+          v-html="clampLines(stripHTML(article.content), 3)"></p>
         </router-link>
       </div>
     </section>
@@ -117,4 +117,12 @@ function clampLines(text, maxLines) {
   width: 100%;
   height: 100%;
 }
+
+.article-link p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 </style>
