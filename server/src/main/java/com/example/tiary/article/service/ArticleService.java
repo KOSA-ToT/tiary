@@ -29,8 +29,7 @@ public interface ArticleService {
 	Article createArticle(Long usersId, RequestArticleDto requestArticleDto, List<String> storeNameList) throws IOException;
 
 	// 게시물 수정
-	Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto,
-		List<MultipartFile> multipartFiles) throws
+	Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto,  List<String> storeNameList) throws
 		IOException;
 
 	String deleteArticle(Long articleId, Long usersId);

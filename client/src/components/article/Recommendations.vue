@@ -12,7 +12,7 @@
           </div>
           <div class="p-4">
             <div class="font-bold text-xl mb-2 lines-clamp-2">{{ related.title }}</div>
-            <div class="text-gray-700 text-base lines-clamp-2">{{ sanitizeHtml(related.content) }}</div>
+            <div class="text-gray-700 text-base lines-clamp-2"><p v-html="clampLines(stripHTML(related.content), 1)"></p></div>
           </div>
         </div>
       </a>
@@ -46,11 +46,19 @@ function getThumbnailImage(content) {
   return match ? match[1] : getRandomDefaultImage();
 }
 
-function sanitizeHtml(html) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const textNodes = [...doc.body.childNodes].filter(node => node.nodeType === Node.TEXT_NODE);
-  return textNodes.map(node => node.nodeValue).join(' ');
+function stripHTML(html) {
+  // HTML 태그 제거 함수
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || '';
+}
+
+function clampLines(text, maxLines) {
+  const lines = text.split('\n');
+  if (lines.length <= maxLines) {
+    return text;
+  } else {
+    return lines.slice(0, maxLines).join('\n');
+  }
 }
 
 function getRandomDefaultImage() {
