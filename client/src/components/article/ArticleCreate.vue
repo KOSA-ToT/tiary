@@ -77,7 +77,7 @@ import axios from "axios";
 import Editor from "@toast-ui/editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import router from "@/router";
-import { postArticleRequest } from "@/api/common";
+import { postArticleRequest , getCategoryList } from "@/api/common";
 
 //컬러
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -140,8 +140,7 @@ onMounted(async () => {
 });
 
 onMounted(async () => {
-  const response = await axios
-    .get("http://localhost:8088/category")
+  const response = await getCategoryList()
     .then((response) => {
       categories.value = response.data;
     });

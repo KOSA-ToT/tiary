@@ -1,4 +1,4 @@
-import { instance, authInstance, fileInstance } from "./config";
+import { instance, authInstance, fileInstance , batchInstance } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);
@@ -82,7 +82,15 @@ export const deleteUserComment = async (articleId, commentId) => {
 export const deleteGuestComment = async (articleId, commentId) => {
   return await instance.delete("/comment/guest/" + articleId + "/" + commentId);
 };
-
+export const getArticleRequest = async (articleId) =>{
+  return await instance.get("/article/" + articleId)
+}
+export const getArticleListRequest = async () => {
+  return await instance.get("/article");
+}
+export const getRecommendationArticleRequest = async (articleId) => {
+  return await batchInstance.get("batch/recommendations/" + articleId)
+}
 export const postArticleRequest = async (requestArticleDto) => {
   return await authInstance.post("/article", requestArticleDto);
 };
@@ -95,6 +103,15 @@ export const deleteArticleRequest = async (articleId) => {
   return await authInstance.delete("/article/" + articleId);
 };
 
+export const getCategoryList = async() => {
+  return await instance.get("/category")
+}
+export const getArticleFromCategory = async(categoryName) =>{
+  return await instance.get("/category?categoryName="+categoryName)
+}
+export const getArticleFromHashtag = async(categoryName) => {
+  return await instance.get("/hashtag?categoryName="+categoryName)
+}
 export const getUser = async (userId) => {
   return await instance.get("/users/"+ userId);
 }

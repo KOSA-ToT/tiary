@@ -78,6 +78,7 @@ import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js'
 import Loading from '@/components/Loading.vue';
+import { getArticleFromCategory, getArticleFromHashtag } from '@/api/common';
 
 const { categoryName } = defineProps(['categoryName'])
 const getArticle = ref([]);
@@ -91,20 +92,15 @@ onMounted(() => {
 const isLoading = ref(true);
 
 async function fetchList(e) {
-  const apiUrl = 'http://localhost:8088/category?categoryName=' + categoryName
-  const response = axios.get(apiUrl);
+  const response = getArticleFromCategory(categoryName)
   const data = (await response).data;
-
   getArticle.value = data.data;
   isLoading.value = false;
 }
 
 async function fetchHashtag(e) {
-  const apiUrl = 'http://localhost:8088/hashtag?categoryName=' + categoryName
-
-  const response = axios.get(apiUrl);
+  const response = getArticleFromHashtag(categoryName)
   const data = (await response).data;
-
   getHashtag.value = data;
 }
 
