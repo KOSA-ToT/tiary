@@ -10,6 +10,7 @@ public enum ExceptionCode {
 	ARTICLE_ALREADY_DELETE(404, "게시물이 이미 삭제 되었습니다"),
 	USER_NOT_FOUND(404, "사용자가 없습니다."),
 	USER_EXIST(500, "사용자가 이미 있습니다."),
+	USER_EXIST_INACTIVE(500, "탈퇴한 사용자입니다."),
 	COMMENTS_NOT_FOUND(404, "댓글이 없습니다."),
 	COMMENTS_ALREADY_DELETE(404, "댓글이 이미 삭제되었습니다."),
 	PARENT_COMMENTS_NOT_FOUND(404, "없는 부모 댓글입니다.");

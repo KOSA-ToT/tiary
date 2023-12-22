@@ -110,7 +110,6 @@ async function submitEmail(task){
           if(!confirm(emailDupCheckResponse.data + " 사용하시겠습니까?")) {
           return;
         }
-        emits('isLoading', true);
       } catch (error) { // 이메일 중복
         alert(error.response.data)
         return;
@@ -120,6 +119,7 @@ async function submitEmail(task){
         email: email.value,
         task: props.task
     };
+    emits('isLoading', true);
     const request = await emailAuthReq(emailDto);
     alert(request.data);
     emits('isLoading', false);
