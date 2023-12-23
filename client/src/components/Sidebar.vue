@@ -21,7 +21,7 @@
          <!-- Write and Apply Buttons -->
          <div class="flex justify-center">
             <a href="/article-create" class="btn btn-orange btn-outline">글쓰기</a>
-            <button class="btn btn-orange btn-outline">작가 신청</button>
+            <button v-if="userRole!='ADMIN'" class="btn btn-orange btn-outline">작가 신청</button>
          </div>
          <!-- Divider -->
          <hr class="my-4 border-t border-gray-300 dark:border-gray-700">
@@ -49,7 +49,7 @@
          <hr class="my-4 border-t border-gray-300 dark:border-gray-700">
 
          <div class="flex justify-center">
-            <a :href="`/mypage/${userId}`" class="btn btn-orange btn-outline">마이페이지</a>
+            <a v-if="userRole!='ADMIN'" :href="`/mypage/${userId}`" class="btn btn-orange btn-outline">마이페이지</a>
             <button @click="authStore.alertLogout()" class="btn btn-orange btn-outline">로그아웃</button>
          </div>
    </div>
@@ -71,6 +71,7 @@ const isSideBar = ref(false);
 const userNickname = ref('');
 const userId = ref('');
 const userPicture = ref(null);
+const userRole = ref(null);
 let links = [];
 
 // 사이드바 오픈 && 유저 정보 출력
@@ -81,11 +82,18 @@ async function onSidebar() {
          userNickname.value = userInfo.nickname;
          userId.value = userInfo.id;
          userPicture.value = userInfo.picture;
+         userRole.value = userInfo.role;
+         if (userInfo.role === 'ADMIN') {
+            links = [
+               { text: '작가 관리', to: `/admin/writer-management`, iconClass: '/images/book.svg' },
+               { text: '공지사항 관리', to: `/admin/notice-management`, iconClass: '/images/comment-dots.svg' },
+               ];
+         } else {
          links = [
          { text: '작성한 글', to: `/mypage/post/${userId.value}`, iconClass: '/images/book.svg' },
          { text: '작성한 댓글', to: `/mypage/comment/${userId.value}`, iconClass: '/images/comment-dots.svg' },
          { text: '구독한 작가', to: `/mypage/subscriber/${userId.value}`, iconClass: '/images/heart.svg' },
-      ];
+      ];}
       } catch (err) {
          console.log(err);
       }
