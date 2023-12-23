@@ -33,13 +33,9 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
-		System.out.println("OAuth2UserCustomService : " + oAuth2User);
-		System.out.println("getAttributes : " + oAuth2User.getAttributes());
-
 		OAuth2UserInfo userInfo = null; // 유저 정보를 담을 객체
 		String provider = userRequest.getClientRegistration().getRegistrationId(); // OAuth2 공급자
 
-		// TODO : Github, Naver, Kakao 등등 추가
 		switch (provider) {
 			case "google" -> userInfo = new GoogleUserInfo(oAuth2User.getAttributes());
 			case "naver" -> userInfo = new NaverUserInfo(oAuth2User.getAttributes());
