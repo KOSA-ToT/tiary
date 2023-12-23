@@ -7,6 +7,16 @@ build/
 
 ### application.yml ###
 server/src/main/resources/application.yml
+server/src/main/resources/application.yaml
+payment/src/main/resources/application.yml
+payment/src/main/resources/application.yaml
+server/src/main/resources/application-dev.yml
+server/src/main/resources/application-dev.yaml
+payment/src/main/resources/application-dev.yml
+payment/src/main/resources/application-dev.yaml
+server/src/main/resources/application-prod.yml
+server/src/main/resources/application-prod.yaml
+
 
 ### STS ###
 .apt_generated
@@ -242,6 +252,10 @@ $RECYCLE.BIN/
 # Batch Server  - 배치 서버 구현 전에 ignore 추가
 .batch
 /batch/*
+
+# payment Server
+.payment
+/payment/*
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,java,visualstudiocode,intellij+all,vuejs
 
