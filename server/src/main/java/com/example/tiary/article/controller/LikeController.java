@@ -26,7 +26,7 @@ public class LikeController {
 		@AuthenticationPrincipal UserDto userDto
 	) {
 		System.out.println("좋아요 상태 호출 입니다.");
-		Boolean result = articleLikesService.getLikeState(50L, userDto.getUsers().getId());
+		Boolean result = articleLikesService.getLikeState(articleId, userDto.getUsers().getId());
 		return new ResponseEntity(result,HttpStatus.OK);
 	}
 }
