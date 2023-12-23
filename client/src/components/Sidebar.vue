@@ -107,7 +107,7 @@ async function getUserInfo() {
 function getUserPictureUrl() {
    if (userPicture.value === null) {
       // 이미지가 없을 경우 로딩 이미지 경로
-      return '/images/loading.gif';
+      return '/images/loading_1.gif';
    } else {
       // 사용자 프로필 사진이 있을 경우 경로 설정
       return import.meta.env.VITE_S3_URL + userPicture.value;
