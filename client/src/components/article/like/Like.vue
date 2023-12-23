@@ -1,8 +1,8 @@
 <template>
   <button
     type="button"
-    class="flex items-center gap-2 text-white p-2 rounded-full cursor-pointer btn btn-outline btn-orange"
-    :class="{ 'hover-style': isLiked, 'orange-bg': isLiked }"
+    class="flex items-center gap-2 text-white p-2 rounded-full cursor-pointer btn"
+    :class="{ 'hover-style': isLiked, 'orange-bg': isLiked , 'btn-outline' : !isLiked , 'brn-orange' : !isLiked}"
     @click="toggleLike"
   >
     <svg
@@ -14,7 +14,7 @@
     >
       <path d="M3 7H1a1 1 0 0 0-1 1v10a2 2 0 0 0 4 0V8a1 1 0 0 0-1-1Zm12.954 0H12l1.558-4.5a1.778 1.778 0 0 0-3.331-1.06A24.859 24.859 0 0 1 6 6.8v13.586h.114C8.223 21.969 11.015 23 13.6 23c1.4 0 1.592-.526 1.88-1.317l2.354-7A2 2 0 0 0 15.954 7Z" />
     </svg>
-    <span>{{ isLiked ? '좋아요 취소' : '좋아요' }}</span>
+    <span>{{ isLiked ? '좋아요' : '좋아요' }}</span>
   </button>
 </template>
 
@@ -86,12 +86,13 @@ const toggleLike = async () => {
 }
 
 /* 좋아요 상태일 때의 스타일 */
-.hover-style:hover {
+.hover-style {
   border-color: #ff9800;
   /* 다른 스타일 속성도 필요한 경우 추가 */
 }
 
 .orange-bg {
   background-color: #ff9800; /* 오렌지 배경 색 */
+  color: #fff; /* 흰색 글씨 색 */
 }
 </style>

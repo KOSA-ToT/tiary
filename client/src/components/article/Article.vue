@@ -84,7 +84,6 @@ import recommendations from "@/components/article/Recommendations.vue";
 import { ref, onMounted, computed, defineProps } from "vue";
 import * as dateFormat from "@/utils/dateformat.js";
 import router from "@/router";
-import Editor from '@toast-ui/editor';
 import { deleteArticleRequest, getArticleRequest } from "@/api/common";
 import { useAuthStore } from "@/stores/auth";
 const { articleId } = defineProps(["articleId"]);
