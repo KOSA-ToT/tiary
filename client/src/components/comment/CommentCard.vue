@@ -99,11 +99,9 @@ const { commentData } = defineProps(["commentData"]);
 const emit = defineEmits(["editComment", "deleteComment"])
 
 const authStore = useAuthStore();
-
 let user = localStorage.getItem("Authorization");
 
 const mode = ref("");
-
 let commentId = ref(commentData.id);
 
 let commentRequestDTO = ref({

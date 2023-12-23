@@ -17,12 +17,12 @@
         userProfileImageUrl: comment.userProfileImageUrl,
         email: comment.email,
       }"
-      @editComment="handleCommentEdit"
-      @deleteComment="handleCommentDelete"
+      @editComment="handleCommentList"
+      @deleteComment="handleCommentList"
     >
     </CommentCard>
 
-    <CommentInput @createComment="handleCommentCreated"></CommentInput>
+    <CommentInput @createComment="handleCommentList"></CommentInput>
   </div>
 </template>
 
@@ -45,7 +45,6 @@ onMounted(async () => {
 });
 
 // 새로고침 안하고 바로 불러오기
-
 // watch(
 //   () => commentList.value,
 //   (newVal, oldVal) => {
@@ -57,19 +56,9 @@ onMounted(async () => {
 //   { deep: true, immediate: true }
 // );
 
-// 댓글이 생성될 때 호출되는 이벤트 핸들러
-// 댓글이 생성되면 commentList 다시 불러오기
-async function handleCommentCreated() {
-  await getCommentLists();
-}
 
-// 댓글이 수정되면 commentList 다시 불러오기
-async function handleCommentEdit() {
-  await getCommentLists();
-}
-
-// 댓글이 삭제되면 commentList 다시 불러오기
-async function handleCommentDelete() {
+// 댓글이 생성, 수정, 삭제되면 commentList 다시 불러오기
+async function handleCommentList() {
   await getCommentLists();
 }
 

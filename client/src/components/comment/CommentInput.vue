@@ -103,7 +103,6 @@ function resetInput() {
   background-color: #ff9800;
   color: #fff;
 }
-
 .btn-orange {
   background-color: transparent;
   color: #ff9800;
