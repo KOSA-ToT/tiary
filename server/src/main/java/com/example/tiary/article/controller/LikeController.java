@@ -2,15 +2,17 @@ package com.example.tiary.article.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tiary.article.service.ArticleLikesService;
+import com.example.tiary.users.dto.UserDto;
 
 @RestController
-@RequestMapping("/like")
+@RequestMapping("/likes")
 public class LikeController {
 	private final ArticleLikesService articleLikesService;
 
@@ -18,10 +20,13 @@ public class LikeController {
 		this.articleLikesService = articleLikesService;
 	}
 
-	@GetMapping("/{user-id}")
+	@GetMapping("/{article-id}")
 	public ResponseEntity isArticleLike(
-		@PathVariable("user-id") Long userId
+		@PathVariable("article-id") Long articleId,
+		@AuthenticationPrincipal UserDto userDto
 	) {
-		return new ResponseEntity(HttpStatus.OK);
+		System.out.println("좋아요 상태 호출 입니다.");
+		Boolean result = articleLikesService.getLikeState(50L, userDto.getUsers().getId());
+		return new ResponseEntity(result,HttpStatus.OK);
 	}
 }
