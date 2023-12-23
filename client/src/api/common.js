@@ -102,7 +102,12 @@ export const patchArticleRequest = async (articleId, requestArticleDto) => {
 export const deleteArticleRequest = async (articleId) => {
   return await authInstance.delete("/article/" + articleId);
 };
-
+export const getArticleLikeRequest = async (articleId) => {
+  return await authInstance.get(articleId+"/likes?check=likes")
+}
+export const getArticleLikeCancleRequest = async (articleId) => {
+  return await authInstance.get(articleId+"/likes")
+}
 export const getCategoryList = async() => {
   return await instance.get("/category")
 }

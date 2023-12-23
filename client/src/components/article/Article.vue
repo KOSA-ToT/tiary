@@ -1,10 +1,7 @@
 <template>
   <div>
     <!-- 커버 이미지 영역 -->
-    <div
-      v-if="article"
-      class="h-64 bg-cover bg-center relative overflow-hidden"
-    >
+    <div v-if="article" class="h-64 bg-cover bg-center relative overflow-hidden">
       <img :src="getRandomDefaultImage()" class="opacity-70 blur-sm" />
       <div class="absolute bottom-0 left-0 right-0 text-white text-center p-4">
         <h1 class="text-3xl font-bold mb-5">
@@ -16,8 +13,8 @@
           <span class="mr-5">
             {{
               isWithinSixHours(article.createdAt)
-                ? formatTimeDifference(article.createdAt)
-                : dateFormat.formatCreatedAt(article.createdAt)
+              ? formatTimeDifference(article.createdAt)
+              : dateFormat.formatCreatedAt(article.createdAt)
             }}
           </span>
           <span class="ico_by">By </span>
@@ -28,10 +25,7 @@
 
           <span v-if="shouldShowEditDeleteButtons">
             <span class="mx-2">•</span>
-            <router-link
-              :to="{ name: 'ArticleEdit', params: { id: articleId } }"
-              >수정</router-link
-            >
+            <router-link :to="{ name: 'ArticleEdit', params: { id: articleId } }">수정</router-link>
             <span class="mx-2">•</span>
             <button @click="deleteArticle">삭제</button>
           </span>
@@ -43,14 +37,8 @@
 
     <!-- 글 내용 -->
 
-    <div
-      v-if="article"
-      class="max-w-2xl mx-auto p-4 bg-white shadow-lg overflow-hidden"
-    >
-      <div
-        class="content prose prose-sm max-w-700 mx-auto"
-        v-html="article.content || '내용 없음'"
-      ></div>
+    <div v-if="article" class="max-w-2xl mx-auto p-4 bg-white shadow-lg overflow-hidden">
+      <div class="content prose prose-sm max-w-700 mx-auto" v-html="article.content || '내용 없음'"></div>
 
       <!-- 해시태그 영역 -->
       <div class="max-w-2xl mx-auto mt-4 p-4">
@@ -62,9 +50,22 @@
           </span>
         </div>
       </div>
-      <!-- 댓글 영역-->
-      <comment></comment>
 
+      <div class="parent-of-parent">
+  <div class="flex items-center space-x-4 mb-4 justify-between">
+    <!-- 좋아요 영역 -->
+    <like :articleId="articleId"></like>
+    <!-- 댓글 토글 버튼 -->
+    <button @click="toggleComments" class="bg-blue-500 text-white p-2 rounded-full cursor-pointer btn btn-outline btn-orange">
+      {{ showComments ? '댓글 닫기' : '댓글 보기' }}
+    </button>
+  </div>
+  <!-- 댓글 영역 -->
+  <comment v-if="showComments" class="mb-4"></comment>
+</div>
+      <hr>
+      <!-- 프로필 영역-->
+      <AuthorProfile :userId="userId"></AuthorProfile>
       <!-- 추천게시물 영역 -->
       <recommendations :articleId="articleId" />
     </div>
@@ -76,24 +77,25 @@
 
 <script setup>
 import Header from "@/components/Header.vue";
-import recommendations from "@/components/article/Recommendations.vue";
+import like from "@/components/article/like/Like.vue"
+import AuthorProfile from './AuthorProfile.vue';
 import comment from "@/components/comment/Comment.vue";
-import { ref, onMounted, computed , defineProps } from "vue";
-import axios from "axios";
+import recommendations from "@/components/article/Recommendations.vue";
+import { ref, onMounted, computed, defineProps } from "vue";
 import * as dateFormat from "@/utils/dateformat.js";
 import router from "@/router";
-
-import { deleteArticleRequest , getArticleRequest } from "@/api/common";
+import Editor from '@toast-ui/editor';
+import { deleteArticleRequest, getArticleRequest } from "@/api/common";
 import { useAuthStore } from "@/stores/auth";
 const { articleId } = defineProps(["articleId"]);
 const article = ref(null);
+const userId = ref("");
 
 onMounted(async () => {
   try {
-    console.log(articleId)
     const response = await getArticleRequest(articleId)
     article.value = response.data;
-    console.log(article.value);
+    userId.value = article.value.userId;
   } catch (error) {
     console.error("글을 불러오는 데 실패했습니다:", error);
   }
@@ -112,6 +114,14 @@ const deleteArticle = () => {
   } catch {
     alert("에러입니다.");
   }
+};
+
+// 댓글 영역 토글 상태 변수
+const showComments = ref(false);
+
+// 댓글 토글 메소드
+const toggleComments = () => {
+  showComments.value = !showComments.value;
 };
 
 // 시간 표시
@@ -200,5 +210,31 @@ function getRandomDefaultImage() {
 .text-stroke {
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
+}
+.btn {
+  margin-right: 5px;
+  padding: 5px 16px; /* padding 수정 */
+  min-width: 75px; /* 최소 너비 추가 */
+  border: 1px solid orange;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  border-color: #ff9800;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #ff9800;
+}
+
+.btn-outline:hover {
+  background-color: #ff9800;
+  color: #fff;
+}
+.btn-orange {
+  background-color: transparent;
+  color : #ff9800;
 }
 </style>
