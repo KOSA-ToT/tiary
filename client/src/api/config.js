@@ -18,7 +18,16 @@ const fileConfig = {
   withCredentials: true,
 };
 
+const batchConfig = {
+  baseURL: "http://localhost:8089", // 로컬
+  headers: {
+    'Content-type': 'application/json'
+  },
+};
+
+
 export const instance = axios.create(baseConfig);
+export const batchInstance = axios.create(batchConfig); // 게이트웨이 구현 하면 필요없어질듯
 export const authInstance = axios.create(baseConfig);
 export const fileInstance = axios.create(fileConfig);
 

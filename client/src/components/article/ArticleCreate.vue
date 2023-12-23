@@ -1,70 +1,37 @@
 <template>
   <div :class="{ dark: isDarkMode, light: !isDarkMode }">
-    <div
-      id="article"
-      class="max-w-4xl mx-auto p-4 font-sans bg-white dark:bg-white-800"
-    >
-      <div
-        id="category"
-        :class="{ 'text-white': isDarkMode, 'text-black': !isDarkMode }"
-      >
+    <div id="article" class="max-w-4xl mx-auto p-4 font-sans bg-white dark:bg-white-800">
+      <div id="category" :class="{ 'text-white': isDarkMode, 'text-black': !isDarkMode }">
         <label for="category" class="block text-sm font-bold mb-2"></label>
-        <select
-          v-model="categoryCode"
-          class="w-40 p-2 border border-gray-300 dark:bg-white-300 dark:text-black"
-        >
+        <select v-model="categoryCode" class="w-40 p-2 border border-gray-300 dark:bg-white-300 dark:text-black">
           <option disabled value="" selected>카테고리</option>
-          <option
-            v-for="i in categories"
-            :key="i.categoryCode"
-            :value="i.categoryCode"
-            class="dark:bg-gray-700 dark:text-white"
-          >
+          <option v-for="i in categories" :key="i.categoryCode" :value="i.categoryCode"
+            class="dark:bg-gray-700 dark:text-white">
             {{ i.categoryName }}
           </option>
         </select>
       </div>
       <div id="title" class="mb-4">
         <label for="title" class="block text-sm font-bold mb-2"></label>
-        <input
-          type="text"
-          name="title"
-          v-model="title"
-          placeholder="제목을 입력해주세요"
-          class="w-full p-2 border-0 border-gray-300 dark:bg-gray-300 dark:text-black"
-        />
+        <input type="text" name="title" v-model="title" placeholder="제목을 입력해주세요"
+          class="w-full p-2 border-0 border-gray-300 dark:bg-gray-300 dark:text-black" />
       </div>
       <div id="content" ref="editor" class="mb-8 h-full">
         <div v-html="testHtml"></div>
       </div>
       <div id="hashtag" class="mb-4">
-        <label
-          for="hashtag"
-          class="block text-sm font-bold mb-2"
-          placeholder="#해시태그"
-        ></label>
-        <input
-          type="text"
-          name="hashtag"
-          v-model="hashtag"
-          placeholder="#해시태그"
-          class="w-full p-2 border-0 border-gray-300 dark:bg-gray-300 dark:text-black"
-        />
+        <label for="hashtag" class="block text-sm font-bold mb-2" placeholder="#해시태그"></label>
+        <input type="text" name="hashtag" v-model="hashtag" placeholder="#해시태그"
+          class="w-full p-2 border-0 border-gray-300 dark:bg-gray-300 dark:text-black" />
       </div>
     </div>
-    <div
-      class="fixed bottom-0 right-0 left-0 flex justify-end items-center p-4 bg-white dark:bg-gray-300"
-    >
-      <button
-        @click.prevent="postArticle"
-        class="text-white py-2 px-4 bg-green-500 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300"
-      >
+    <div class="fixed bottom-0 right-0 left-0 flex justify-end items-center p-4 bg-white dark:bg-gray-300">
+      <button @click.prevent="postArticle"
+        class="text-white py-2 px-4 bg-green-500 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
         작성하기
       </button>
-      <button
-      @click.prevent="backArticle"
-        class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300"
-      >
+      <button @click.prevent="backArticle"
+        class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
         취소
       </button>
     </div>
@@ -77,7 +44,7 @@ import axios from "axios";
 import Editor from "@toast-ui/editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import router from "@/router";
-import { postArticleRequest } from "@/api/common";
+import { postArticleRequest, getCategoryList } from "@/api/common";
 
 //컬러
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
@@ -105,10 +72,51 @@ const categoryCode = ref("");
 //css
 const isDarkMode = ref(false);
 
-//마운트될때 Editor 생성
-onMounted(async () => {
+// 주기적으로 실행될 함수
+function autoSave() {
+  // 현재 작성된 내용을 가져와서 임시 저장
+  const dataToSave = {
+    title: title.value,
+    content: editorValid.value.getHTML(),
+    hashtag: hashtag.value,
+    categoryCode: categoryCode.value,
+    storeName: images,
+  };
+
+  // localStorage에 데이터 저장
+  localStorage.setItem('autoSaveData', JSON.stringify(dataToSave));
+  console.log('자동 저장 완료');
+}
+
+// 주기적으로 autoSave 함수 호출 (예: 2분마다)
+const autoSaveInterval = setInterval(autoSave, 2 * 60 * 1000); // 2분
+
+// 컴포넌트가 소멸될 때 clearInterval을 통해 인터벌 해제
+onUnmounted(() => {
+  clearInterval(autoSaveInterval);
+});
+
+// 컴포넌트가 생성될 때 localStorage에서 데이터 불러오기
+onMounted(() => {
+  const savedData = localStorage.getItem('autoSaveData');
+  if (savedData) {
+    const confirmLoad = window.confirm('임시 저장된 데이터가 있습니다. 불러오시겠습니까?');
+
+    if (confirmLoad) {
+      const parsedData = JSON.parse(savedData);
+      console.log(savedData);
+     
+      title.value = parsedData.title;
+      content.value = parsedData.content;
+     
+    } else {
+      localStorage.removeItem('autoSaveData');
+    }
+  }
+  //마운트될때 Editor 생성
   editorValid.value = new Editor({
     el: editor.value,
+    initialValue : content.value,
     height: "460px",
     usageStatistics: false,
     hideModeSwitch: true,
@@ -139,9 +147,12 @@ onMounted(async () => {
   });
 });
 
+
+
+
+
 onMounted(async () => {
-  const response = await axios
-    .get("http://localhost:8088/category")
+  const response = await getCategoryList()
     .then((response) => {
       categories.value = response.data;
     });
@@ -175,9 +186,10 @@ function postArticle() {
   }
 }
 
-function backArticle(){
+function backArticle() {
   router.push('/');
 }
+
 
 watch(
   () => window.matchMedia("(prefers-color-scheme: dark)").matches,

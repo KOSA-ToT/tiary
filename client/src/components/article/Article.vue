@@ -78,24 +78,22 @@
 import Header from "@/components/Header.vue";
 import recommendations from "@/components/article/Recommendations.vue";
 import comment from "@/components/comment/Comment.vue";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed , defineProps } from "vue";
 import axios from "axios";
 import * as dateFormat from "@/utils/dateformat.js";
 import router from "@/router";
 
-import { deleteArticleRequest } from "@/api/common";
+import { deleteArticleRequest , getArticleRequest } from "@/api/common";
 import { useAuthStore } from "@/stores/auth";
-
 const { articleId } = defineProps(["articleId"]);
 const article = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get(
-      `http://localhost:8088/article/${articleId}`
-    );
+    console.log(articleId)
+    const response = await getArticleRequest(articleId)
     article.value = response.data;
-    console.log(article);
+    console.log(article.value);
   } catch (error) {
     console.error("글을 불러오는 데 실패했습니다:", error);
   }
@@ -108,7 +106,7 @@ const deleteArticle = () => {
     const response = deleteArticleRequest(articleId).then((response) => {
       if (response.status == 205) {
         alert("게시물이 삭제되었습니다.");
-        router.go("/");
+        router.go("-1");
       }
     });
   } catch {
