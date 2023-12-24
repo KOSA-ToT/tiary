@@ -27,11 +27,11 @@
     </div>
     <div class="fixed bottom-0 right-0 left-0 flex justify-end items-center p-4 bg-white dark:bg-gray-300">
       <button @click.prevent="postArticle"
-        class="text-white py-2 px-4 bg-green-500 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
+        class="text-white py-2 px-4 bg-orange-400 dark:bg-orange-400 rounded-full hover:bg-orange-500 transition duration-300">
         작성하기
       </button>
       <button @click.prevent="backArticle"
-        class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
+        class="text-white py-2 px-4 ml-2 bg-orange-400 dark:bg-orange-400 rounded-full hover:bg-orange-500 transition duration-300">
         취소
       </button>
     </div>
@@ -247,4 +247,17 @@ const testValid = (e) => {
   outline: none;
   /* 포커스시 테두리 제거 */
 }
+
+@keyframes catJump {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .cat-button {
+    animation: catJump 1s infinite;
+  }
 </style>
