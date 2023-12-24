@@ -254,8 +254,8 @@ $RECYCLE.BIN/
 /batch/*
 
 # payment Server
-.payment
-/payment/*
+#.payment
+#/payment/*
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,java,visualstudiocode,intellij+all,vuejs
 
