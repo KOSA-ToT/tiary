@@ -28,7 +28,6 @@ async function getVerified(key, task) {
 
   try { // 이메인 인증 요청
       const response = await emailAuthResultReq(key, task);
-      alert(response.data.accepted)
 
       try { // 회원정보 있으면 로그인
         const loginDto = { email: response.data.email };
@@ -36,7 +35,11 @@ async function getVerified(key, task) {
           localStorage.setItem('Authorization', loginResponse.headers.authorization)
           router.push('/');
       } catch (error) { // 회원정보 없으니 회원가입
-        if(task === '회원가입') {
+        if(error.response.status === 500) {
+          console.log(error)
+          alert(error.response.data.message)
+          router.push('/');
+        } else {
           router.push({ name: 'Nickcheck', params: { email: response.data.email } });
         }
       }

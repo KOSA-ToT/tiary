@@ -16,13 +16,14 @@ import Footer from '@/components/Footer.vue';
 import RandomArticle from '@/components/home/RandomArticle.vue'
 import Card from '@/components/home/Card.vue';
 import Category from '@/components/home/Category.vue';
+import { getArticleListRequest,getCategoryList } from '@/api/common';
 
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
 const categories = ref([])
 onMounted(async () => {
-  const response = await axios.get('http://localhost:8088/category')
+  const response = getCategoryList()
     .then((response) => {
       categories.value = response.data;
     })
@@ -32,7 +33,7 @@ onMounted(async () => {
 const randomArticle = ref([])
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8088/article');
+    const response = await getArticleListRequest();
     // response.data에서 6개의 랜덤 인덱스를 뽑아서 randomArticle.value에 할당
     randomArticle.value = getRandomArticles(response.data, 6);
   } catch (error) {

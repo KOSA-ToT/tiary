@@ -2,6 +2,7 @@ package com.example.tiary.global.config.oauth;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -18,6 +19,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+
+	@Value("${spring.security.oauth2.success-redirect}")
+	private String redirectUrl;
 	private final TokenService tokenService;
 	private final UsersRepository usersRepository;
 
@@ -47,7 +51,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			JwtProperties.getREFRESH_TOKEN_EXPIRE_DURATION());
 
 		response.setStatus(HttpServletResponse.SC_OK);
-		// TODO 승희: 하드코딩 삭제
-		response.sendRedirect("http://localhost:5173/oauth/callback");
+		response.sendRedirect(redirectUrl);
 	}
 }

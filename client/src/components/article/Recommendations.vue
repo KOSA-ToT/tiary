@@ -23,7 +23,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { getRecommendationArticleRequest } from '@/api/common';
 
 const { articleId } = defineProps(['articleId']);
 const relatedArticles = ref([]);
@@ -35,7 +35,7 @@ onMounted(() => {
 
 async function fetchData() {
   try {
-    const response = await axios.get(`http://localhost:8089/batch/recommendations/${articleId}`);
+    const response = await getRecommendationArticleRequest(articleId);
     relatedArticles.value = response.data.responseRelatedArticleDtoList;
   } catch (error) {
     console.error('글을 불러오는 데 실패했습니다:', error);
