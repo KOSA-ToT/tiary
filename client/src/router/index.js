@@ -17,6 +17,7 @@ import Post from '@/pages/Post.vue'
 import NickCheck from '@/pages/Nickcheck.vue'
 import VerifyEmail from '@/pages/VerifyEmail.vue'
 import OauthCallback from '@/pages/OauthCallback.vue'
+import TossPayment from '@/components/TossPayment.vue'
 
 
 const router = createRouter({
@@ -55,6 +56,7 @@ const router = createRouter({
         {path: '/nickname-check/:email', name: 'Nickcheck', component: NickCheck},
         {path: '/auth/verify-email', component: VerifyEmail},
         {path: '/oauth/callback', component: OauthCallback},
+        {path: '/donate', component: TossPayment}
     ],
     })
 
