@@ -126,6 +126,7 @@
 import { defineProps, onMounted, ref, watchEffect, watch, computed } from "vue";
 import { listMyPost, deleteArticleRequest } from "@/api/common";
 import { useRoute } from "vue-router";
+import {useNoticeStore} from '@/stores/noticeStore'
 const noticeList = ref([]);
 const allChecked = ref(false);
 const totalPages = ref(0);
@@ -136,6 +137,8 @@ const selectedPosts = ref([]);
 
 const currentRoute = useRoute();
 let adminId = currentRoute.params.id;
+
+const noticeStore = useNoticeStore();
 
 // function test() {
 //   console.log("어드민아이디", adminId);
@@ -159,6 +162,7 @@ async function listMyPosts() {
       (_, index) => pageCalculate.value + index + 1
     );
     const response = await listMyPost(adminId, currentPage.value);
+    noticeStore.setNotices(response.data.content)
     console.log("response", response);
     console.log("response.data.content", response.data.content);
 
