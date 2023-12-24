@@ -1,15 +1,10 @@
 <template>
-  <div>
-공지사항 신청 관리 컴포넌트~
-<ManagementTable></ManagementTable>
-  </div>
+  <div>공지사항 신청 관리 컴포넌트~</div>
+  <AdminPost></AdminPost>
 </template>
 
 <script setup>
-
-import ManagementTable from "@/components/admin/ManagementTable.vue";
+import AdminPost from "@/components/admin/AdminPost.vue";
 </script>
 
-<style  scoped>
-
-</style>
+<style scoped></style>
