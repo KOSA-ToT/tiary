@@ -229,6 +229,7 @@ async function createReplyComment(replyComment) {
       await createGuestComment(commentRequestDTO.value, commentData.articleId);
       closeModal();
     }
+    emit("createReplyComment");
   } catch (error) {
     console.log(error);
   }

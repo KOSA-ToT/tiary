@@ -19,6 +19,7 @@
       }"
       @editComment="handleCommentList"
       @deleteComment="handleCommentList"
+      @createReplyComment="handleCommentList"
     >
     </CommentCard>
 
@@ -55,7 +56,6 @@ onMounted(async () => {
 //   },
 //   { deep: true, immediate: true }
 // );
-
 
 // 댓글이 생성, 수정, 삭제되면 commentList 다시 불러오기
 async function handleCommentList() {
