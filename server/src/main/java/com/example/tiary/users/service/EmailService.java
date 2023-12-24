@@ -17,7 +17,7 @@ public class EmailService {
 	private final JavaMailSender mailSender;
 	private final RedisUtil redisUtil;
 
-	@Value("${mail.username}")
+	@Value("${spring.mail.username}")
 	private String senderEmail;
 	@Value("${spring.mail.verify-link}")
 	private String verifyLink;
