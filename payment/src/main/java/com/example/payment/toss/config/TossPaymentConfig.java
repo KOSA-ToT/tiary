@@ -7,10 +7,7 @@ import lombok.Getter;
 
 @Configuration
 @Getter
-public class TossPaymentCofig {
-	@Value("${toss.payments.test-client-key}")
-	private String clientKey;
-
+public class TossPaymentConfig {
 	@Value("${toss.payments.test-secret-key}")
 	private String secretKey;
 
@@ -23,3 +20,4 @@ public class TossPaymentCofig {
 	@Value("${toss.payments.payment-url}")
 	private String paymentUrl;
 }
+

@@ -22,7 +22,6 @@
         >
           {{ formatPrice(price.value) }}원
         </button>
-        <!-- 다른 결제 수단 버튼들 주석 처리 -->
       </div>
     </section>
 
@@ -34,10 +33,10 @@
 <script>
 import { ref } from 'vue';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
-import { tossPaymentReq } from '@/api/common';
 
 const clientKey = import.meta.env.VITE_CLIENT_KEY;
-const payUrl = import.meta.env.VITE_PAY_URL;
+const successUrl = import.meta.env.VITE_SUCCESS_URL;
+
 
 export default {
   name: 'pgWindow',
@@ -48,52 +47,35 @@ export default {
       { id: 3, value: 10000, hover: false },
     ]);
 
-    const tossPaymentDto = ref({
-      amount: 0,
-      orderId: '',
-      orderName: '',
-      customerName: '',
-      successUrl: 'http://localhost:5173/success',
-      failUrl: 'http://localhost:5173/fail'
-    });
+    const func1 = loadTossPayments(clientKey);
 
     const formatPrice = (price) => {
       // 숫자를 3자리마다 쉼표를 추가하여 포맷팅
       return price.toLocaleString();
     };
 
-    const func1 = loadTossPayments(clientKey)
-
-    // 백엔드에서 결제창 요청 후에 200 뜨면 프론트에서 창 띄워주는 requestPayment요청
-
     const pay = (method, price) => {
-      tossPaymentDto.value.amount = price;
-      try {
-        const response = tossPaymentReq(tossPaymentDto.value);
-        console.log(response)
+      func1.then((tossPayments) => {
+        const amt = price;
+        const orderId = new Date().getTime();
 
-
-        if(response.status === 200) {
-          func1.then((tossPayments) => {
-            const amt = price;
-            const orderId = new Date().getTime();
-
-            tossPayments
-              .requestPayment(method, tossPaymentDto.value)
-              .catch((error) => {
-                if (error.code === 'USER_CANCEL') {
-                  alert('취소되었습니다.');
-                } else {
-                  alert(error.message);
-                }
-              });
+        tossPayments
+          .requestPayment(method, {
+            amount: amt,
+            orderId: orderId,
+            orderName: '토스 티셔츠 외 1건',
+            customerName: '박토스',
+            successUrl: 'http://localhost:8889/payment/success',
+            failUrl: 'http://localhost:8889/payment/fail',
+          })
+          .catch((error) => {
+            if (error.code === 'USER_CANCEL') {
+              alert('취소되었습니다.');
+            } else {
+              alert(error.message);
+            }
           });
-        }
-      } catch(error) {
-        console.log(error)
-      }
-
-      
+      });
     };
 
     const hoverButton = (id, isHovered) => {
