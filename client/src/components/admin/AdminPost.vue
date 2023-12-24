@@ -24,12 +24,15 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr v-for="(post, index) in noticeList" :key="post.id">
+        <tr v-for="(notice, index) in noticeList" :key="notice.id">
           <td class="px-6 py-4 whitespace-nowrap">{{ index + 1 }}</td>
           <td class="px-6 py-4 whitespace-nowrap">
+            <router-link :to="'/article/' + notice.id">
             <div class="text-sm text-gray-900">
-              {{ post.title }}
+              {{ notice.title }}
             </div>
+          </router-link>
+
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
