@@ -31,7 +31,7 @@
 ## 👨‍👩‍👧‍👦 팀원 소개
 | 유승희 | 김민지 | 김진수 | 노은기 | 송기영 |
 | :---: | :---: | :---: | :---: | :---: | 
-| <img alt="유승희님" src="https://avatars.githubusercontent.com/YSHeee" height="100" width="100"> | <img alt="김민지님" src="https://avatars.githubusercontent.com/Minji287" height="100" width="100"> | <img alt="김진수" src="https://avatars.githubusercontent.com/ckaanf" height="100" width="100"> | <img alt="노은기님" src="https://avatars.githubusercontent.com/Nohkii" height="100" width="100"> | <img alt="송기영님" src="https://avatars.githubusercontent.com/rlrl9" height="100" width="100">
+| <img alt="유승희님" src="https://avatars.githubusercontent.com/YSHeee" height="100" width="100"> | <img alt="김민지님" src="https://avatars.githubusercontent.com/Minji287" height="100" width="100"> | <img alt="김진수" src="https://avatars.githubusercontent.com/ckaanf" height="100" width="100"> | <img alt="노은기님" src="https://avatars.githubusercontent.com/Nohkii" height="100" width="100"> | <img alt="송기영님" src="https://avatars.githubusercontent.com/rlrl9" height="100" width="100">
 | [@YSHeee](https://github.com/YSHeee) | [@Minji287](https://github.com/Minji287) | [@ckaanf](https://github.com/ckaanf) | [@Nohkii](https://github.com/Nohkii) | [@rlrl9](https://github.com/rlrl9) |
 | **팀장** |  |  |  |  |
 
