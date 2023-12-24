@@ -102,16 +102,24 @@ export const patchArticleRequest = async (articleId, requestArticleDto) => {
 export const deleteArticleRequest = async (articleId) => {
   return await authInstance.delete("/article/" + articleId);
 };
-
-export const getCategoryList = async () => {
-  return await instance.get("/category");
-};
-export const getArticleFromCategory = async (categoryName) => {
-  return await instance.get("/category?categoryName=" + categoryName);
-};
-export const getArticleFromHashtag = async (categoryName) => {
-  return await instance.get("/hashtag?categoryName=" + categoryName);
-};
+export const getLikeState =async(articleId) =>{
+  return await authInstance.get("/likes/" + articleId)
+}
+export const getArticleLikeRequest = async (articleId) => {
+  return await authInstance.get("/article/" + articleId + "/likes?check=likes")
+}
+export const getArticleLikeCancelRequest = async (articleId) => {
+  return await authInstance.get("/article/" + articleId + "/likes?check=")
+}
+export const getCategoryList = async() => {
+  return await instance.get("/category")
+}
+export const getArticleFromCategory = async(categoryName) =>{
+  return await instance.get("/category?categoryName="+categoryName)
+}
+export const getArticleFromHashtag = async(categoryName) => {
+  return await instance.get("/hashtag?categoryName="+categoryName)
+}
 export const getUser = async (userId) => {
   return await instance.get("/users/" + userId);
 };

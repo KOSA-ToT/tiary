@@ -27,6 +27,22 @@ public class ArticleLikesServiceImpl implements ArticleLikesService {
 		this.usersRepository = usersRepository;
 	}
 
+	@Transactional(readOnly = true)
+	@Override
+	public boolean getLikeState(Long articleId, Long usersId) {
+		boolean result = false;
+		Users users = usersRepository.findById(usersId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		Article article = articleRepository.findById(articleId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+
+		ArticleLikes articleLikes = articleLikesRepository.findArticleLikesByArticleUsersForLikes_ArticleIdAndArticleUsersForLikes_UsersId(
+			article.getId(), users.getId());
+		if (articleLikes != null)
+			result = true;
+		return result;
+	}
+
 	@Transactional
 	@Override
 	public boolean choiceLikes(Long articleId, Long usersId) {
@@ -49,13 +65,14 @@ public class ArticleLikesServiceImpl implements ArticleLikesService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-		articleLikesRepository.deleteArticleLikesByArticleUsersForLikes(ArticleUsersForLikes.of(users.getId(),article.getId()));
+		articleLikesRepository.deleteArticleLikesByArticleUsersForLikes(
+			ArticleUsersForLikes.of(users.getId(), article.getId()));
 		return true;
 	}
 
 	@Transactional
 	@Override
-	public boolean deleteLikes(Long articleId ){
+	public boolean deleteLikes(Long articleId) {
 		articleLikesRepository.deleteAllByArticleUsersForLikes_ArticleId(articleId);
 		return true;
 	}

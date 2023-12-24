@@ -167,6 +167,7 @@ async function onSidebar() {
   isSideBar.value = !isSideBar.value;
 }
 
+
 // 사이드바 클릭 시, 유저 정보를 가져옴
 async function getUserInfo() {
   try {
@@ -177,13 +178,13 @@ async function getUserInfo() {
 
 // 사용자 프로필 사진 경로를 동적으로 생성하는 계산된 속성
 function getUserPictureUrl() {
-  if (userPicture.value === null) {
-    // 이미지가 없을 경우 로딩 이미지 경로
-    return "/images/loading.gif";
-  } else {
-    // 사용자 프로필 사진이 있을 경우 경로 설정
-    return import.meta.env.VITE_S3_URL + userPicture.value;
-  }
+   if (userPicture.value === null) {
+      // 이미지가 없을 경우 로딩 이미지 경로
+      return '/images/loading_1.gif';
+   } else {
+      // 사용자 프로필 사진이 있을 경우 경로 설정
+      return import.meta.env.VITE_S3_URL + userPicture.value;
+   }
 }
 
 onMounted(() => {

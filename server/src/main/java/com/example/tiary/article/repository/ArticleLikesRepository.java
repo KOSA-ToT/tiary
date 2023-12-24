@@ -11,4 +11,6 @@ public interface ArticleLikesRepository extends JpaRepository<ArticleLikes, Arti
 	void deleteArticleLikesByArticleUsersForLikes(ArticleUsersForLikes articleUsersForLikesId);
 
 	void deleteAllByArticleUsersForLikes_ArticleId(Long articleId);
+
+	ArticleLikes findArticleLikesByArticleUsersForLikes_ArticleIdAndArticleUsersForLikes_UsersId(Long articleId, Long usersId);
 }
