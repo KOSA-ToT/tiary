@@ -52,6 +52,7 @@ public class UserController {
 		response.put("nickname", principal.getUsers().getNickname());
 		response.put("email", principal.getUsers().getEmail());
 		response.put("picture", principal.getUsers().getUserPicture());
+		response.put("role", principal.getUsers().getRole());
 		return ResponseEntity.ok(response);
 	}
 
