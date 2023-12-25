@@ -55,14 +55,26 @@
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900">
+            <div class="text-base text-gray-900 font-bold">
               {{ approval.nickname }}
             </div>
-            <div class="text-sm text-gray-500">블로그 바로가기</div>
+            <router-link :to="'/writer-page/' + approval.userId">
+              <div class="text-sm text-gray-500">블로그 바로가기</div>
+            </router-link>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <span
+            <span v-if="approval.status==='Approving'"
               class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+            >
+            {{ approval.status }}
+            </span>
+            <span v-if="approval.status==='Accepted'"
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800"
+            >
+            {{ approval.status }}
+            </span>
+            <span v-else
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
             >
             {{ approval.status }}
             </span>

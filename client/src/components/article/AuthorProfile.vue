@@ -18,6 +18,10 @@
                 class="px-3 py-1  ml-3 text-sm font-bold text-orange-500 uppercase transition-all duration-150 ease-linear bg-white border border-orange-500 border-solid rounded-full outline-none bg-opacity-40 hover:bg-orange-500 hover:text-white active:bg-orange-600 focus:outline-none">
                 구독
               </button>
+              <button @click="donate()"
+                class="px-3 py-1  ml-1 text-sm font-bold text-orange-500 uppercase transition-all duration-150 ease-linear bg-white border border-orange-500 border-solid rounded-full outline-none bg-opacity-40 hover:bg-orange-500 hover:text-white active:bg-orange-600 focus:outline-none">
+                응원하기
+              </button>
             </div>
 
             <ul class="mt-2 flex flex-row items-center justify-center md:justify-start ">
@@ -53,14 +57,17 @@
         </div>
       </div>
     </div>
+    
   </section>
 </template>
 <script setup>
-import { onMounted, ref, defineProps } from 'vue';
+import { onMounted, ref, defineProps, defineEmits } from 'vue';
 import { getUser, subscribeUser } from '@/api/common';
 
 const { userId } = defineProps(['userId']);
 const user = ref("");
+const donateBtn = ref(false);
+const emits = defineEmits();
 
 onMounted(async () => {
   try {
@@ -93,5 +100,11 @@ async function subscribe(userId) {
     console.log("에러 : " + error);
   }
 };
+
+// 응원하기
+function donate() {
+  donateBtn.value = true;
+  emits('handleDonateModal', donateBtn.value);
+}
 </script>
 <style scoped></style>

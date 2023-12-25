@@ -73,7 +73,7 @@
       </div>
       <hr>
       <!-- 프로필 영역-->
-      <AuthorProfile :userId="userId"></AuthorProfile>
+      <AuthorProfile :userId="userId" @handleDonateModal="handleDonateModal"></AuthorProfile>
       <!-- 추천게시물 영역 -->
       <recommendations :articleId="articleId" />
     </div>
@@ -81,6 +81,7 @@
       <p>Loading...</p>
     </div>
   </div>
+  <TossPayment v-if="donateBtn" @openDonationModal="openDonationModal"></TossPayment>
 </template>
 
 <script setup>
@@ -96,6 +97,8 @@ import Editor from '@toast-ui/editor';
 import { deleteArticleRequest, getArticleRequest } from "@/api/common";
 import { useAuthStore } from "@/stores/auth";
 import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
+import TossPayment from '@/components/TossPayment.vue';
+
 const { articleId } = defineProps(["articleId"]);
 const article = ref(null);
 const userId = ref("");
@@ -104,7 +107,8 @@ const editor = ref("");
 const editorValid = ref("");
 const testHtml = ref("");
 
-
+const donateBtn = ref(false);
+const emits = defineEmits();
 
 // onMounted(async () => {
 //   try {
@@ -226,6 +230,17 @@ function getRandomDefaultImage() {
   const randomIndex = Math.floor(Math.random() * defaultImageArray.length);
   return defaultImageArray[randomIndex];
 }
+
+// 응원하기 전달
+function handleDonateModal(btnValue) {
+  console.log('Donation Value:', btnValue);
+  console.log('User ID:', userId.value);
+  console.log('Article ID:', articleId);
+  donateBtn.value = btnValue;
+  console.log(donateBtn.value);
+  // emits('openDonationModal', btnValue, userId.value, articleId);
+}
+
 </script>
 <style scoped>
 /* 추가된 스타일 */
