@@ -33,6 +33,7 @@
 <script>
 import { ref } from 'vue';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
+import { v4 as uuidv4 } from "uuid";
 
 const clientKey = import.meta.env.VITE_CLIENT_KEY;
 const successUrl = import.meta.env.VITE_SUCCESS_URL;
@@ -42,9 +43,9 @@ export default {
   name: 'pgWindow',
   setup() {
     const prices = ref([
-      { id: 1, value: 1000, hover: false },
-      { id: 2, value: 5000, hover: false },
-      { id: 3, value: 10000, hover: false },
+      { id: 'C1', value: 1000, hover: false },
+      { id: 'C5', value: 5000, hover: false },
+      { id: 'C10', value: 10000, hover: false },
     ]);
 
     const func1 = loadTossPayments(clientKey);
@@ -54,10 +55,15 @@ export default {
       return price.toLocaleString();
     };
 
+    const generateOrderId = () => {
+      // uuid 생성 및 8자리로 자르기
+      return uuidv4().replace(/-/g, '').substring(0, 8);
+    };
+
     const pay = (method, price) => {
       func1.then((tossPayments) => {
         const amt = price;
-        const orderId = new Date().getTime();
+        const orderId = generateOrderId();
 
         tossPayments
           .requestPayment(method, {
@@ -67,6 +73,8 @@ export default {
             customerName: '박토스',
             successUrl: 'http://localhost:8889/payment/success',
             failUrl: 'http://localhost:8889/payment/fail',
+            supporterId: '',
+            receiverId: ''
           })
           .catch((error) => {
             if (error.code === 'USER_CANCEL') {

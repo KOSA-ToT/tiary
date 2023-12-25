@@ -8,7 +8,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class PaymentInfo {
-	private int amount;
 	private String orderId;
 	private String paymentKey;
+	private int amount;
 }
