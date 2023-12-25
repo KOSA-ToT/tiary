@@ -54,7 +54,7 @@ public class TossController {
 		HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
 
 		ResponseEntity<String> responseEntity = restTemplate.postForEntity(
-			tossPaymentConfig.getPaymentUrl(),
+			tossPaymentConfig.getPaymentUrl() + "/confirm",
 			requestEntity,
 			String.class
 		);

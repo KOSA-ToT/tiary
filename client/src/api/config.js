@@ -35,7 +35,7 @@ const paymentConfig = {
 export const instance = axios.create(baseConfig);
 export const batchInstance = axios.create(batchConfig); // 게이트웨이 구현 하면 필요없어질듯
 export const paymentInstance = axios.create(paymentConfig); // 게이트웨이 구현 하면 필요없어질듯
-export const authInstance = axios.create(paymentConfig);
+export const authInstance = axios.create(baseConfig);
 export const fileInstance = axios.create(fileConfig);
 
 
