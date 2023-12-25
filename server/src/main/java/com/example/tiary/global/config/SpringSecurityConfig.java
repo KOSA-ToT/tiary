@@ -60,7 +60,8 @@ public class SpringSecurityConfig {
 		return (web) -> web.ignoring()
 			.requestMatchers(new AntPathRequestMatcher("/h2/**"))
 			.requestMatchers(new AntPathRequestMatcher("/comment/guest/**"))
-			.requestMatchers(new AntPathRequestMatcher("/category/**"));
+			.requestMatchers(new AntPathRequestMatcher("/category/**"))
+			.requestMatchers(new AntPathRequestMatcher("/likes/**"));
 	}
 
 	@Bean

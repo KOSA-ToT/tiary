@@ -530,20 +530,7 @@ const formatCreatedAt = (createdAt) => {
 
     return formattedDate;
 };
-// const deleteSelected = () => {
-//     // 선택한 게시물의 ID를 서버에 전송
-//     axios.delete('http://localhost:8088/article/{article-id}/{comment-id}', { selectedPosts: selectedPosts.value })
-//         .then((response) => {
-//             console.log('삭제 요청이 성공했습니다.');
-//             // 성공적으로 서버에서 응답을 받으면 선택한 게시물 목록에서 제거
-//             postList.value = postList.value.filter(post => !selectedPosts.value.includes(post.id));
-//             // 선택한 게시물 배열 초기화
-//             selectedPosts.value = [];
-//         })
-//         .catch((error) => {
-//             console.error('삭제 요청 중 오류가 발생했습니다.', error);
-//         });
-// }; // 나중에 수정..deleteArticleRequest
+
 async function deleteSelected(postId) {
     try {
         const response = await deleteArticleRequest(postId);
@@ -571,7 +558,8 @@ watch(() => props.user.id.value, () => {
     listMyPosts();
 });
 </script>
-<style>.page-link[aria-total="page"] {
+<style>
+.page-link[aria-total="page"] {
     background-color: #805959;
     /* 현재 페이지 버튼의 배경색을 변경 */
 }

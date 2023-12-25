@@ -1,5 +1,15 @@
 package com.example.tiary.admin.controller;
 
+
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.example.tiary.admin.service.AdminService;
 import com.example.tiary.comment.dto.request.CommentRequestDTO;
 import com.example.tiary.users.dto.UserDto;
@@ -9,17 +19,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.tiary.myPage.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RequestMapping("/admin")
 @RestController
-@Slf4j
-@CrossOrigin(origins = "http://localhost:5173")
 public class AdminController {
-	// 작가 신청
+
+	private final UserService userService;
     private final AdminService adminService;
 
-    public AdminController(AdminService adminService) {
+	public AdminController(UserService userService, AdminService adminService) {
+		this.userService = userService;
         this.adminService = adminService;
-    }
+	}
+
+	// 작가 신청
     // 작가 신청 버튼 눌렀을 때
     @GetMapping("/approving")
     public ResponseEntity approve(@AuthenticationPrincipal UserDto users) {
@@ -40,5 +57,15 @@ public class AdminController {
     public ResponseEntity rejectWriter(@PathVariable("userId") Long userId, @AuthenticationPrincipal UserDto users) {
         return new ResponseEntity<>(adminService.reject(userId), HttpStatus.OK);
     }
-    // 공지사항
+	// 공지사항
+	@GetMapping("/{userId}/notice")
+	public ResponseEntity readNotice(@PathVariable("userId") Long userId, Pageable pageable){
+		try{
+			Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
+			return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
+		}catch(Exception e){
+			log.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("공지사항 조회에 실패했습니다.");
+		}
+	}
 }

@@ -78,15 +78,11 @@ const router = createRouter({
       component: Admin,
       children: [
         {
-          path: ":id",
-          component: MyInfoView,
-        },
-        {
           path: "writer-management",
           component: WriterManagement,
         },
         {
-          path: "notice-management",
+          path: "notice-management/:id",
           component: NoticeManagement,
         },
       ],
