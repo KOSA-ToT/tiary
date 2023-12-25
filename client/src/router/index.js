@@ -86,7 +86,7 @@ const router = createRouter({
           component: WriterManagement,
         },
         {
-          path: "notice-managment",
+          path: "notice-management",
           component: NoticeManagement,
         },
       ],

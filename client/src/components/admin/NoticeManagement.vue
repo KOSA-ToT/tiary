@@ -10,6 +10,6 @@
 import ManagementTable from "@/components/admin/ManagementTable.vue";
 </script>
 
-<style  scoped>
+<style scoped>
 
 </style>

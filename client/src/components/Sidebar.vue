@@ -21,7 +21,7 @@
          <!-- Write and Apply Buttons -->
          <div class="flex justify-center">
             <a href="/article-create" class="btn btn-orange btn-outline">글쓰기</a>
-            <button v-if="userRole!='ADMIN'" class="btn btn-orange btn-outline">작가 신청</button>
+            <button @click="writerApproval()" v-if="userRole != 'ADMIN'" class="btn btn-orange btn-outline">작가 신청</button>
          </div>
          <!-- Divider -->
          <hr class="my-4 border-t border-gray-300 dark:border-gray-700">
@@ -49,22 +49,24 @@
          <hr class="my-4 border-t border-gray-300 dark:border-gray-700">
 
          <div class="flex justify-center">
-            <a v-if="userRole!='ADMIN'" :href="`/mypage/${userId}`" class="btn btn-orange btn-outline">마이페이지</a>
+            <a v-if="userRole != 'ADMIN'" :href="`/mypage/${userId}`" class="btn btn-orange btn-outline">마이페이지</a>
             <button @click="authStore.alertLogout()" class="btn btn-orange btn-outline">로그아웃</button>
          </div>
-   </div>
-   <div v-else class="mt-4 flex flex-col items-center">
-      <img src="/images/person-who-invests.svg">
-      <span class="my-2 text-black font-bold">누구나 작가가 될 수 있는 곳</span>
-      <span class="mb-2 text-black font-bold text-lg">Tiary<span class="text-black">와 함께해요</span></span>
-      <button type="button" class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-2xl text-sm px-5 py-2.5 text-center me-2 mb-2">Tiary 시작하기 →</button>
-   </div>
+      </div>
+      <div v-else class="mt-4 flex flex-col items-center">
+         <img src="/images/person-who-invests.svg">
+         <span class="my-2 text-black font-bold">누구나 작가가 될 수 있는 곳</span>
+         <span class="mb-2 text-black font-bold text-lg">Tiary<span class="text-black">와 함께해요</span></span>
+         <button type="button"
+            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-2xl text-sm px-5 py-2.5 text-center me-2 mb-2">Tiary
+            시작하기 →</button>
+      </div>
    </div>
 </template>
 <script setup>
 import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import { getUserInfoReq } from '@/api/common';
+import { getUserInfoReq, writerApprove } from '@/api/common';
 
 const authStore = useAuthStore();
 const isSideBar = ref(false);
@@ -87,13 +89,14 @@ async function onSidebar() {
             links = [
                { text: '작가 관리', to: `/admin/writer-management`, iconClass: '/images/book.svg' },
                { text: '공지사항 관리', to: `/admin/notice-management`, iconClass: '/images/comment-dots.svg' },
-               ];
+            ];
          } else {
-         links = [
-         { text: '작성한 글', to: `/mypage/post/${userId.value}`, iconClass: '/images/book.svg' },
-         { text: '작성한 댓글', to: `/mypage/comment/${userId.value}`, iconClass: '/images/comment-dots.svg' },
-         { text: '구독한 작가', to: `/mypage/subscriber/${userId.value}`, iconClass: '/images/heart.svg' },
-      ];}
+            links = [
+               { text: '작성한 글', to: `/mypage/post/${userId.value}`, iconClass: '/images/book.svg' },
+               { text: '작성한 댓글', to: `/mypage/comment/${userId.value}`, iconClass: '/images/comment-dots.svg' },
+               { text: '구독한 작가', to: `/mypage/subscriber/${userId.value}`, iconClass: '/images/heart.svg' },
+            ];
+         }
       } catch (err) {
          console.log(err);
       }
@@ -110,7 +113,14 @@ async function getUserInfo() {
    } catch (err) {
    }
 }
+async function writerApproval() {
+   try {
+      const response = await writerApprove();
+   } catch (error) {
+      console.log("에러 : " + error);
 
+   }
+};
 // 사용자 프로필 사진 경로를 동적으로 생성하는 계산된 속성
 function getUserPictureUrl() {
    if (userPicture.value === null) {
@@ -123,51 +133,50 @@ function getUserPictureUrl() {
 }
 
 onMounted(() => {
-  // 사이드바 내부에서의 클릭이면, 사이드바를 닫지 않음
-  // 사이드바 외부에서의 클릭이면, 사이드바를 닫음
-  const sidebar = document.getElementById("sideBar");
-  const sidebtn = document.getElementById("sideBtn");
-  window.addEventListener("click", closeSidebar);
+   // 사이드바 내부에서의 클릭이면, 사이드바를 닫지 않음
+   // 사이드바 외부에서의 클릭이면, 사이드바를 닫음
+   const sidebar = document.getElementById("sideBar");
+   const sidebtn = document.getElementById("sideBtn");
+   window.addEventListener("click", closeSidebar);
 
-  // 사이드바 외부에서의 클릭 && 사이드바 전용 버튼이 아닌 경우(사이드바 오픈을 막지 않기 위함)
-  function closeSidebar(event) {
-    const isClickInsideSidebar = sidebar.contains(event.target);
-    const isClickSidebtn = sidebtn.contains(event.target);
-    if (!isClickInsideSidebar && !isClickSidebtn) {
-      isSideBar.value = false;
-    }
-  }
+   // 사이드바 외부에서의 클릭 && 사이드바 전용 버튼이 아닌 경우(사이드바 오픈을 막지 않기 위함)
+   function closeSidebar(event) {
+      const isClickInsideSidebar = sidebar.contains(event.target);
+      const isClickSidebtn = sidebtn.contains(event.target);
+      if (!isClickInsideSidebar && !isClickSidebtn) {
+         isSideBar.value = false;
+      }
+   }
 });
 </script>
 <style scoped>
 /* 추가된 스타일 */
 .btn {
-  margin-right: 5px;
-  padding: 5px 16px;
-  /* padding 수정 */
-  min-width: 75px;
-  /* 최소 너비 추가 */
-  border: 1px solid orange;
-  border-radius: 30px;
-  transition: all 0.3s ease;
+   margin-right: 5px;
+   padding: 5px 16px;
+   /* padding 수정 */
+   min-width: 75px;
+   /* 최소 너비 추가 */
+   border: 1px solid orange;
+   border-radius: 30px;
+   transition: all 0.3s ease;
 }
 
 .btn:hover {
-  border-color: #ff9800;
+   border-color: #ff9800;
 }
 
 .btn-outline {
-  background-color: transparent;
-  color: #ff9800;
+   background-color: transparent;
+   color: #ff9800;
 }
 
 .btn-outline:hover {
-  background-color: #ff9800;
-  color: #fff;
+   background-color: #ff9800;
+   color: #fff;
 }
 
 .btn-orange {
-  background-color: transparent;
-  color: #ff9800;
-}
-</style>
+   background-color: transparent;
+   color: #ff9800;
+}</style>
