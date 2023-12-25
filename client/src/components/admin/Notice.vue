@@ -1,9 +1,6 @@
 <template>
- <div v-if="isDataLoaded">
+ <div>
     <div class="text-center">공지사항 ~</div>
-    <div class="text-center" v-if="noticeList.value.length > 0">
-      공지사항 ~ {{ noticeList.value[0].title }}
-    </div>
   </div>
 </template>
 
@@ -14,7 +11,6 @@ import { useRoute } from "vue-router";
 
 import { useNoticeStore } from "@/stores/noticeStore";
 const noticeList = ref([]);
-const isDataLoaded = ref(false); // 데이터 로드 상태 추적
 const noticeStore = useNoticeStore();
 const visiblePages = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 const pageCalculate = ref();
@@ -43,10 +39,9 @@ async function listMyPosts() {
     console.log("response", response);
     console.log("response.data.content", response.data.content);
     noticeList.value = response.data.content;
-    isDataLoaded.value = true;  // 데이터가 로드되었음을 표시
   } catch (error) {
     console.log(error);
-    isDataLoaded.value = true;  // 에러 발생 시에도 로드 상태를 true로 설정
+
   }
 }
 

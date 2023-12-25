@@ -161,8 +161,7 @@ export const getUserByEmail = async (email) => {
 export const tossPaymentReq = async (tossPaymentDto) => {
   return await paymentInstance.post("/payment/toss", tossPaymentDto);
 }
-  return await instance.get("/users/" + email);
-};
+
 export const writerApprove = async () => {
   return await authInstance.get("/admin/approving");
 };

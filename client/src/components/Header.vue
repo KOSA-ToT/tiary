@@ -12,7 +12,8 @@
     >
       <!-- 왼쪽에 사이드바와 홈 로고 위치 -->
       <div class="flex items-center">
-        <Sidebar></Sidebar>
+        <!-- <Sidebar></Sidebar> -->
+        <AdminSidebar></AdminSidebar>
         <router-link to="/" class="text-lg font-bold text-gray-800 dark:text-black">
           <img src="/images/header_logo.png" class="h-auto max-h-full">
         </router-link>
@@ -43,6 +44,7 @@
 import { ref, watchEffect, onMounted, onBeforeUnmount, defineProps } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import Sidebar from '@/components/Sidebar.vue';
+import AdminSidebar from '@/components/AdminSidebar.vue';
 import UserModal from '@/components/UserModal.vue';
 import router from '@/router/index.js';
 import { userEmail } from '@/utils/jwtUtils';
