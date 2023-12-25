@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class AdminService {
+
 	// 작가 신청
     private final ApprovalRepository approvalRepository;
 

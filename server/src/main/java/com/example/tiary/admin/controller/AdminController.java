@@ -35,7 +35,6 @@ public class AdminController {
 		this.userService = userService;
         this.adminService = adminService;
 	}
-
 	// 작가 신청
     // 작가 신청 버튼 눌렀을 때
     @GetMapping("/approving")
@@ -58,14 +57,6 @@ public class AdminController {
         return new ResponseEntity<>(adminService.reject(userId), HttpStatus.OK);
     }
 	// 공지사항
-	@GetMapping("/{userId}/notice")
-	public ResponseEntity readNotice(@PathVariable("userId") Long userId, Pageable pageable){
-		try{
-			Pageable fixedPageable = PageRequest.of(pageable.getPageNumber(), 4, pageable.getSort());
-			return ResponseEntity.ok(userService.showMyArticle(userId,fixedPageable));
-		}catch(Exception e){
-			log.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("공지사항 조회에 실패했습니다.");
-		}
-	}
+
+
 }
