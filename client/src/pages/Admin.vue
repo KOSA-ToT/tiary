@@ -5,7 +5,9 @@
     <br />
     <br />
     <br />
-    <router-view />
+    <div class="flex flex-col justify-center items-center h-full">
+      <router-view />
+    </div>
     <Footer></Footer>
   </div>
 </template>

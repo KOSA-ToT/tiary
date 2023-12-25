@@ -156,3 +156,8 @@ export const subscribeUser = async (userId) => {
 export const getUserByEmail = async (email) => {
   return await instance.get("/users/" + email);
 };
+
+// Admin
+export const readNoticeList = async (userId, page) => {
+  return await instance.get("/admin/" + userId + "/notice?page=" + page);
+};

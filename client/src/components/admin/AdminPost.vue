@@ -28,11 +28,10 @@
           <td class="px-6 py-4 whitespace-nowrap">{{ index + 1 }}</td>
           <td class="px-6 py-4 whitespace-nowrap">
             <router-link :to="'/article/' + notice.id">
-            <div class="text-sm text-gray-900">
-              {{ notice.title }}
-            </div>
-          </router-link>
-
+              <div class="text-sm text-gray-900">
+                {{ notice.title }}
+              </div>
+            </router-link>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
@@ -124,9 +123,9 @@
 
 <script setup>
 import { defineProps, onMounted, ref, watchEffect, watch, computed } from "vue";
-import { listMyPost, deleteArticleRequest } from "@/api/common";
+import { listMyPost, readNoticeList, deleteArticleRequest } from "@/api/common";
 import { useRoute } from "vue-router";
-import {useNoticeStore} from '@/stores/noticeStore'
+import { useNoticeStore } from "@/stores/noticeStore";
 const noticeList = ref([]);
 const allChecked = ref(false);
 const totalPages = ref(0);
@@ -143,16 +142,16 @@ const noticeStore = useNoticeStore();
 // function test() {
 //   console.log("어드민아이디", adminId);
 // }
-// onMounted(async () => {
-//   await test();
-// });
+onMounted(async () => {
+  await getNoticeList;
+});
 
 const Post = {
   title: ref(),
   content: ref(),
 };
 
-async function listMyPosts() {
+async function getNoticeList() {
   try {
     pageCalculate.value = Math.floor(currentPage.value / 10);
     console.log(pageCalculate.value);
@@ -162,7 +161,7 @@ async function listMyPosts() {
       (_, index) => pageCalculate.value + index + 1
     );
     const response = await listMyPost(adminId, currentPage.value);
-    noticeStore.setNotices(response.data.content)
+    noticeStore.setNotices(response.data.content);
     console.log("response", response);
     console.log("response.data.content", response.data.content);
 
@@ -179,19 +178,19 @@ async function listMyPosts() {
 function prevPage() {
   if (currentPage.value > 0) {
     currentPage.value -= 1;
-    listMyPosts();
+    getNoticeList();
   }
 }
 function nextPage() {
   if (currentPage.value < totalPages.value - 1) {
     currentPage.value += 1;
-    listMyPosts();
+    getNoticeList();
   }
 }
 function clickPage(num) {
   if (num < totalPages.value) {
     currentPage.value = num;
-    listMyPosts();
+    getNoticeList();
   }
 }
 const formatCreatedAt = (createdAt) => {
@@ -229,11 +228,11 @@ const handleCheckboxChange = () => {
   // postId를 이용하여 해당 포스트의 선택 여부를 처리
 };
 onMounted(() => {
-  listMyPosts();
+  getNoticeList();
 });
 
 // watch(() => adminId.value, () => {
-//     listMyPosts();
+//     getNoticeList();
 // });
 </script>
 
