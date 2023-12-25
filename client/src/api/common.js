@@ -1,4 +1,4 @@
-import { instance, authInstance, fileInstance , batchInstance, paymentInstance } from "./config";
+import { instance, authInstance, fileInstance , batchInstance,  } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);

@@ -25,7 +25,7 @@
       </div>
     </section>
 
-    <!-- 선택한 페이지 렌더링 -->
+
     <router-view />
   </div>
 </template>
