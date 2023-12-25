@@ -1,5 +1,7 @@
 package com.example.tiary.article.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +20,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 	@Modifying
 	@Query("update Article a set a.view = a.view +1 where a.id = :id")
 	int updateViews(@Param("id") Long articleId);
+
+	List<Article> findAllByCategoryIsNotNull();
 }
