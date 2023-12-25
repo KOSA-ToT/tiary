@@ -156,6 +156,18 @@ export const subscribeUser = async (userId) => {
 export const getUserByEmail = async (email) => {
   return await instance.get("/users/" + email);
 };
+export const writerApprove = async () => {
+  return await authInstance.get("/admin/approving");
+};
+export const listApprove = async () => {
+  return await authInstance.get("/admin/showList");
+};
+export const writerAccpet = async (userId) => {
+  return await authInstance.patch("/admin/acceptWriter/"+userId);
+};
+export const writerReject = async (userId) => {
+  return await authInstance.patch("/admin/rejectWriter/"+userId);
+};
 
 // Admin
 export const readNoticeList = async (userId, page) => {

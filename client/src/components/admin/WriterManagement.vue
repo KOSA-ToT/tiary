@@ -1,12 +1,14 @@
 <template>
   <div>
     작가 신청 관리 컴포넌트~
-    <ManagementTable></ManagementTable>
+    <ManagementsTable></ManagementsTable>
   </div>
 </template>
 
 <script setup>
-import ManagementTable from "@/components/admin/ManagementTable.vue";
+import ManagementsTable from '@/components/admin/ManagementsTable.vue'
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
