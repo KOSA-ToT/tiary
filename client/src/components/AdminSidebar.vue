@@ -1,5 +1,4 @@
 <template>
-  <!-- drawer init and show -->
   <div
     id="sideBtn"
     @click="onSidebar"
@@ -20,62 +19,38 @@
       />
     </svg>
   </div>
-
-  <!-- drawer component -->
   <div
     id="sideBar"
     :class="{ 'translate-x-0': isSideBar }"
-    class="fixed top-0 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform duration-300 ease-in-out -translate-x-full bg-stone-50 dark:bg-gray-800"
+    class="fixed top-0 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform duration-300 ease-in-out -translate-x-full bg-stone-100 dark:bg-gray-800"
     tabindex="-1"
   >
     <div v-if="authStore.isLoggedIn">
-      <!-- Profile Section -->
       <div class="flex flex-col items-center mb-6">
-        <!-- Add your profile picture here -->
-        <a href="/"
-          ><img
+        <a href="/">
+          <!-- 망치사진으로 변경하기 -->
+          <img
             :src="getUserPictureUrl()"
             alt="Profile"
             class="w-16 h-16 rounded-full mb-2"
         /></a>
         <h5 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          {{ userNickname }}
+          Admin
         </h5>
       </div>
-      <!-- Write and Apply Buttons -->
-      <div class="flex justify-center">
-        <a href="/article-create" class="btn btn-orange btn-outline">글쓰기</a>
-        <button v-if="userRole != 'ADMIN'" class="btn btn-orange btn-outline">
-          작가 신청
-        </button>
-      </div>
-      <!-- Divider -->
       <hr class="my-4 border-t border-gray-300 dark:border-gray-700" />
-
-      <!-- Navigation Links -->
       <ul class="space-y-2">
         <li v-for="link in links" :key="link.text">
-          <!-- <a :href="link.to"
-                  class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <img :src="link.iconClass" alt="icon" class="w-5 h-5 rounded-lg">
-                  <span class="ms-3">{{ link.text }}</span>
-               </a> -->
           <router-link
             :to="link.to"
             class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group"
           >
             <img :src="link.iconClass" alt="icon" class="w-5 h-5 rounded-lg" />
-            <!-- <span
-                     class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                     :class="link.iconClass"></span> -->
             <span class="ms-3">{{ link.text }}</span>
           </router-link>
         </li>
       </ul>
-
-      <!-- Divider -->
       <hr class="my-4 border-t border-gray-300 dark:border-gray-700" />
-
       <div class="flex justify-center">
         <a
           v-if="userRole != 'ADMIN'"
@@ -128,45 +103,25 @@ async function onSidebar() {
       userId.value = userInfo.id;
       userPicture.value = userInfo.picture;
       userRole.value = userInfo.role;
-      if (userInfo.role === "ADMIN") {
-        links = [
+
+      links = [
         {
-            text: "공지사항 관리",
-            to: `/admin/notice-management/${userId.value}`,
-            iconClass: "/images/comment-dots.svg",
-          },
-          {
-            text: "작가 관리",
-            to: `/admin/writer-management`,
-            iconClass: "/images/book.svg",
-          },
-        ];
-      } else {
-        links = [
-          {
-            text: "작성한 글",
-            to: `/mypage/post/${userId.value}`,
-            iconClass: "/images/book.svg",
-          },
-          {
-            text: "작성한 댓글",
-            to: `/mypage/comment/${userId.value}`,
-            iconClass: "/images/comment-dots.svg",
-          },
-          {
-            text: "구독한 작가",
-            to: `/mypage/subscriber/${userId.value}`,
-            iconClass: "/images/heart.svg",
-          },
-        ];
-      }
+          text: "공지사항 관리",
+          to: `/admin/notice-management/${userId.value}`,
+          iconClass: "/images/comment-dots.svg",
+        },
+        {
+          text: "작가 관리",
+          to: `/admin/writer-management`,
+          iconClass: "/images/book.svg",
+        },
+      ];
     } catch (err) {
       console.log(err);
     }
   }
   isSideBar.value = !isSideBar.value;
 }
-
 
 // 사이드바 클릭 시, 유저 정보를 가져옴
 async function getUserInfo() {
@@ -178,13 +133,13 @@ async function getUserInfo() {
 
 // 사용자 프로필 사진 경로를 동적으로 생성하는 계산된 속성
 function getUserPictureUrl() {
-   if (userPicture.value === null) {
-      // 이미지가 없을 경우 로딩 이미지 경로
-      return '/images/loading_1.gif';
-   } else {
-      // 사용자 프로필 사진이 있을 경우 경로 설정
-      return import.meta.env.VITE_S3_URL + userPicture.value;
-   }
+  if (userPicture.value === null) {
+    // 이미지가 없을 경우 로딩 이미지 경로
+    return "/images/loading_1.gif";
+  } else {
+    // 사용자 프로필 사진이 있을 경우 경로 설정
+    return import.meta.env.VITE_S3_URL + userPicture.value;
+  }
 }
 
 onMounted(() => {
