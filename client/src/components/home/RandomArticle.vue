@@ -5,7 +5,7 @@
   </div>
   <section>
     <section class="thumbnails">
-      <div v-for="(article, index) in getRandomArticles(randomArticles, 6)" :key="article.id" class="article-item">
+      <div v-for="(article, index) in randomArticles" :key="article.id" class="article-item">
         <router-link :to="{ name: 'Post', params: { articleId: article.id } }" class="article-link">
           <div class="ml-6">
             <img
@@ -23,9 +23,8 @@
               style="object-fit: cover; object-position: center center;"
             />
           </div>
-          <p class="text-2xl text-orange-900"
-          style="margin-top: 10px;
-          font-size: large;
+          <p class="text-2xl text-orange-900" style="margin-top: 10px;
+          font-size:  large;
           font-weight: 400;">
             {{ article.title }}</p>
           <p class="text-lg text-gray-600" 
@@ -39,12 +38,18 @@
 <script setup>
 const { randomArticles } = defineProps(['randomArticles']);
 
-const defaultImageArray = ["/images/cat_1.jpg", "/images/cat_2.jpg", "/images/dog.jpg"]; // 여기 이미지 추가
-
-function getRandomArticles(articles, count) {
-  // 배열을 랜덤으로 섞은 후, 필요한 개수만큼 자름
-  return articles.sort(() => Math.random() - 0.5).slice(0, count);
-}
+const defaultImageArray = 
+[
+"/images/article_default_1.jpeg", 
+"/images/article_default_2.jpeg", 
+"/images/article_default_3.jpeg", 
+"/images/article_default_4.jpeg",
+"/images/article_default_5.jpeg",
+"/images/article_default_6.jpeg",
+"/images/article_default_7.jpeg",
+"/images/article_default_8.jpeg", 
+"/images/article_default_9.jpeg", 
+"/images/article_default_10.jpeg", ]; // 여기 이미지 추가
 
 function getRandomImage(imgPathArray) {
   const randomIndex = Math.floor(Math.random() * imgPathArray.length);

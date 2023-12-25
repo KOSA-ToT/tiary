@@ -147,10 +147,6 @@ onMounted(() => {
   });
 });
 
-
-
-
-
 onMounted(async () => {
   const response = await getCategoryList()
     .then((response) => {

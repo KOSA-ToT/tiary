@@ -62,8 +62,6 @@
         <!-- 댓글 영역 -->
         <comment v-if="showComments" class="mb-4"></comment>
       </div>
-      <!--후원 영역-->
-      <!-- <Donate></Donate> -->
       <hr>
       <!-- 프로필 영역-->
       <AuthorProfile :userId="userId"></AuthorProfile>
@@ -80,7 +78,6 @@
 import Header from "@/components/Header.vue";
 import like from "@/components/article/like/Like.vue";
 import comment from "@/components/comment/Comment.vue";
-import Donate from '@/components/article/Donate.vue';
 import AuthorProfile from './AuthorProfile.vue';
 import recommendations from "@/components/article/Recommendations.vue";
 
