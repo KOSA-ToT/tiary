@@ -43,7 +43,7 @@
         <li v-for="link in links" :key="link.text">
           <router-link
             :to="link.to"
-            class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 group"
           >
             <img :src="link.iconClass" alt="icon" class="w-5 h-5 rounded-lg" />
             <span class="ms-3">{{ link.text }}</span>

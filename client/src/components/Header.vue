@@ -29,7 +29,10 @@
       </div>
 
       <div class="flex items-center space-x-4">
-        <div v-if="authStore.isLoggedIn" class="meta text-right space-x-4">
+        <div
+          v-if="authStore.isLoggedIn && userRole != 'ADMIN'"
+          class="meta text-right space-x-4"
+        >
           <span>{{ userVars.task }}</span>
           <button @click="articleCreate" class="btn btn-outline btn-orange">
             글 작성
@@ -39,7 +42,7 @@
           </button>
         </div>
 
-        <div v-else class="space-x-4">
+        <div v-else-if="userRole != 'ADMIN'" class="space-x-4">
           <button
             @click="openModal('로그인')"
             class="btn btn-outline btn-orange"
