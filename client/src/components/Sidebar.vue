@@ -128,45 +128,30 @@ async function onSidebar() {
       userId.value = userInfo.id;
       userPicture.value = userInfo.picture;
       userRole.value = userInfo.role;
-      if (userInfo.role === "ADMIN") {
-        links = [
+
+      links = [
         {
-            text: "공지사항 관리",
-            to: `/admin/notice-management/${userId.value}`,
-            iconClass: "/images/comment-dots.svg",
-          },
-          {
-            text: "작가 관리",
-            to: `/admin/writer-management`,
-            iconClass: "/images/book.svg",
-          },
-        ];
-      } else {
-        links = [
-          {
-            text: "작성한 글",
-            to: `/mypage/post/${userId.value}`,
-            iconClass: "/images/book.svg",
-          },
-          {
-            text: "작성한 댓글",
-            to: `/mypage/comment/${userId.value}`,
-            iconClass: "/images/comment-dots.svg",
-          },
-          {
-            text: "구독한 작가",
-            to: `/mypage/subscriber/${userId.value}`,
-            iconClass: "/images/heart.svg",
-          },
-        ];
-      }
+          text: "작성한 글",
+          to: `/mypage/post/${userId.value}`,
+          iconClass: "/images/book.svg",
+        },
+        {
+          text: "작성한 댓글",
+          to: `/mypage/comment/${userId.value}`,
+          iconClass: "/images/comment-dots.svg",
+        },
+        {
+          text: "구독한 작가",
+          to: `/mypage/subscriber/${userId.value}`,
+          iconClass: "/images/heart.svg",
+        },
+      ];
     } catch (err) {
       console.log(err);
     }
   }
   isSideBar.value = !isSideBar.value;
 }
-
 
 // 사이드바 클릭 시, 유저 정보를 가져옴
 async function getUserInfo() {
@@ -178,13 +163,13 @@ async function getUserInfo() {
 
 // 사용자 프로필 사진 경로를 동적으로 생성하는 계산된 속성
 function getUserPictureUrl() {
-   if (userPicture.value === null) {
-      // 이미지가 없을 경우 로딩 이미지 경로
-      return '/images/loading_1.gif';
-   } else {
-      // 사용자 프로필 사진이 있을 경우 경로 설정
-      return import.meta.env.VITE_S3_URL + userPicture.value;
-   }
+  if (userPicture.value === null) {
+    // 이미지가 없을 경우 로딩 이미지 경로
+    return "/images/loading_1.gif";
+  } else {
+    // 사용자 프로필 사진이 있을 경우 경로 설정
+    return import.meta.env.VITE_S3_URL + userPicture.value;
+  }
 }
 
 onMounted(() => {
