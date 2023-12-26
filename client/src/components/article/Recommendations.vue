@@ -27,8 +27,18 @@ import { getRecommendationArticleRequest } from '@/api/common';
 
 const { articleId } = defineProps(['articleId']);
 const relatedArticles = ref([]);
-const defaultImageArray = ["/images/cat_1.jpg", "/images/cat_2.jpg", "/images/dog.jpg"];
-
+const defaultImageArray = 
+[
+"/images/article_default_1.jpeg", 
+"/images/article_default_2.jpeg", 
+"/images/article_default_3.jpeg", 
+"/images/article_default_4.jpeg",
+"/images/article_default_5.jpeg",
+"/images/article_default_6.jpeg",
+"/images/article_default_7.jpeg",
+"/images/article_default_8.jpeg", 
+"/images/article_default_9.jpeg", 
+"/images/article_default_10.jpeg", ]; // 
 onMounted(() => {
   fetchData(); // 초기 로드
 });

@@ -128,16 +128,8 @@ onMounted(async () => {
     const response = await getArticleRequest(articleId);
     article.value = response.data;
     userId.value = article.value.userId;
-
-    // 디버깅: article.value.content가 제대로 설정되었는지 확인
-    console.log("Content from API:", article.value.content);
-
     // testHtml 값 설정
     testHtml.value = article.value.content;
-
-    // 디버깅: testHtml 값이 제대로 설정되었는지 확인
-    console.log("testHtml value:", testHtml.value);
-
     // Editor를 생성하여 Viewer 모드로 설정
     await nextTick(() => {
       const viewer = new Viewer({
