@@ -39,6 +39,13 @@ public class SubscribeServiceImpl implements SubscribeService {
         List<ResponseSubscribeDto> subscribedWriterList =  subscribeRepository.showSubscribedWriterList(userId);
         return subscribedWriterList;
     }
+    //구독 작가 리스트 만들기
+    @Transactional(readOnly = true)
+    @Override
+    public List<Long> subscribedWriterList(Long userId){
+        List<Long> subscribedWriterCount =  subscribeRepository.showSubscribedWriterCount(userId);
+        return subscribedWriterCount;
+    }
     //구독하기
     @Transactional
     @Override

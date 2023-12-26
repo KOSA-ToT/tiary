@@ -46,6 +46,7 @@ onMounted(async () => {
 });
 
 // 새로고침 안하고 바로 불러오기
+
 // watch(
 //   () => commentList.value,
 //   (newVal, oldVal) => {
@@ -56,6 +57,7 @@ onMounted(async () => {
 //   },
 //   { deep: true, immediate: true }
 // );
+
 
 // 댓글이 생성, 수정, 삭제되면 commentList 다시 불러오기
 async function handleCommentList() {

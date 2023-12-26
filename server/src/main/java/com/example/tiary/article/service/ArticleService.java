@@ -17,6 +17,10 @@ public interface ArticleService {
 	// 게시물 조회
 	List<ResponseArticleDto> readArticleList();
 
+	//랜덤 게시물 조회
+	@Transactional(readOnly = true)
+	List<ResponseArticleDto> readRandomList();
+
 	ResponseArticleDto readArticle(Long articleId);
 
 	List<ResponseArticleDto> readArticleFromHashtag(String hashtag);
@@ -36,4 +40,6 @@ public interface ArticleService {
 
 	@Transactional
 	int updateView(Long articleId);
+
+	List<ResponseArticleDto> findArticlesByUserIds(List<Long> userIds);
 }

@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.tiary.article.entity.Article;
+import com.example.tiary.myPage.dto.response.ResponseMyArticleDto;
+
+import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
@@ -18,4 +21,12 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 	@Modifying
 	@Query("update Article a set a.view = a.view +1 where a.id = :id")
 	int updateViews(@Param("id") Long articleId);
+
+	Page<Article> findAllArticleByUsersId(Long userId, Pageable pageable);
+
+	int countByUsersId(Long userId);
+
+	List<Article> findByUsersIdInOrderByCreatedAtDesc(List<Long> userIds);
+
+	List<Article> findAllByCategoryIsNotNull();
 }

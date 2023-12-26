@@ -29,6 +29,8 @@ public interface UserService {
     //유저 inactive하기
     Users accountCancellation(RequestUserDto requestUserDto, Long userId);
     //유저 프로필 이미지 업로드
-    Users uploadProfileImg(Long userId, MultipartFile imgFile) throws IOException;;
+    Users uploadProfileImg(Long userId, MultipartFile imgFile) throws IOException;
+
+    Integer numberMyPosts(Long userId);
 
 }

@@ -75,9 +75,7 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { onMounted, ref } from 'vue';
-import axios from 'axios';
 import * as dateFormat from '@/utils/dateformat.js'
-import Loading from '@/components/Loading.vue';
 import { getArticleFromCategory, getArticleFromHashtag } from '@/api/common';
 
 const { categoryName } = defineProps(['categoryName'])
