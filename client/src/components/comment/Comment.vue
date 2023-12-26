@@ -19,6 +19,7 @@
       }"
       @editComment="handleCommentList"
       @deleteComment="handleCommentList"
+      @createReplyComment="handleCommentList"
     >
     </CommentCard>
 

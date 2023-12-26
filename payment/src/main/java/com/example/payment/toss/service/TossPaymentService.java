@@ -2,11 +2,12 @@ package com.example.payment.toss.service;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Collections;
 
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.payment.toss.config.TossPaymentConfig;
-import com.example.payment.toss.dto.PaymentInfo;
+import com.example.payment.toss.dto.PaymentInfoDto;
+import com.example.payment.toss.dto.TossPaymentDto;
+import com.example.payment.toss.entity.TossPayment;
 import com.example.payment.toss.repository.TossPaymentRepository;
 
 @Service
@@ -30,7 +33,7 @@ public class TossPaymentService {
 	}
 
 	@Transactional
-	public void requestTossPayment(PaymentInfo paymentInfo, TossPaymentConfig tossPaymentConfig) throws JSONException {
+	public void requestTossPayment(PaymentInfoDto paymentInfoDto, TossPaymentConfig tossPaymentConfig) throws JSONException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -45,7 +48,7 @@ public class TossPaymentService {
 							"orderId": "%s",
 							"paymentKey": "%s"
 						}
-						""".formatted(paymentInfo.getAmount(), paymentInfo.getOrderId(), paymentInfo.getPaymentKey());
+						""".formatted(paymentInfoDto.getAmount(), paymentInfoDto.getOrderId(), paymentInfoDto.getPaymentKey());
 
 		HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
 
@@ -55,27 +58,20 @@ public class TossPaymentService {
 			String.class
 		);
 		System.out.println(responseEntity.getBody());
-		// 필요 데이터 저장
-		savePaymentRecord(responseEntity.getBody());
+
+		JSONObject jsonObject = new JSONObject(responseEntity.getBody());
+
+		LocalDateTime approvedAt = parseZonedDateTime(jsonObject);
+
+		tossPaymentRepository.save(TossPayment.toEntity(paymentInfoDto, approvedAt));
 	}
 
-	public void savePaymentRecord(String responseBody) throws JSONException {
-		JSONObject jsonObject = new JSONObject(responseBody);
-		String orderId = jsonObject.getString("orderId");
-		String paymentKey = jsonObject.getString("paymentKey");
-		String supporterId = jsonObject.getString("supporterId");
-		String receiverId = jsonObject.getString("receiverId");
-		String articleId = jsonObject.getString("articleId");
-		int amount = Integer.parseInt(jsonObject.getString("amount"));
-		LocalDateTime approvedAt = LocalDateTime.parse(jsonObject.getString("approvedAt"));
-
-		System.out.println("오더 아이디: " + orderId);
-		System.out.println("페이먼트 키: " + paymentKey);
-		System.out.println("보낸사람: " + supporterId);
-		System.out.println("받는사람: " + receiverId);
-		System.out.println("후원 받은 글 번호: " + articleId);
-		System.out.println("얼마: " + amount);
-		System.out.println("날짜: " + approvedAt);
-		
+	private LocalDateTime parseZonedDateTime(JSONObject jsonObject) throws JSONException {
+		// ZonedDateTime으로 파싱
+		ZonedDateTime zonedDateTime = ZonedDateTime.parse(jsonObject.getString("approvedAt"));
+		// ZonedDateTime에서 LocalDateTime으로 변환
+		return zonedDateTime.toLocalDateTime();
 	}
+
+
 }

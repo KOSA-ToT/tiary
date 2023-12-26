@@ -7,6 +7,19 @@
         <div class="container mx-auto text-center text-white">
           <div class="max-w-screen-md px-4 mx-auto mt-12 text-lg leading-relaxed text-gray-700 lg:px-0">
             <div class="flex items-center justify-end px-12">
+              <div class="max-w-screen-md text-lg leading-relaxed text-gray-700 lg:px-0">
+                <div
+                  class="flex px-6 py-3 mb-1 text-sm font-bold text-white uppercase transition-all duration-150 ease-linear bg-orange-500 bg-opacity-50 border border-orange-500 border-solid rounded-full outline-none mr-52 focus:outline-none">
+                  <div class="mr-4">
+                    <p class="mb-2">구독자</p>
+                    <p>{{ subscriberListLength }}</p>
+                  </div>
+                  <div>
+                    <p class="mb-2">구독 작가</p>
+                    <p>{{ subscribedListLength }}</p>
+                  </div>
+                </div>
+              </div>
               <svg height="25px" width="25px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 class="mr-2 mt-6" v-if="ifWriter == true" xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 0 392.699 392.699" xml:space="preserve" fill="#000000">
@@ -61,12 +74,16 @@ import { storeToRefs } from 'pinia';
 import api from '@/router/api';
 import { onBeforeMount, onMounted, ref } from 'vue';
 import axios from "axios";
-import { getUser, writerConfirm } from '@/api/common';
+import { getUser, writerConfirm, listSubscribers, listsubscribedWriter, subscribeUser } from '@/api/common';
 import { useRoute } from 'vue-router';
 const id = ref(null);
 const route = useRoute();
 const ifWriter = ref(false);
 // const serverUrl = import.meta.env.VUE_APP_API_BASE_URL;
+const subscriberList = ref([]);
+const subscribedList = ref([]);
+const subscriberListLength = ref();
+const subscribedListLength = ref();
 
 const User = {
   id: ref(),
@@ -87,8 +104,22 @@ async function approval() {
   } catch (error) {
     console.log("에러 : " + error + error.response);
   }
-  
+}
+async function listSubscriber() {
+  try {
+    const subscriberResponse = await listSubscribers(id.value);
+    subscriberList.value = subscriberResponse.data;
+    subscriberListLength.value = subscriberList.value.length;
+    console.log("subscriberListLength.value : " + subscriberListLength.value);
 
+    const subscribedWriterResponse = await listsubscribedWriter(id.value);
+    subscribedList.value = subscribedWriterResponse.data;
+    subscribedListLength.value = subscribedList.value.length;
+    console.log("subscribedListLength.value : " + subscribedListLength.value);
+  }
+  catch (error) {
+    console.log(error);
+  }
 }
 async function getUsers(props) {
   try {
@@ -109,6 +140,7 @@ async function getUsers(props) {
 }
 onMounted(() => {
   getUsers();
+  listSubscriber();
   approval();
 });
 onBeforeMount(() => {
