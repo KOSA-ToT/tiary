@@ -242,4 +242,13 @@ public class ArticleServiceImpl implements ArticleService {
 		hashtagService.removeOldHashtag(article);
 		hashtagService.updateHashtag(hashtagService.createHashtag(requestArticleDto), article);
 	}
+	@Override
+	public List<ResponseArticleDto> findArticlesByUserIds(List<Long> userIds) {
+		List<Article> articles = articleRepository.findByUsersIdInOrderByCreatedAtDesc(userIds);
+		// 각 Article을 ResponseArticleDto로 매핑
+//		List<ResponseArticleDto> result = articles.stream()
+//				.map(ResponseArticleDto::from)
+//				.collect(Collectors.toList());
+		return getResponseArticleDtoAddImages(articles);
+	}
 }

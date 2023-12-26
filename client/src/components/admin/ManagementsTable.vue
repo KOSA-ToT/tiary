@@ -25,7 +25,7 @@
             scope="col"
             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            역할
+            글 수
           </th>
           <th
             scope="col"
@@ -55,27 +55,39 @@
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900">
+            <div class="text-base text-gray-900 font-bold">
               {{ approval.nickname }}
             </div>
-            <div class="text-sm text-gray-500">블로그 바로가기</div>
+            <router-link :to="'/writer-page/' + approval.userId">
+              <div class="text-sm text-gray-500">블로그 바로가기</div>
+            </router-link>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <span
+            <span v-if="approval.status==='Approving'"
               class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+            >
+            {{ approval.status }}
+            </span>
+            <span v-else-if="approval.status==='Accepted'"
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800"
+            >
+            {{ approval.status }}
+            </span>
+            <span v-else
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
             >
             {{ approval.status }}
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {{ approval.userStatus }}
+            {{ approval.articleCount }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             {{ approval.email }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <a @click="accept(approval.userId)" class="text-indigo-600 hover:text-indigo-900">수락</a>
-            <a @click="reject(approval.userId)" href="#" class="ml-2 text-red-600 hover:text-red-900">반려</a>
+            <a @click="reject(approval.userId,approval.email)" href="#" class="ml-2 text-red-600 hover:text-red-900">반려</a>
           </td>
         </tr>
       </tbody>
@@ -85,14 +97,16 @@
 
 <script setup>
 import { onMounted,ref } from 'vue';
-import { listApprove, writerAccpet, writerReject } from '@/api/common';
+import { listApprove, writerAccpet, writerReject,rejectEmailAuthReq, numberPosts } from '@/api/common';
 
 const approvalList = ref([]);
-
-async function listApproval() {
+const number =ref();
+async function listApproval(userId) {
     try {
         const response = await listApprove();
+        // const numberResponse = await numberPosts(userId);
         approvalList.value = response.data;
+        // number.value = numberResponse.data;
     } catch (error) {
         console.log(error);
     }
@@ -105,10 +119,16 @@ async function accept(userId) {
         console.log(error);
     }
 }
-async function reject(userId) {
+async function reject(userId,userEmail) {
     try {
+      const emailDto = {
+        email: userEmail,
+        task: "거절"
+    };
         const response = await writerReject(userId);
+        const request = await rejectEmailAuthReq(emailDto);
         window.location.reload();
+        alert(request.data);
     } catch (error) {
         console.log(error);
     }

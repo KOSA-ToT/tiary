@@ -86,6 +86,13 @@ public class UserController {
 		emailService.sendMail(emailSendDto, encodedKey);
 		return ResponseEntity.ok("이메일 전송이 완료되었습니다. 5분 이내 인증해주세요.");
 	}
+	// 거절 이메일 전송
+	@PostMapping("/reject-email")
+	public ResponseEntity sendRejectEmail(@RequestBody EmailSendDto emailSendDto) throws MessagingException {
+		String encodedKey = redisUtil.setDataExpire(emailSendDto.getEmail());
+		emailService.sendRejectMail(emailSendDto, encodedKey);
+		return ResponseEntity.ok("거절 이메일 전송이 완료되었습니다.");
+	}
 
 	// 인증 확인
 	@GetMapping("/verify-email")
