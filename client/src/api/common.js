@@ -89,7 +89,7 @@ export const getArticleListRequest = async () => {
   return await instance.get("/article");
 }
 export const getRecommendationArticleRequest = async (articleId) => {
-  return await batchInstance.get("batch/recommendations/" + articleId)
+  return await batchInstance.get("/batch/recommendations/" + articleId)
 }
 export const postArticleRequest = async (requestArticleDto) => {
   return await authInstance.post("/article", requestArticleDto);

@@ -2,7 +2,7 @@ import axios from "axios";
 import { parseJwt } from '@/utils/jwtUtils';
 
 const baseConfig = {
-  baseURL: "http://localhost:8088", // 로컬
+  baseURL: "http://localhost:8090/server", // 로컬
   headers: {
     'Content-type': 'application/json'
   },
@@ -10,7 +10,7 @@ const baseConfig = {
 };
 
 const fileConfig = {
-  baseURL: "http://localhost:8088", // 로컬
+  baseURL: "http://localhost:8090/server", // 로컬
   headers: {
     'Content-Type': 'multipart/form-data',
     accept: 'application/json'
@@ -19,7 +19,7 @@ const fileConfig = {
 };
 
 const batchConfig = {
-  baseURL: "http://localhost:8089", // 로컬
+  baseURL: "http://localhost:8090", // 로컬
   headers: {
     'Content-type': 'application/json'
   },
