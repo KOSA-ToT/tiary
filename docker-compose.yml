@@ -1,0 +1,71 @@
+version: '3'
+services:
+  eureka:
+    container_name: tiary-eureka
+    build: ./eureka/
+    ports:
+      - "8761:8761"
+    restart: always
+
+  config:
+    container_name: tiary-config
+    build: ./config/
+    ports:
+      - "9000:9000"
+    depends_on:
+      - eureka
+    restart: unless-stopped
+
+  server:
+    container_name: tiary-server
+    build: ./server/
+    ports:
+      - "8088:8088"
+    depends_on:
+      - eureka
+      - config
+    restart: unless-stopped
+
+  batch:
+    container_name: tiary-batch
+    build: ./batch/
+    ports:
+      - "8089:8089"
+    depends_on:
+      - eureka
+      - config
+      - server
+    restart: unless-stopped
+
+  gateway:
+    container_name: tiary-gateway
+    build: ./gateway/
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka
+  #  prometheus:
+  #    container_name: msa-monitor-prometheus
+  #    image: prom/prometheus
+  #    ports:
+  #      - "9090:9090"
+  #    volumes:
+  #      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #
+  #  grafana:
+  #    container_name: msa-monitor-grafana
+  #    image: grafana/grafana
+  #    user: "$UID:$GID"
+  #    ports:
+  #      - "3000:3000"
+  #    depends_on:
+  #      - prometheus
+  #    volumes:
+  #      - ./monitoring/grafana/data:/var/lib/grafana
+
+
+
+  # volumes:
+  #   msa-volume:
+
+
