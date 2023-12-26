@@ -1,4 +1,4 @@
-import { instance, authInstance, fileInstance , batchInstance,  } from "./config";
+import { instance, authInstance, fileInstance , batchInstance, paymentInstance  } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);
@@ -152,6 +152,6 @@ export const getUserByEmail = async (email) => {
 }
 
 // TossPayment instance 수정 필요
-export const tossPaymentReq = async (tossPaymentDto) => {
-  return await paymentInstance.post("/payment/toss", tossPaymentDto);
+export const tossPaymentReq = async (paymentDto) => {
+  return await paymentInstance.post("/payment/savepayinfo", paymentDto);
 }

@@ -1,14 +1,5 @@
 <template>
   <div>
-    <section class="hero is-link">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            토스페이먼츠 연동 샘플
-          </h1>
-        </div>
-      </div>
-    </section>
     <section class="section">
       <div class="container">
         <button
@@ -30,76 +21,63 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, defineProps } from 'vue';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
+const props = defineProps(['userId', 'articleId', 'supporter', 'receiver', 'author']);
 const clientKey = import.meta.env.VITE_CLIENT_KEY;
-const successUrl = import.meta.env.VITE_SUCCESS_URL;
+const successUrl = import.meta.env.VITE_PAYMENT_SUCCESS_URL;
+const failUrl = import.meta.env.VITE_PAYMENT_FAIL_URL;
+const paydata = props.articleId + '_' + props.supporter;
 
+const prices = ref([
+  { id: 'C1', value: 1000, hover: false },
+  { id: 'C5', value: 5000, hover: false },
+  { id: 'C10', value: 10000, hover: false },
+]);
 
-export default {
-  name: 'pgWindow',
-  setup() {
-    const prices = ref([
-      { id: 'C1', value: 1000, hover: false },
-      { id: 'C5', value: 5000, hover: false },
-      { id: 'C10', value: 10000, hover: false },
-    ]);
+const func1 = loadTossPayments(clientKey);
 
-    const func1 = loadTossPayments(clientKey);
+const formatPrice = (price) => {
+  return price.toLocaleString();
+};
 
-    const formatPrice = (price) => {
-      // 숫자를 3자리마다 쉼표를 추가하여 포맷팅
-      return price.toLocaleString();
-    };
+const generateOrderId = () => {
+  return uuidv4().replace(/-/g, '').substring(0, 8);
+};
 
-    const generateOrderId = () => {
-      // uuid 생성 및 8자리로 자르기
-      return uuidv4().replace(/-/g, '').substring(0, 8);
-    };
+const pay = (method, price) => {
 
-    const pay = (method, price) => {
-      func1.then((tossPayments) => {
-        const amt = price;
-        const orderId = generateOrderId();
+  func1.then((tossPayments) => {
+    const amt = price;
+    const orderId = generateOrderId();
 
-        tossPayments
-          .requestPayment(method, {
-            amount: amt,
-            orderId: orderId,
-            orderName: '토스 티셔츠 외 1건',
-            customerName: '박토스',
-            successUrl: 'http://localhost:8889/payment/success',
-            failUrl: 'http://localhost:8889/payment/fail',
-            supporterId: '',
-            receiverId: ''
-          })
-          .catch((error) => {
-            if (error.code === 'USER_CANCEL') {
-              alert('취소되었습니다.');
-            } else {
-              alert(error.message);
-            }
-          });
+    tossPayments
+      .requestPayment(method, {
+        amount: amt,
+        orderId: orderId,
+        orderName: props.author + '님에게 ' + amt + '원 후원',
+        customerName: 'Tiary',
+        successUrl: successUrl + paydata,
+        failUrl: failUrl
+      })
+      .catch((error) => {
+        if (error.code === 'USER_CANCEL') {
+          alert('취소되었습니다.');
+        } else {
+          alert(error.message);
+        }
       });
-    };
+  });
+};
 
-    const hoverButton = (id, isHovered) => {
-      const button = prices.value.find((price) => price.id === id);
-      if (button) {
-        button.hover = isHovered;
-      }
-    };
-
-    return {
-      prices,
-      pay,
-      hoverButton,
-      formatPrice,
-    };
-  },
+const hoverButton = (id, isHovered) => {
+  const button = prices.value.find((price) => price.id === id);
+  if (button) {
+    button.hover = isHovered;
+  }
 };
 </script>
 

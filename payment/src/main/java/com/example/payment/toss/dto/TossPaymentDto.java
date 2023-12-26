@@ -1,22 +1,21 @@
-package com.example.payment.toss.entity;
+package com.example.payment.toss.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.payment.toss.entity.TossPayment;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TossPayment {
-	@Id
+public class TossPaymentDto {
 	private String orderId; // 글 카테고리 포함...
 	private String paymentKey;
 	private String supporterEmail; // 후원자
