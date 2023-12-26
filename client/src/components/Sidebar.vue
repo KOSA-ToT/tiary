@@ -17,8 +17,9 @@
         <!-- Add your profile picture here -->
         <a href="/"><img :src="getUserPictureUrl()" alt="Profile" class="w-16 h-16 rounded-full mb-2" /></a>
         <div class="flex grid-cols-2">
-          <svg height="21px" width="21px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" class="mr-1 mt-1" v-if="ifWriter==true"
-            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 392.699 392.699" xml:space="preserve" fill="#000000">
+          <svg height="21px" width="21px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" class="mr-1 mt-1"
+            v-if="ifWriter === true" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 392.699 392.699"
+            xml:space="preserve" fill="#000000">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
@@ -122,7 +123,22 @@ async function onSidebar() {
       userId.value = userInfo.id;
       userPicture.value = userInfo.picture;
       userRole.value = userInfo.role;
-
+      try {
+        const response = await writerConfirm(userId.value);
+        console.log("writerConfirm : " + response.data);
+        if (response.data === 'Approving') {
+          writerMsg.value = "작가신청중";
+        }
+        else if (response.data === 'Accepted') {
+          writerMsg.value = "작가됨";
+          ifWriter.value = true;
+        }
+        else if (response.data === 'Rejected') {
+          writerMsg.value = "작가신청";
+        }
+      } catch (error) {
+        console.log("에러 : " + error + error.response);
+      }
       links = [
         {
           text: "작성한 글",
@@ -137,6 +153,11 @@ async function onSidebar() {
         {
           text: "구독한 작가",
           to: `/mypage/subscriber/${userId.value}`,
+          iconClass: "/images/heart.svg",
+        },
+        {
+          text: "구독한 글",
+          to: `/mypage/my-subscribe/${userId.value}`,
           iconClass: "/images/heart.svg",
         },
       ];
@@ -229,4 +250,5 @@ onMounted(() => {
 .btn-orange {
   background-color: transparent;
   color: #ff9800;
-}</style>
+}
+</style>

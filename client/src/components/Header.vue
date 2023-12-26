@@ -127,12 +127,6 @@ async function ifAdmin(){
   userRole.value = userInfo.role;
 
 }
-async function getUserInfo() {
-  try {
-    const res = await getUserInfoReq();
-    return res.data;
-  } catch (err) { }
-}
 // 스크롤 이벤트 핸들러 등록
 onMounted(async () => {
   window.addEventListener("scroll", handleScroll);
