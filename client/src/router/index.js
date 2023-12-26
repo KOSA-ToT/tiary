@@ -21,7 +21,7 @@ import OauthCallback from "@/pages/OauthCallback.vue";
 import Admin from "@/pages/Admin.vue";
 import WriterManagement from "@/components/admin/WriterManagement.vue";
 import NoticeManagement from "@/components/admin/NoticeManagement.vue";
-import TossPayment from "@/components/TossPayment.vue";
+import PaymentCallBack from '@/pages/PaymentCallBack.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -93,7 +93,7 @@ const router = createRouter({
         },
       ],
     },
-    { path: "/donate", component: TossPayment },
+    {path: '/payment/success/:data', component: PaymentCallBack, props: true}
   ],
 });
 

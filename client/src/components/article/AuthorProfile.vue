@@ -104,7 +104,7 @@ async function subscribe(userId) {
 // 응원하기
 function donate() {
   donateBtn.value = true;
-  emits('handleDonateModal', donateBtn.value);
+  emits('handleDonateModal', donateBtn.value, user.value.nickname);
 }
 </script>
 <style scoped></style>
