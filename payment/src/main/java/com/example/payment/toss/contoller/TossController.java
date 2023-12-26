@@ -1,20 +1,18 @@
 package com.example.payment.toss.contoller;
 
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.http.ResponseEntity;
+import com.example.payment.toss.config.TossPaymentConfig;
+import com.example.payment.toss.dto.PaymentInfo;
+import com.example.payment.toss.service.TossPaymentService;
+import lombok.RequiredArgsConstructor;
+
+import org.json.JSONException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.payment.toss.config.TossPaymentConfig;
-import com.example.payment.toss.dto.PaymentInfo;
-import com.example.payment.toss.service.TossPaymentService;
-
-import lombok.RequiredArgsConstructor;
-
-@RestController
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/payment")
 public class TossController {
 	private final TossPaymentService tossPaymentService;

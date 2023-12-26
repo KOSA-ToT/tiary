@@ -16,6 +16,10 @@ export const rejectEmailAuthReq = async (emailDto) => {
   return await instance.post("/auth/reject-email", emailDto);
 };
 
+export const acceptEmailAuthReq = async (emailDto) => {
+  return await instance.post("/auth/accept-email", emailDto);
+};
+
 export const nickDupCheckReq = async (nick) => {
   return await instance.get("/auth/chk-nickname?nickname=" + nick);
 };
