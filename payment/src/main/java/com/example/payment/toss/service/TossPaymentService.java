@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.payment.toss.config.TossPaymentConfig;
 import com.example.payment.toss.dto.PaymentInfoDto;
 import com.example.payment.toss.dto.TossPaymentDto;
+import com.example.payment.toss.entity.TossPayment;
 import com.example.payment.toss.repository.TossPaymentRepository;
 
 @Service
@@ -31,6 +32,7 @@ public class TossPaymentService {
 		this.restTemplate = restTemplate;
 	}
 
+	@Transactional
 	public void requestTossPayment(PaymentInfoDto paymentInfoDto, TossPaymentConfig tossPaymentConfig) throws JSONException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -59,13 +61,9 @@ public class TossPaymentService {
 
 		JSONObject jsonObject = new JSONObject(responseEntity.getBody());
 
-		LocalDateTime localDateTime = parseZonedDateTime(jsonObject);
+		LocalDateTime approvedAt = parseZonedDateTime(jsonObject);
 
-		// // PaymentInfoDto에 설정
-		// tossPaymentDto.setApprovedAt(localDateTime);
-		// System.out.println(tossPaymentDto);
-		//
-		// savePaymentData();
+		tossPaymentRepository.save(TossPayment.toEntity(paymentInfoDto, approvedAt));
 	}
 
 	private LocalDateTime parseZonedDateTime(JSONObject jsonObject) throws JSONException {
@@ -75,9 +73,5 @@ public class TossPaymentService {
 		return zonedDateTime.toLocalDateTime();
 	}
 
-	// @Transactional
-	// public void savePaymentData(AdditionalPaymentInfoDto addtionalPaymentInfo) {
-	//
-	// 	tossPaymentRepository.save();
-	// }
+
 }

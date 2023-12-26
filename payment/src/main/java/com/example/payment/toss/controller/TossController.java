@@ -1,9 +1,12 @@
 package com.example.payment.toss.controller;
 
 import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.payment.toss.config.TossPaymentConfig;
@@ -20,9 +23,15 @@ public class TossController {
 	private final TossPaymentConfig tossPaymentConfig;
 
 	@PostMapping("/savepayinfo")
-	public void tossPayment(@RequestBody PaymentInfoDto paymentInfoDto) throws JSONException {
-		System.out.println(paymentInfoDto);
-		tossPaymentService.requestTossPayment(paymentInfoDto, tossPaymentConfig);
+	public ResponseEntity tossPayment(@RequestBody PaymentInfoDto paymentInfoDto) throws JSONException {
+		try {
+			System.out.println(paymentInfoDto);
+			tossPaymentService.requestTossPayment(paymentInfoDto, tossPaymentConfig);
+			return ResponseEntity.ok().build(); // 200 OK
+		} catch (Exception e) {
+			// 예외 발생 시 500 Internal Server Error
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 }

@@ -18,5 +18,5 @@ public class PaymentInfoDto {
 	private String paymentKey;
 	private int amount;
 	private String articleId;
-	private String userEmail;
+	private String supporterEmail;
 }

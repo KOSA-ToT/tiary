@@ -28,13 +28,13 @@ function extractPaymentInfoAndRedirect() {
   const [articleId, userEmail] = props.data.split('_');
 
   const paymentDto = {
-    userEmail: userEmail,
+    supporterEmail: userEmail,
     articleId: articleId,
     paymentKey: paymentKey.value,
     orderId: orderId.value,
     amount: amount.value,
   };
-  
+
   try {
     const response = tossPaymentReq(paymentDto);
     console.log(response);
