@@ -38,6 +38,22 @@ public class EmailService {
 		helper.setText(greetingMsg + linkButton, true);
 		mailSender.send(message);
 	}
+	public void sendRejectMail(EmailSendDto emailSendDto, String encodedKey) throws MessagingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+		String linkButton = getString(encodedKey, emailSendDto.getTask());
+
+		String greetingMsg = "<br>안녕하세요! T o T 입니다.<br>"
+				+ "작가 신청을 하셨으나, 운영진의 검토 결과 신청 기준을 충족하지 않아 신청이 반려되었습니다.<br><br>"
+				+ "신청기준을 충족하신 뒤에 다시 신청해주시길 바랍니다. <br><br>";
+
+		helper.setFrom(senderEmail);
+		helper.setTo(emailSendDto.getEmail());
+		helper.setSubject("[Tiary] 작가 신청이 거절되었습니다 😥");
+		helper.setText(greetingMsg, true);
+		mailSender.send(message);
+	}
 
 	private String getString(String encodedKey, String task) {
 		String linkButtonStyle = "display:inline-block; background:#f2f4f6; color:#4e5968; "

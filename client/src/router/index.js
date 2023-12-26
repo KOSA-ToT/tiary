@@ -8,6 +8,7 @@ import MyPostView from "@/components/myPage/myPost.vue";
 import MyCommentView from "@/components/myPage/myComment.vue";
 import MySubscriberView from "@/components/myPage/mySubscriber.vue";
 import WriterProfile from "@/components/myPage/writerProfile.vue";
+import MySubscribePost from "@/components/myPage/MySubscribePost.vue";
 import Comment from "@/components/comment/Comment.vue";
 
 import ArticleList from "@/pages/ArticleList.vue";
@@ -47,6 +48,10 @@ const router = createRouter({
           path: "subscriber/:id",
           component: MySubscriberView,
         },
+        {
+            path: "my-subscribe/:id",
+            component: MySubscribePost,
+          },
       ],
     },
     { path: "/writer-page/:id", component: WriterProfile },

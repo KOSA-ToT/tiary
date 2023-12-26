@@ -56,6 +56,11 @@ public class AdminController {
     public ResponseEntity rejectWriter(@PathVariable("userId") Long userId, @AuthenticationPrincipal UserDto users) {
         return new ResponseEntity<>(adminService.reject(userId), HttpStatus.OK);
     }
+    //작가 신청중인지 확인할 때
+    @GetMapping("/confirmWriter/{userId}")
+    public ResponseEntity confirmWriter(@PathVariable("userId") Long userId, @AuthenticationPrincipal UserDto users) {
+        return new ResponseEntity<>(adminService.confirm(userId), HttpStatus.OK);
+    }
 	// 공지사항
 
 
