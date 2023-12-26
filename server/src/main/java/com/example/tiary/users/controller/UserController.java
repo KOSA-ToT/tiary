@@ -52,6 +52,7 @@ public class UserController {
 		response.put("nickname", principal.getUsers().getNickname());
 		response.put("email", principal.getUsers().getEmail());
 		response.put("picture", principal.getUsers().getUserPicture());
+		response.put("role", principal.getUsers().getRole());
 		return ResponseEntity.ok(response);
 	}
 
@@ -85,7 +86,19 @@ public class UserController {
 		emailService.sendMail(emailSendDto, encodedKey);
 		return ResponseEntity.ok("이메일 전송이 완료되었습니다. 5분 이내 인증해주세요.");
 	}
-
+	// 거절 이메일 전송
+	@PostMapping("/reject-email")
+	public ResponseEntity sendRejectEmail(@RequestBody EmailSendDto emailSendDto) throws MessagingException {
+		String encodedKey = redisUtil.setDataExpire(emailSendDto.getEmail());
+		emailService.sendRejectMail(emailSendDto, encodedKey);
+		return ResponseEntity.ok("거절 이메일 전송이 완료되었습니다.");
+	}
+	@PostMapping("/accept-email")
+	public ResponseEntity sendAcceptEmail(@RequestBody EmailSendDto emailSendDto) throws MessagingException {
+		String encodedKey = redisUtil.setDataExpire(emailSendDto.getEmail());
+		emailService.sendAcceptMail(emailSendDto, encodedKey);
+		return ResponseEntity.ok("승인 이메일 전송이 완료되었습니다.");
+	}
 	// 인증 확인
 	@GetMapping("/verify-email")
 	public ResponseEntity verifiedEmail(@RequestParam("link") String encodedKey, @RequestParam("task") String task) {
