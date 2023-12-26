@@ -122,45 +122,24 @@ async function onSidebar() {
       userId.value = userInfo.id;
       userPicture.value = userInfo.picture;
       userRole.value = userInfo.role;
-      try {
-        const response = await writerConfirm(userId.value);
-        console.log("writerConfirm : " + response.data);
-        if (response.data === 'Approving') {
-          writerMsg.value = "작가신청중";
-        }
-        else if (response.data === 'Accepted') {
-          writerMsg.value = "작가됨";
-          ifWriter.value = true;
-        }
-        else if (response.data === 'Rejected') {
-          writerMsg.value = "작가신청";
-        }
-      } catch (error) {
-        console.log("에러 : " + error + error.response);
-      }
-      
-        links = [
-          {
-            text: "작성한 글",
-            to: `/mypage/post/${userId.value}`,
-            iconClass: "/images/book.svg",
-          },
-          {
-            text: "작성한 댓글",
-            to: `/mypage/comment/${userId.value}`,
-            iconClass: "/images/comment-dots.svg",
-          },
-          {
-            text: "구독한 작가",
-            to: `/mypage/subscriber/${userId.value}`,
-            iconClass: "/images/heart.svg",
-          },
-          {
-            text: "구독한 글",
-            to: `/mypage/my-subscribe/${userId.value}`,
-            iconClass: "/images/heart.svg",
-          },
-        ];
+
+      links = [
+        {
+          text: "작성한 글",
+          to: `/mypage/post/${userId.value}`,
+          iconClass: "/images/book.svg",
+        },
+        {
+          text: "작성한 댓글",
+          to: `/mypage/comment/${userId.value}`,
+          iconClass: "/images/comment-dots.svg",
+        },
+        {
+          text: "구독한 작가",
+          to: `/mypage/subscriber/${userId.value}`,
+          iconClass: "/images/heart.svg",
+        },
+      ];
     } catch (err) {
       console.log(err);
     }
@@ -196,7 +175,7 @@ async function getUserInfo() {
 function getUserPictureUrl() {
   if (userPicture.value === null) {
     // 이미지가 없을 경우 로딩 이미지 경로
-    return '/images/loading_1.gif';
+    return "/images/loading_1.gif";
   } else {
     // 사용자 프로필 사진이 있을 경우 경로 설정
     return import.meta.env.VITE_S3_URL + userPicture.value;
