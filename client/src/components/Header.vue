@@ -14,10 +14,10 @@
     >
       <!-- 왼쪽에 사이드바와 홈 로고 위치 -->
       <div class="flex items-center">
-        <div v-if="userRole === 'ADMIN' || userRole.value === 'ADMIN'">
+        <div v-if="userRole === 'ADMIN' || userRole.value === 'ADMIN'" class="cursor-pointer">
           <AdminSidebar></AdminSidebar>
         </div>
-        <div v-else>
+        <div v-else class="cursor-pointer">
           <Sidebar></Sidebar>
         </div>
         <router-link

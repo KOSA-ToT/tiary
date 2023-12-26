@@ -1,6 +1,6 @@
 <template>
- <div>
-    <div class="text-center">공지사항 ~</div>
+ <div class="flex justify-center">
+  <img  src="/images/writing-icegif-15.gif" alt="writing image">
   </div>
 </template>
 
@@ -11,7 +11,6 @@ import { useRoute } from "vue-router";
 
 import { useNoticeStore } from "@/stores/noticeStore";
 const noticeList = ref([]);
-const noticeStore = useNoticeStore();
 const visiblePages = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 const pageCalculate = ref();
 const currentPage = ref(0);
@@ -21,9 +20,6 @@ let noticeId = ref(0);
 
 onMounted(async () => {
   await listMyPosts();
-  console.log("pinia", noticeStore.notices);
-  console.log("길이", noticeList.value.length);
-  console.log("테스트", noticeList.value[0].title);
 });
 
 async function listMyPosts() {
@@ -35,9 +31,6 @@ async function listMyPosts() {
       (_, index) => pageCalculate.value + index + 1
     );
     const response = await listMyPost(adminId, currentPage.value);
-    // noticeStore.setNotices(response.data.content);
-    console.log("response", response);
-    console.log("response.data.content", response.data.content);
     noticeList.value = response.data.content;
   } catch (error) {
     console.log(error);
