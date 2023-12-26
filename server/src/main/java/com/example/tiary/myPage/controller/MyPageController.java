@@ -70,6 +70,16 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("내 글 조회에 실패했습니다.");
         }
     }
+    //내 글 수 보기
+    @GetMapping("/{userId}/postsNumber")
+    public ResponseEntity numberMyPosts(@PathVariable("userId") Long userId,@AuthenticationPrincipal UserDto user){
+        try{
+            return ResponseEntity.ok(userService.numberMyPosts(userId));
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("글 조회에 실패했습니다.");
+        }
+    }
 //    //내 글 보기
 //    @GetMapping("/{userId}/posts")
 //    public ResponseEntity viewMyPosts(@PathVariable("userId") Long userId){
@@ -222,6 +232,17 @@ public class MyPageController {
         }catch(Exception e){
             log.error("에러 : "+e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구독 취소 실패했습니다.");
+        }
+    }
+    //구독 글 보기
+    @GetMapping("/postSubscribe")
+    public ResponseEntity postSubscribe(@AuthenticationPrincipal UserDto user){
+        try{
+            List<Long> userIds = subscribeService.subscribedWriterList(user.getUsers().getId());
+            return ResponseEntity.ok(articleService.findArticlesByUserIds(userIds));
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("글 조회에 실패했습니다.");
         }
     }
 }

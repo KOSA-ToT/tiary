@@ -25,7 +25,7 @@
     class="fixed top-0 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform duration-300 ease-in-out -translate-x-full bg-stone-100 dark:bg-gray-800"
     tabindex="-1"
   >
-    <div v-if="authStore.isLoggedIn">
+    <div>
       <div class="flex flex-col items-center mb-6">
         <a href="/">
           <!-- 망치사진으로 변경하기 -->
@@ -43,7 +43,7 @@
         <li v-for="link in links" :key="link.text">
           <router-link
             :to="link.to"
-            class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            class="flex items-center p-3 text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 group"
           >
             <img :src="link.iconClass" alt="icon" class="w-5 h-5 rounded-lg" />
             <span class="ms-3">{{ link.text }}</span>
@@ -52,12 +52,6 @@
       </ul>
       <hr class="my-4 border-t border-gray-300 dark:border-gray-700" />
       <div class="flex justify-center">
-        <a
-          v-if="userRole != 'ADMIN'"
-          :href="`/mypage/${userId}`"
-          class="btn btn-orange btn-outline"
-          >마이페이지</a
-        >
         <button
           @click="authStore.alertLogout()"
           class="btn btn-orange btn-outline"
@@ -65,19 +59,6 @@
           로그아웃
         </button>
       </div>
-    </div>
-    <div v-else class="mt-4 flex flex-col items-center">
-      <img src="/images/person-who-invests.svg" />
-      <span class="my-2 text-black font-bold">누구나 작가가 될 수 있는 곳</span>
-      <span class="mb-2 text-black font-bold text-lg"
-        >Tiary<span class="text-black">와 함께해요</span></span
-      >
-      <button
-        type="button"
-        class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-2xl text-sm px-5 py-2.5 text-center me-2 mb-2"
-      >
-        Tiary 시작하기 →
-      </button>
     </div>
   </div>
 </template>
@@ -103,7 +84,6 @@ async function onSidebar() {
       userId.value = userInfo.id;
       userPicture.value = userInfo.picture;
       userRole.value = userInfo.role;
-
       links = [
         {
           text: "공지사항 관리",
@@ -171,21 +151,17 @@ onMounted(() => {
   border-radius: 30px;
   transition: all 0.3s ease;
 }
-
 .btn:hover {
   border-color: #ff9800;
 }
-
 .btn-outline {
   background-color: transparent;
   color: #ff9800;
 }
-
 .btn-outline:hover {
   background-color: #ff9800;
   color: #fff;
 }
-
 .btn-orange {
   background-color: transparent;
   color: #ff9800;

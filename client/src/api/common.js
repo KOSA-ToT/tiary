@@ -12,6 +12,10 @@ export const emailAuthReq = async (emailDto) => {
   return await instance.post("/auth/send-email", emailDto);
 };
 
+export const rejectEmailAuthReq = async (emailDto) => {
+  return await instance.post("/auth/reject-email", emailDto);
+};
+
 export const nickDupCheckReq = async (nick) => {
   return await instance.get("/auth/chk-nickname?nickname=" + nick);
 };
@@ -126,6 +130,9 @@ export const getUser = async (userId) => {
 export const listMyPost = async (userId, page) => {
   return await instance.get("/users/" + userId + "/posts?page=" + page);
 };
+export const listMySubscribe = async () => {
+  return await authInstance.get("/users/postSubscribe");
+};
 export const editNickname = async (userId, nickname) => {
   return await authInstance.patch(
     "/users/" + userId + "/updateNickname",
@@ -175,6 +182,12 @@ export const writerReject = async (userId) => {
   return await authInstance.patch("/admin/rejectWriter/"+userId);
 };
 
+export const writerConfirm = async (userId) => {
+  return await authInstance.get("/admin/confirmWriter/"+userId);
+};
+export const numberPosts = async (userId) => {
+  return await authInstance.get("/users/"+userId+"/postsNumber");
+};
 // Admin
 export const readNoticeList = async (userId, page) => {
   return await instance.get("/admin/" + userId + "/notice?page=" + page);
