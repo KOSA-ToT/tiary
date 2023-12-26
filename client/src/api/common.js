@@ -1,4 +1,4 @@
-import { instance, authInstance, fileInstance , batchInstance,  } from "./config";
+import { instance, authInstance, fileInstance , batchInstance, paymentInstance  } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);
@@ -168,11 +168,6 @@ export const getUserByEmail = async (email) => {
   return await instance.get("/users/"+email);
 }
 
-// TossPayment instance 수정 필요
-export const tossPaymentReq = async (tossPaymentDto) => {
-  return await paymentInstance.post("/payment/toss", tossPaymentDto);
-}
-
 export const writerApprove = async () => {
   return await authInstance.get("/admin/approving");
 };
@@ -196,3 +191,7 @@ export const numberPosts = async (userId) => {
 export const readNoticeList = async (userId, page) => {
   return await instance.get("/admin/" + userId + "/notice?page=" + page);
 };
+
+export const tossPaymentReq = async (paymentDto) => {
+  return await paymentInstance.post("/payment/savepayinfo", paymentDto);
+}
