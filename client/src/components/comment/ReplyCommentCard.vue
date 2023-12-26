@@ -3,7 +3,8 @@
   <div class="font-bold text-gray-300 pl-14">|</div>
   <div class="ml-5 border rounded-md">
     <div class="p-3">
-      <div class="flex items-center gap-3"><router-link :to="'/writer-page/' + replyCommentData.userId" v-if="replyCommentData.userProfileImageUrl">
+      <div class="flex items-center gap-3">
+        <router-link :to="'/writer-page/' + replyCommentData.userId" v-if="replyCommentData.userProfileImageUrl">
         <img
           v-if="replyCommentData.userProfileImageUrl"
           :src="
@@ -40,7 +41,6 @@
       </button> -->
       <div class="text-right">
         <!-- 회원이 작성한 댓글 -->
-
         <span
         v-if="showEditDeleteBtn"
           class="text-sm font-normal text-gray-400 cursor-pointer hover:text-gray-700"

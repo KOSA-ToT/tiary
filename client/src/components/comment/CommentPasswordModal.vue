@@ -18,7 +18,7 @@
         <div class="ml-3">
           <h2 class="font-semibold text-gray-800">비밀번호 확인</h2>
           <p class="mt-2 text-sm text-gray-600 leading-relaxed">
-            비밀번호를 입력해주세요 ^0^
+            비밀번호를 입력해주세요.
           </p>
           <input type="password" class="border rounded-lg" v-model="password" />
         </div>
