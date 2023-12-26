@@ -86,11 +86,6 @@ async function onSidebar() {
       userRole.value = userInfo.role;
       links = [
         {
-          text: "공지사항 관리",
-          to: `/admin/notice-management/${userId.value}`,
-          iconClass: "/images/comment-dots.svg",
-        },
-        {
           text: "작가 관리",
           to: `/admin/writer-management`,
           iconClass: "/images/book.svg",

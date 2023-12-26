@@ -158,7 +158,7 @@ async function onSidebar() {
         {
           text: "구독한 글",
           to: `/mypage/my-subscribe/${userId.value}`,
-          iconClass: "/images/heart.svg",
+          iconClass: "/images/star.svg",
         },
       ];
     } catch (err) {
