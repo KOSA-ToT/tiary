@@ -44,7 +44,7 @@ public class ArticleController {
         if (hashtag != null) {
             return new ResponseEntity(articleService.readArticleFromHashtag(hashtag), HttpStatus.OK);
         }
-        return new ResponseEntity<>(articleService.readArticleList(), HttpStatus.OK);
+        return new ResponseEntity<>(articleService.readRandomList(), HttpStatus.OK);
     }
 
     //게시물 단건 조회

@@ -32,7 +32,7 @@
         수정하기
       </button>
       <button @click.prevent="backArticle"
-        class="text-white-700 py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
+        class="text-white py-2 px-4 ml-2 bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-purple-500 transition duration-300">
         취소
       </button>
     </div>

@@ -27,4 +27,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 	int countByUsersId(Long userId);
 
 	List<Article> findByUsersIdInOrderByCreatedAtDesc(List<Long> userIds);
+
+	List<Article> findAllByCategoryIsNotNull();
 }
