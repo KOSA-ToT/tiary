@@ -2,7 +2,9 @@
   <button
     type="button"
     class="flex items-center gap-2 text-white p-2 rounded-full cursor-pointer btn"
-    :class="{ 'hover-style': isLiked, 'orange-bg': isLiked , 'btn-outline' : !isLiked , 'brn-orange' : !isLiked}"
+    :class="{ 'hover-style': isLiked, 'orange-bg': isLiked, 'btn-outline': !isLiked, 'btn-orange': !isLiked, 'cat-jump': isHovering }"
+    @mouseenter="startJumpAnimation"
+    @mouseleave="stopJumpAnimation"
     @click="toggleLike"
   >
     <svg
@@ -24,12 +26,11 @@ import { getLikeState, getArticleLikeRequest, getArticleLikeCancelRequest } from
 
 const { articleId } = defineProps(['articleId']);
 const isLiked = ref(false);
+const isHovering = ref(false);
 
 onMounted(async () => {
   try {
-    // 좋아요 상태를 가져오는 비동기 함수 호출
     const response = await getLikeState(articleId);
-    // 서버에서 받아온 값으로 isLiked 상태 갱신
     console.log(response.data);
     isLiked.value = response.data;
   } catch (error) {
@@ -37,22 +38,25 @@ onMounted(async () => {
   }
 });
 
-// 좋아요 토글 함수
 const toggleLike = async () => {
   try {
     if (isLiked.value) {
-      // 이미 좋아요 상태인 경우, 좋아요 취소 요청
       await getArticleLikeCancelRequest(articleId);
     } else {
-      // 좋아요 상태가 아닌 경우, 좋아요 요청
       await getArticleLikeRequest(articleId);
     }
-
-    // 토글 후 isLiked 상태 갱신
     isLiked.value = !isLiked.value;
   } catch (error) {
     console.error('좋아요 토글에 실패했습니다:', error);
   }
+};
+
+const startJumpAnimation = () => {
+  isHovering.value = true;
+};
+
+const stopJumpAnimation = () => {
+  isHovering.value = false;
 };
 </script>
 
@@ -94,5 +98,18 @@ const toggleLike = async () => {
 .orange-bg {
   background-color: #ff9800; /* 오렌지 배경 색 */
   color: #fff; /* 흰색 글씨 색 */
+}
+
+/* 애니메이션 스타일 */
+@keyframes catJump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.cat-jump {
+  animation: catJump 0.5s ease;
 }
 </style>

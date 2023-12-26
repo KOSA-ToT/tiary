@@ -7,6 +7,12 @@ build/
 
 ### application.yml ###
 application.yml
+application.yaml
+application-dev.yml
+application-dev.yaml
+application-prod.yml
+application-prod.yaml
+
 
 ### STS ###
 .apt_generated
@@ -240,6 +246,10 @@ $RECYCLE.BIN/
 *.lnk
 
 
+# payment Server
+#.payment
+#/payment/*
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,java,visualstudiocode,intellij+all,vuejs
 
 # Logs
@@ -276,3 +286,6 @@ client/*.tsbuildinfo
 
 # Vue Environment Variables
 client/.env
+payment/application-dev.yaml
+payment/application.yaml
+payment/gradle/wrapper/gradle-wrapper.properties

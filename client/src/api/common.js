@@ -1,4 +1,4 @@
-import { instance, authInstance, fileInstance , batchInstance } from "./config";
+import { instance, authInstance, fileInstance , batchInstance,  } from "./config";
 
 export const signupReq = async (signupDto) => {
   return await instance.post("/auth/signup", signupDto);
@@ -10,6 +10,10 @@ export const loginReq = async (loginDto) => {
 
 export const emailAuthReq = async (emailDto) => {
   return await instance.post("/auth/send-email", emailDto);
+};
+
+export const rejectEmailAuthReq = async (emailDto) => {
+  return await instance.post("/auth/reject-email", emailDto);
 };
 
 export const nickDupCheckReq = async (nick) => {
@@ -82,12 +86,12 @@ export const deleteUserComment = async (articleId, commentId) => {
 export const deleteGuestComment = async (articleId, commentId) => {
   return await instance.delete("/comment/guest/" + articleId + "/" + commentId);
 };
-export const getArticleRequest = async (articleId) =>{
-  return await instance.get("/article/" + articleId)
-}
+export const getArticleRequest = async (articleId) => {
+  return await instance.get("/article/" + articleId);
+};
 export const getArticleListRequest = async () => {
   return await instance.get("/article");
-}
+};
 export const getRecommendationArticleRequest = async (articleId) => {
   return await batchInstance.get("/batch/recommendations/" + articleId)
 }
@@ -96,8 +100,8 @@ export const postArticleRequest = async (requestArticleDto) => {
 };
 
 export const patchArticleRequest = async (articleId, requestArticleDto) => {
-  return await authInstance.patch("/article/"+ articleId, requestArticleDto)
-}
+  return await authInstance.patch("/article/" + articleId, requestArticleDto);
+};
 
 export const deleteArticleRequest = async (articleId) => {
   return await authInstance.delete("/article/" + articleId);
@@ -121,32 +125,70 @@ export const getArticleFromHashtag = async(categoryName) => {
   return await instance.get("/hashtag?categoryName="+categoryName)
 }
 export const getUser = async (userId) => {
-  return await instance.get("/users/"+ userId);
-}
-export const listMyPost = async (userId,page) => {
-  return await instance.get("/users/"+userId+"/posts?page="+ page);
-}
-export const editNickname = async (userId,nickname) => {
-  return await authInstance.patch("/users/"+userId+"/updateNickname", nickname);
-}
-export const handleWithDrawal = async (userId,nickname) => {
-  return await instance.patch("/users/"+userId+"/inactive", nickname);
-}
-export const changeProfileImage = async (userId,formData) => {
-  return await fileInstance.post("/users/"+userId+"/uploadProfileImg", formData);
-}
-export const listMyComment = async (userId,page) => {
-  return await instance.get("/users/"+userId+"/comments?page="+page);
-}
+  return await instance.get("/users/" + userId);
+};
+export const listMyPost = async (userId, page) => {
+  return await instance.get("/users/" + userId + "/posts?page=" + page);
+};
+export const listMySubscribe = async () => {
+  return await authInstance.get("/users/postSubscribe");
+};
+export const editNickname = async (userId, nickname) => {
+  return await authInstance.patch(
+    "/users/" + userId + "/updateNickname",
+    nickname
+  );
+};
+export const handleWithDrawal = async (userId, nickname) => {
+  return await instance.patch("/users/" + userId + "/inactive", nickname);
+};
+export const changeProfileImage = async (userId, formData) => {
+  return await fileInstance.post(
+    "/users/" + userId + "/uploadProfileImg",
+    formData
+  );
+};
+export const listMyComment = async (userId, page) => {
+  return await instance.get("/users/" + userId + "/comments?page=" + page);
+};
 export const listSubscribers = async (userId) => {
-  return await instance.get("/users/"+userId+"/subscriber");
-}
+  return await instance.get("/users/" + userId + "/subscriber");
+};
 export const listsubscribedWriter = async (userId) => {
-  return await instance.get("/users/"+userId+"/subscribedWriter");
-}
+  return await instance.get("/users/" + userId + "/subscribedWriter");
+};
 export const subscribeUser = async (userId) => {
-  return await authInstance.get("/users/"+userId+"/subscribe");
-}
+  return await authInstance.get("/users/" + userId + "/subscribe");
+};
 export const getUserByEmail = async (email) => {
   return await instance.get("/users/"+email);
 }
+
+// TossPayment instance 수정 필요
+export const tossPaymentReq = async (tossPaymentDto) => {
+  return await paymentInstance.post("/payment/toss", tossPaymentDto);
+}
+
+export const writerApprove = async () => {
+  return await authInstance.get("/admin/approving");
+};
+export const listApprove = async () => {
+  return await authInstance.get("/admin/showList");
+};
+export const writerAccpet = async (userId) => {
+  return await authInstance.patch("/admin/acceptWriter/"+userId);
+};
+export const writerReject = async (userId) => {
+  return await authInstance.patch("/admin/rejectWriter/"+userId);
+};
+
+export const writerConfirm = async (userId) => {
+  return await authInstance.get("/admin/confirmWriter/"+userId);
+};
+export const numberPosts = async (userId) => {
+  return await authInstance.get("/users/"+userId+"/postsNumber");
+};
+// Admin
+export const readNoticeList = async (userId, page) => {
+  return await instance.get("/admin/" + userId + "/notice?page=" + page);
+};

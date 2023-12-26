@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +63,18 @@ public class ArticleServiceImpl implements ArticleService {
 		List<Article> articles = articleRepository.findAll();
 		// Article과 이미지 경로를 조합하여 ResponseArticleDto 리스트 생성
 		return getResponseArticleDtoAddImages(articles);
+	}
+
+	//랜덤 게시물 조회
+	@Transactional(readOnly = true)
+	@Override
+	public List<ResponseArticleDto> readRandomList() {
+		List<Article> articles = articleRepository.findAllByCategoryIsNotNull();
+		return new Random().ints(0, articles.size())
+			.distinct()
+			.limit(6)
+			.mapToObj(index -> getResponseArticleDtoWithImages(articles.get(index)))
+			.collect(Collectors.toList());
 	}
 
 	//게시물 단건 조회
@@ -227,5 +241,14 @@ public class ArticleServiceImpl implements ArticleService {
 	private void updateArticleHashtags(RequestArticleDto requestArticleDto, Article article) {
 		hashtagService.removeOldHashtag(article);
 		hashtagService.updateHashtag(hashtagService.createHashtag(requestArticleDto), article);
+	}
+	@Override
+	public List<ResponseArticleDto> findArticlesByUserIds(List<Long> userIds) {
+		List<Article> articles = articleRepository.findByUsersIdInOrderByCreatedAtDesc(userIds);
+		// 각 Article을 ResponseArticleDto로 매핑
+//		List<ResponseArticleDto> result = articles.stream()
+//				.map(ResponseArticleDto::from)
+//				.collect(Collectors.toList());
+		return getResponseArticleDtoAddImages(articles);
 	}
 }

@@ -75,7 +75,13 @@ public class UserServiceImpl implements UserService {
         Page<ResponseMyArticleDto> myArticleList= userRepository.listMyArticle(userId, pageable);
         return myArticleList;
     }
-
+    //내 글 수 보기
+    @Transactional
+    @Override
+    public Integer numberMyPosts(Long userId){
+        Integer articleListNumber= userRepository.countArticlesById(userId);
+        return articleListNumber;
+    }
     //내 댓글 보기
     @Transactional
     @Override

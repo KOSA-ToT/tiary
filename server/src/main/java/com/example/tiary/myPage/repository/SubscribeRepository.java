@@ -23,4 +23,8 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     List<ResponseSubscribeDto> showSubscribedWriterList(@Param("userId") Long userId);
 
     Optional<Subscribe> findByUserIdAndWriterId(@Param("userId") Long userId, @Param("writerId") Long writerId);
+
+    //구독 작가 리스트 만들기
+    @Query("SELECT s.writerId FROM Subscribe s LEFT JOIN Users u ON s.writerId = u.id WHERE s.userId = :userId")
+    List<Long> showSubscribedWriterCount(@Param("userId") Long userId);
 }
