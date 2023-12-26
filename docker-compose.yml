@@ -37,6 +37,16 @@ services:
       - server
     restart: unless-stopped
 
+  payment:
+    container_name: tiary-payment
+    build: ./payment/
+    ports:
+      - "8889:8889"
+    depends_on:
+      - eureka
+      - config
+    restart: unless-stopped
+
   gateway:
     container_name: tiary-gateway
     build: ./gateway/
@@ -44,6 +54,14 @@ services:
       - "8090:8090"
     depends_on:
       - eureka
+
+  redis:
+    container_name: tiary-redis
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
   #  prometheus:
   #    container_name: msa-monitor-prometheus
   #    image: prom/prometheus
