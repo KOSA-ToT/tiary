@@ -12,7 +12,8 @@
     >
       <!-- 왼쪽에 사이드바와 홈 로고 위치 -->
       <div class="flex items-center">
-        <Sidebar></Sidebar>
+        <AdminSidebar v-if="userRole==='ADMIN'"></AdminSidebar>
+        <Sidebar v-else></Sidebar>
         <router-link to="/" class="text-lg font-bold text-gray-800 dark:text-black">
           <img src="/images/header_logo.png" class="h-auto max-h-full">
         </router-link>
@@ -43,15 +44,18 @@
 import { ref, watchEffect, onMounted, onBeforeUnmount, defineProps } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import Sidebar from '@/components/Sidebar.vue';
+import AdminSidebar from '@/components/AdminSidebar.vue';
 import UserModal from '@/components/UserModal.vue';
 import router from '@/router/index.js';
 import { userEmail } from '@/utils/jwtUtils';
+import { getUserInfoReq } from '@/api/common';
 
 const props = defineProps(['threshold']);
 const showHeader = ref(true);
 const headerBackgroundVisible = ref(false);
 const inSlider = ref(false);
 const authStore = useAuthStore();
+const userRole = ref();
 const userVars = ref({
   task: '',
   isShowModal: false
@@ -81,9 +85,20 @@ watchEffect(() => {
     login(userEmail(authorizationToken));
   }
 });
+async function ifAdmin(){
+  const userInfo = await getUserInfo();
+  userRole.value = userInfo.role;
 
+}
+async function getUserInfo() {
+  try {
+    const res = await getUserInfoReq();
+    return res.data;
+  } catch (err) { }
+}
 // 스크롤 이벤트 핸들러 등록
 onMounted(() => {
+  ifAdmin();
   window.addEventListener('scroll', handleScroll);
   onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScroll);

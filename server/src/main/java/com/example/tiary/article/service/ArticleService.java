@@ -36,4 +36,6 @@ public interface ArticleService {
 
 	@Transactional
 	int updateView(Long articleId);
+
+	List<ResponseArticleDto> findArticlesByUserIds(List<Long> userIds);
 }

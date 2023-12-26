@@ -34,4 +34,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "JOIN Article a ON c.article.id = a.id " +  // 추가: Article 테이블 조인
             "WHERE u.id = :userId")
     Page<ResponseMyCommentDto> listMyComment(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("SELECT COUNT(a) FROM Article a WHERE a.users.id = :userId")
+    Integer countArticlesById(@Param("userId") Long userId);
 }

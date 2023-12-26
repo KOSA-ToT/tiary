@@ -28,6 +28,7 @@ public class WriteApproval {
 
     private String userPicture;
     private UserStatus userStatus;
+    private int articleCount;
     public void updateStatus(WriterStatus status) {
         this.status = status;
     }
