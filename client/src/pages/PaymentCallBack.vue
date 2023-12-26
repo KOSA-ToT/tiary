@@ -8,6 +8,7 @@
 import Loading from '@/components/Loading.vue';
 import { onMounted, ref, defineProps } from 'vue';
 import { tossPaymentReq } from '@/api/common';
+import router from '@/router';
 
 onMounted(() => {
   extractPaymentInfoAndRedirect();
@@ -18,7 +19,7 @@ const paymentKey = ref(null);
 const orderId = ref(null);
 const amount = ref(null);
 
-function extractPaymentInfoAndRedirect() {
+async function extractPaymentInfoAndRedirect() {
   const params = new URLSearchParams(window.location.search);
   paymentKey.value = params.get('paymentKey');
   orderId.value = params.get('orderId');
@@ -36,8 +37,13 @@ function extractPaymentInfoAndRedirect() {
   };
 
   try {
-    const response = tossPaymentReq(paymentDto);
+    const response = await tossPaymentReq(paymentDto);
     console.log(response);
+    console.log(response.status);
+    if(response.status === 200) {
+      alert("후원이 완료되었습니다!")
+      router.push('/article/' + articleId);
+    }
   } catch (error) {
     console.log(error);
   }

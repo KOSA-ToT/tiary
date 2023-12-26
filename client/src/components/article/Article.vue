@@ -123,6 +123,9 @@
         </div>
       </div>
     </div>
+    <div v-if="paymentSuccess" class="modal-overlay">
+      <PaymentSuccessModal></PaymentSuccessModal>
+    </div>
 </template>
 
 <script setup>
@@ -131,7 +134,7 @@ import like from "@/components/article/like/Like.vue"
 import AuthorProfile from './AuthorProfile.vue';
 import comment from "@/components/comment/Comment.vue";
 import recommendations from "@/components/article/Recommendations.vue";
-import { ref, onMounted, computed, defineProps, nextTick } from "vue";
+import { ref, onMounted, computed, defineProps, nextTick, onBeforeMount } from "vue";
 import * as dateFormat from "@/utils/dateformat.js";
 import router from "@/router";
 import Editor from '@toast-ui/editor';
@@ -139,6 +142,7 @@ import { deleteArticleRequest, getArticleRequest } from "@/api/common";
 import { useAuthStore } from "@/stores/auth";
 import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
 import TossPayment from '@/components/TossPayment.vue';
+import PaymentSuccessModal from '@/components/PaymentSuccessModal.vue'
 
 const { articleId } = defineProps(["articleId"]);
 const article = ref(null);
@@ -195,6 +199,7 @@ onMounted(async () => {
     console.error("글을 불러오는 데 실패했습니다:", error);
   }
 });
+
 
 // editArticle 및 deleteArticle 메소드 정의
 const deleteArticle = () => {
@@ -286,6 +291,12 @@ function handleDonateModal(btnValue, nickname) {
 
 function closeDonationModal() {
   donateBtn.value = false;
+}
+
+const paymentSuccess = ref(false);
+
+function openPaymentSuccessModal() {
+  paymentSuccess.value = true;
 }
 
 </script>
