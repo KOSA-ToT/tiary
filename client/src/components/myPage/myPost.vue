@@ -5,7 +5,7 @@
         <div class="container mx-auto my-12 md:px-6">
             <!-- Section: Design Block -->
             <section class="mb-12 text-center md:text-left">
-                <h2 class="mb-12 ml-12 text-lg font-bold text-orange-500">작성글</h2>
+                <h2 class="mb-12 ml-12 text-xl bg-gradient-to-tr font-extrabold from-pink-400 to-yellow-400 text-transparent bg-clip-text">작성글</h2>
                 <div class="flex justify-end">
                     <!-- <button @click="deleteSelected"
                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">삭제</button>
@@ -428,7 +428,7 @@
                         <div>
                             <nav class="inline-flex -space-x-px rounded-md shadow-sm isolate" aria-label="Pagination">
                                 <a @click="prevPage" :disabled="currentPage === 1"
-                                    class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-commu-pagination-hover focus:z-20 focus:outline-offset-0"
+                                    class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-amber-100 focus:z-20 focus:outline-offset-0"
                                     id="previousPage">
                                     <span class="sr-only">Previous</span>
                                     <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -439,11 +439,11 @@
                                 </a>
                                 <a v-for="page in visiblePages" :key="page" @click="clickPage(page - 1)"
                                     :aria-current="currentPage === page - 1 ? 'page' : null"
-                                    :class="{ 'hover:bg-commu-pagination-hover': totalPages > page - 1 }"
+                                    :class="{ 'hover:bg-amber-100': totalPages > page - 1 }"
                                     class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 duration-200 ease-in-out ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0 page-link">
                                     {{ page }}
                                 </a><a @click="nextPage" :disabled="currentPage === totalPages"
-                                    class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-commu-pagination-hover focus:z-20 focus:outline-offset-0"
+                                    class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-amber-100 focus:z-20 focus:outline-offset-0"
                                     id="nextPage">
                                     <span class="sr-only">Next</span>
                                     <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -530,20 +530,7 @@ const formatCreatedAt = (createdAt) => {
 
     return formattedDate;
 };
-// const deleteSelected = () => {
-//     // 선택한 게시물의 ID를 서버에 전송
-//     axios.delete('http://localhost:8088/article/{article-id}/{comment-id}', { selectedPosts: selectedPosts.value })
-//         .then((response) => {
-//             console.log('삭제 요청이 성공했습니다.');
-//             // 성공적으로 서버에서 응답을 받으면 선택한 게시물 목록에서 제거
-//             postList.value = postList.value.filter(post => !selectedPosts.value.includes(post.id));
-//             // 선택한 게시물 배열 초기화
-//             selectedPosts.value = [];
-//         })
-//         .catch((error) => {
-//             console.error('삭제 요청 중 오류가 발생했습니다.', error);
-//         });
-// }; // 나중에 수정..deleteArticleRequest
+
 async function deleteSelected(postId) {
     try {
         const response = await deleteArticleRequest(postId);
@@ -571,7 +558,8 @@ watch(() => props.user.id.value, () => {
     listMyPosts();
 });
 </script>
-<style>.page-link[aria-total="page"] {
+<style>
+.page-link[aria-total="page"] {
     background-color: #805959;
     /* 현재 페이지 버튼의 배경색을 변경 */
 }

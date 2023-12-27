@@ -13,4 +13,6 @@ public interface SubscribeService {
     boolean addSubscribe(Long writerId,Long userId);
     //구독 삭제하기
     boolean cancelSubscribe(Long writerId,Long userId);
+    //구독 작가 리스트
+    List<Long> subscribedWriterList(Long userId);
 }

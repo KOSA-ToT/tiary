@@ -56,6 +56,8 @@
                         </div>
                     </div>
                 </div>
+                <h2 class="text-base font-semibold leading-7 text-gray-900 mt-10">작가 신청 상태</h2>
+                <p class="block text-sm font-medium leading-6 text-gray-900 ml-4 mt-8">{{ writerMsg }}</p>
             </div>
             <div class="mt-4 mb-24 ml-12">
                 <div @click="modalOpen = true">
@@ -153,10 +155,10 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, onBeforeMount } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-import { editNickname, handleWithDrawal, changeProfileImage } from '@/api/common';
+import { editNickname, handleWithDrawal, changeProfileImage, writerConfirm } from '@/api/common';
 import { useAuthStore } from '@/stores/auth';
 const props = defineProps({
     user: {
@@ -176,6 +178,9 @@ const previewImage = ref(null);
 const token = localStorage.getItem('Authorization');
 const authStore = useAuthStore();
 const { currentUser } = authStore;
+const writerMsg = ref("작가 신청을 하지 않았습니다.");
+const ifWriter = ref(false);
+const usersId = ref();
 async function editNickName() {
     // 토큰이 없으면 요청을 보내지 않음
     if (!token) {
@@ -198,6 +203,30 @@ async function editNickName() {
         }
     }
 
+}
+async function approval(userId) {
+  
+      try {
+        const response = await writerConfirm(userId);
+        console.log("writerConfirm : " + response.data);
+        if (response.data === 'Approving') {
+          writerMsg.value = "작가 신청이 완료되었습니다. 빠른 시일 안에 안내 드리겠습니다.";
+          console.log("작가 신청이 완료되었습니다. 빠른 시일 안에 안내 드리겠습니다.");
+        }
+        else if (response.data === 'Accepted') {
+          writerMsg.value = "축하합니다. 작가가 되었습니다.";
+          console.log("축하합니다. 작가가 되었습니다.");
+        //   ifWriter.value = true;
+        }
+        else if (response.data === 'Rejected') {
+          writerMsg.value = "결과가 이메일로 전송되었습니다.";
+          console.log("결과가 이메일로 전송되었습니다.");
+        }
+      } catch (error) {
+        console.log("에러 : " + error + error.response);
+      }
+      
+  
 }
 async function handleWithdrawal() {
     try {
@@ -247,5 +276,9 @@ const handleFileChange = (event) => {
 };
 onMounted(() => {
     console.log("currentUser : " + currentUser);
+    approval(usersId.value);
+});
+onBeforeMount(()=>{
+	usersId.value = route.params.id;
 });
 </script>

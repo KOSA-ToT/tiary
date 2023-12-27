@@ -26,10 +26,12 @@ public class BatchService {
 	// }
 
 	public void updateRecommendationsAsync(Long postId) {
-		String batchServerUrl = "http://localhost:8089/batch/updateRecommendations/" + postId;
+		//http://localhost:8089
+		String requestUrl  =  batchServerUrl + "/batch/updateRecommendations/" + postId;
+		System.out.println("서버 호스트 입니다: " + batchServerUrl);
 
 		// 게시물이 생성된 후 배치 서버 API를 호출
-		ResponseEntity<String> response = restTemplate.postForEntity(batchServerUrl, null, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, null, String.class);
 
 		// HTTP 응답 확인 등 추가 로직이 필요할 경우 처리 가능
 	}

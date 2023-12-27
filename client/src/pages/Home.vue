@@ -10,12 +10,15 @@
 </template>
 
 <script setup>
+
+
 import Header from '@/components/Header.vue';
 import Slider from '@/components/Slider.vue';
 import Footer from '@/components/Footer.vue';
 import RandomArticle from '@/components/home/RandomArticle.vue'
 import Card from '@/components/home/Card.vue';
 import Category from '@/components/home/Category.vue';
+import Notice from '@/components/admin/Notice.vue'
 import { getArticleListRequest,getCategoryList } from '@/api/common';
 
 import { onMounted, ref } from 'vue';

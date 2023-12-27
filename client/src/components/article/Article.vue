@@ -73,7 +73,7 @@
       </div>
       <hr>
       <!-- 프로필 영역-->
-      <AuthorProfile :userId="userId"></AuthorProfile>
+      <AuthorProfile :userId="userId" @handleDonateModal="handleDonateModal"></AuthorProfile>
       <!-- 추천게시물 영역 -->
       <recommendations :articleId="articleId" />
     </div>
@@ -81,6 +81,51 @@
       <p>Loading...</p>
     </div>
   </div>
+  <div v-if="donateBtn" class="modal-overlay">
+      <div class="max-w-2xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+        <div class="p-6">
+          <button
+            @click="closeDonationModal()"
+            type="button"
+            class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm ml-auto inline-flex items-center popup-close"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5"
+              fill="#c6c7c7"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                cliprule="evenodd"
+              ></path>
+            </svg>
+            <span class="sr-only">Close Modal</span>
+          </button>
+          <div class="flex items-center justify-center h-full space-x-2">
+            <!-- 로고 말고 다른거 넣어도 괜찮을듯 -->
+  <img src="/images/header_logo.png" class="w-18 h-18 mx-auto" />
+</div>
+        </div>
+        <div class="p-6">
+          <h2 class="text-2xl font-bold mb-4">{{ `${author}님 응원하기` }}</h2>
+          <p class="mb-4">작가님을 응원하고 싶습니다! 얼마를 후원하시겠습니까?</p>
+          <!-- 여기에 버튼 등 기부 UI 추가 -->
+          <TossPayment
+              :userId="userId"
+              :articleId="articleId"
+              :supporter="supporter"
+              :receiver="receiver"
+              :author="author"
+          ></TossPayment>
+        </div>
+      </div>
+    </div>
+    <div v-if="paymentSuccess" class="modal-overlay">
+      <PaymentSuccessModal></PaymentSuccessModal>
+    </div>
 </template>
 
 <script setup>
@@ -89,22 +134,28 @@ import like from "@/components/article/like/Like.vue"
 import AuthorProfile from './AuthorProfile.vue';
 import comment from "@/components/comment/Comment.vue";
 import recommendations from "@/components/article/Recommendations.vue";
-import { ref, onMounted, computed, defineProps, nextTick } from "vue";
+import { ref, onMounted, computed, defineProps, nextTick, onBeforeMount } from "vue";
 import * as dateFormat from "@/utils/dateformat.js";
 import router from "@/router";
 import Editor from '@toast-ui/editor';
 import { deleteArticleRequest, getArticleRequest } from "@/api/common";
 import { useAuthStore } from "@/stores/auth";
 import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
+import TossPayment from '@/components/TossPayment.vue';
+import PaymentSuccessModal from '@/components/PaymentSuccessModal.vue'
+
 const { articleId } = defineProps(["articleId"]);
 const article = ref(null);
 const userId = ref("");
+const author = ref("");
 
 const editor = ref("");
 const editorValid = ref("");
 const testHtml = ref("");
 
-
+const receiver = ref('');
+const supporter = ref('');
+const emits = defineEmits();
 
 // onMounted(async () => {
 //   try {
@@ -124,16 +175,8 @@ onMounted(async () => {
     const response = await getArticleRequest(articleId);
     article.value = response.data;
     userId.value = article.value.userId;
-
-    // 디버깅: article.value.content가 제대로 설정되었는지 확인
-    console.log("Content from API:", article.value.content);
-
     // testHtml 값 설정
     testHtml.value = article.value.content;
-
-    // 디버깅: testHtml 값이 제대로 설정되었는지 확인
-    console.log("testHtml value:", testHtml.value);
-
     // Editor를 생성하여 Viewer 모드로 설정
     await nextTick(() => {
       const viewer = new Viewer({
@@ -148,6 +191,7 @@ onMounted(async () => {
     console.error("글을 불러오는 데 실패했습니다:", error);
   }
 });
+
 
 // editArticle 및 deleteArticle 메소드 정의
 const deleteArticle = () => {
@@ -226,6 +270,27 @@ function getRandomDefaultImage() {
   const randomIndex = Math.floor(Math.random() * defaultImageArray.length);
   return defaultImageArray[randomIndex];
 }
+
+const donateBtn = ref(false);
+
+// 응원하기 전달
+function handleDonateModal(btnValue, nickname) {
+  donateBtn.value = btnValue;
+  author.value = nickname;
+  receiver.value = article.value.email;
+  supporter.value = authStore.currentUser;
+}
+
+function closeDonationModal() {
+  donateBtn.value = false;
+}
+
+const paymentSuccess = ref(false);
+
+function openPaymentSuccessModal() {
+  paymentSuccess.value = true;
+}
+
 </script>
 <style scoped>
 /* 추가된 스타일 */
@@ -288,5 +353,29 @@ function getRandomDefaultImage() {
 .btn-orange {
   background-color: transparent;
   color: #ff9800;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* 반투명한 검은 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1002; /* 모달이 다른 요소 위에 나타나도록 설정 */
+}
+
+.max-w-2xl {
+  width: 80%; /* 가로 크기를 80%로 설정 (조절 가능) */
+  position: relative;
+}
+
+.popup-close {
+  top: 10px; /* 모달창 상단에서 10px 떨어진 위치 */
+  right: 10px; /* 모달창 오른쪽에서 10px 떨어진 위치 */
+  cursor: pointer;
 }
 </style>
