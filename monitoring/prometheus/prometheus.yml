@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "multiple_services"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: [ "tiary-server:8088", "tiary-batch:8089", "tiary-payment:8889" ]

@@ -62,28 +62,23 @@ services:
       - "6379:6379"
     restart: unless-stopped
 
-  #  prometheus:
-  #    container_name: msa-monitor-prometheus
-  #    image: prom/prometheus
-  #    ports:
-  #      - "9090:9090"
-  #    volumes:
-  #      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #
-  #  grafana:
-  #    container_name: msa-monitor-grafana
-  #    image: grafana/grafana
-  #    user: "$UID:$GID"
-  #    ports:
-  #      - "3000:3000"
-  #    depends_on:
-  #      - prometheus
-  #    volumes:
-  #      - ./monitoring/grafana/data:/var/lib/grafana
+  prometheus:
+    container_name: tiary-prometheus
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
-
-
-  # volumes:
-  #   msa-volume:
+  grafana:
+    container_name: tiary-grafana
+    image: grafana/grafana
+    user: "$UID:$GID"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - ./monitoring/grafana/data:/var/lib/grafana
 
 

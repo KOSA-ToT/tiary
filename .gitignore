@@ -289,3 +289,6 @@ client/.env
 payment/application-dev.yaml
 payment/application.yaml
 payment/gradle/wrapper/gradle-wrapper.properties
+
+# Grafana
+monitoring/grafana/data
