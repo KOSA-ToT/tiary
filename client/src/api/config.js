@@ -25,7 +25,7 @@ const batchConfig = {
 };
 
 const paymentConfig = {
-  baseURL: "http://localhost:8889", // 로컬
+  baseURL: "http://localhost:8090", // 로컬
   headers: {
     'Content-type': 'application/json'
   },
