@@ -2,7 +2,6 @@
   <div>
     <Header :threshold="100"></Header>
     <Slider></Slider>
-    <Notice></Notice>
     <Category :categories="categories"></Category>
     <RandomArticle :randomArticles="randomArticle"></RandomArticle>
     <Card></Card>
