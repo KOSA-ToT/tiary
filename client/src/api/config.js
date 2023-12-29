@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const baseUrl = import.meta.env.VITE_URL;
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const baseConfig = {
-  baseURL: "http://localhost:8090/server", // 로컬
+  baseURL: serverUrl, 
   headers: {
     'Content-type': 'application/json'
   },
@@ -9,7 +12,7 @@ const baseConfig = {
 };
 
 const fileConfig = {
-  baseURL: "http://localhost:8090/server", // 로컬
+  baseURL: serverUrl, 
   headers: {
     'Content-Type': 'multipart/form-data',
     accept: 'application/json'
@@ -18,14 +21,14 @@ const fileConfig = {
 };
 
 const batchConfig = {
-  baseURL: "http://localhost:8090", // 로컬
+  baseURL: baseUrl, 
   headers: {
     'Content-type': 'application/json'
   },
 };
 
 const paymentConfig = {
-  baseURL: "http://localhost:8090", // 로컬
+  baseURL: baseUrl, 
   headers: {
     'Content-type': 'application/json'
   },

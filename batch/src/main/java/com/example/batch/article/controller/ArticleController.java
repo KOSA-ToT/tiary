@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/batch")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${cors.allowed.origin}")
 @RequiredArgsConstructor
 public class ArticleController {
 	private final ArticleService articleService;

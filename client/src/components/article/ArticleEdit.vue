@@ -63,6 +63,7 @@ const emit = defineEmits(['update:modelValue']);
 const editor = ref("");
 const editorValid = ref("");
 const images = [];
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 //article
 const title = ref("");
@@ -108,7 +109,7 @@ onMounted(
       height: '460px',
       usageStatistics: false,
       hideModeSwitch: true,
-      hideToolbar: true,
+      hideToolbar: false,
       initialEditType: 'wysiwyg',
       plugins: [colorSyntax, codeSyntaxHighlight],
       hooks: {
@@ -117,7 +118,7 @@ onMounted(
           formData.append('images', blob);
 
           try {
-            const response = await axios.post('http://localhost:8088/images', formData);
+            const response = await axios.post(`${serverUrl}/images`, formData);
             // 새로운 이미지 추가
             Object.entries(response.data).forEach(([key, value]) => {
               console.log(response.data)
