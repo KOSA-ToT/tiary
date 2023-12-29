@@ -2,21 +2,21 @@ version: '3'
 services:
   client:
     container_name: tiary-vuejs
-    build: ./client/
+    image: your_hub_image
     ports:
       - "5173:80"
     restart: always
 
   eureka:
     container_name: tiary-eureka
-    build: ./eureka/
+    image: your_hub_image
     ports:
       - "8761:8761"
     restart: always
 
   config:
     container_name: tiary-config
-    build: ./config/
+    image: your_hub_image
     ports:
       - "9000:9000"
     depends_on:
@@ -25,7 +25,7 @@ services:
 
   server:
     container_name: tiary-server
-    build: ./server/
+    image: your_hub_image
     environment:
       - TZ=Asia/Seoul
     ports:
@@ -37,7 +37,7 @@ services:
 
   batch:
     container_name: tiary-batch
-    build: ./batch/
+    image: your_hub_image
     environment:
       - TZ=Asia/Seoul
     ports:
@@ -50,7 +50,7 @@ services:
 
   payment:
     container_name: tiary-payment
-    build: ./payment/
+    image: your_hub_image
     environment:
       - TZ=Asia/Seoul
     ports:
@@ -62,7 +62,7 @@ services:
 
   gateway:
     container_name: tiary-gateway
-    build: ./gateway/
+    image: your_hub_image
     ports:
       - "8090:8090"
     depends_on:
@@ -92,5 +92,3 @@ services:
       - prometheus
     volumes:
       - ./monitoring/grafana/data:/var/lib/grafana
-
-
