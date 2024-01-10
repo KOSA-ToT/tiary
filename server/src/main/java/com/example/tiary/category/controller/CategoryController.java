@@ -31,7 +31,7 @@ public class CategoryController {
 	@GetMapping
 
 	public ResponseEntity getArticleListFromCategory(@RequestParam(value = "categoryName" , required = false) String categoryName,
-		@PageableDefault Pageable pageable) {
+		@PageableDefault(page = 0, size = 10) Pageable pageable) { // size에 대해 명시적으로 알려주기 위해 선언함
 		List<Category> categoryList;
 		if (categoryName != null) {
 			Pageable pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),

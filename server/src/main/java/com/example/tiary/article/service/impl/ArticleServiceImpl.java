@@ -37,6 +37,7 @@ import com.example.tiary.global.pagination.PaginationService;
 import com.example.tiary.global.s3.service.S3UploadService;
 import com.example.tiary.users.entity.Users;
 import com.example.tiary.users.repository.UsersRepository;
+import com.example.tiary.users.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,8 @@ public class ArticleServiceImpl implements ArticleService {
 	private final UsersRepository usersRepository;
 	private final ArticleHashtagRepository articleHashtagRepository;
 	private final ArticleImageRepository articleImageRepository;
+
+	private final UserService userService;
 	private final HashtagService hashtagService;
 	private final CategoryService categoryService;
 	private final S3UploadService s3UploadService;
@@ -148,8 +151,10 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public Article createArticle(Long usersId, RequestArticleDto requestArticleDto, List<String> storeNameList) throws
 		IOException {
-		Users user = usersRepository.findById(usersId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		// -> id, Uk , article users Users -> usersId Long
+		// Users user = usersRepository.findById(usersId)
+		// 	.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		Users user = userService.getUserById(usersId);
 		Category category = categoryService.readCategory(requestArticleDto.getCategoryCode());
 		Article article = articleRepository.save(requestArticleDto.toEntity(category, user));
 
@@ -161,7 +166,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 		hashtagService.saveHashtag(requestArticleDto, article);
-		batchService.updateRecommendationsAsync(article.getId());
+		batchService.updateRecommendationsAsync(article.getId(),requestArticleDto);
 		return article;
 	}
 
@@ -169,8 +174,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	@Override
 	public Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto, List<String> storeNameList ) throws IOException {
-		Users user = usersRepository.findById(usersId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		// Users user = usersRepository.findById(usersId)
+		// 	.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		Users user = userService.getUserById(usersId);
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 
@@ -194,7 +200,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 		updateArticleHashtags(requestArticleDto, article);
-		batchService.updateRecommendationsAsync(article.getId());
+		batchService.updateRecommendationsAsync(article.getId(),requestArticleDto);
 
 		return articleRepository.save(article);
 	}
@@ -203,8 +209,10 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	@Override
 	public String deleteArticle(Long articleId, Long usersId) {
-		Users users = usersRepository.findById(usersId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		// Users users = usersRepository.findById(usersId)
+		// 	.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+		Users users = userService.getUserById(usersId);
+		getArticle(articleId);
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_ALREADY_DELETE));
 		if(!Objects.equals(article.getUsers().getId(), users.getId())){
@@ -251,4 +259,11 @@ public class ArticleServiceImpl implements ArticleService {
 //				.collect(Collectors.toList());
 		return getResponseArticleDtoAddImages(articles);
 	}
+
+	private Article getArticle(Long articleId){
+		return articleRepository.findById(articleId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+	}
+	// 아티클 만드는데 유저 정보, 본문 , 우리 회사 정보까지 넣어주세요
+	// 아티클 가져오는데 articleId 말고 작성자로 가져와주세요)
 }

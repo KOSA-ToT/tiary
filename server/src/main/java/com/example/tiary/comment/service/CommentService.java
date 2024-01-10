@@ -105,7 +105,10 @@ public class CommentService {
 	public boolean confirmPassword(Long commentId, String password) {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
-		return comment.getPassword().equals(password);
+		if(!comment.getPassword().equals(password)){
+			throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCHED);
+		}
+		return true;
 	}
 
 	// 회원 수정
@@ -116,10 +119,11 @@ public class CommentService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
 
-		if(!Objects.equals(userId, comment.getUsers().getId()))
+		if(!Objects.equals(users.getId(), comment.getUsers().getId()))
 			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
 
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);

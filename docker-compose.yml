@@ -2,14 +2,14 @@ version: '3'
 services:
   eureka:
     container_name: tiary-eureka
-    build: ./eureka/
+    image: ckaanf/tiary-eureka:tiary
     ports:
       - "8761:8761"
     restart: always
 
   config:
     container_name: tiary-config
-    build: ./config/
+    image: ckaanf/tiary-config:tiary
     ports:
       - "9000:9000"
     depends_on:
@@ -18,7 +18,7 @@ services:
 
   server:
     container_name: tiary-server
-    build: ./server/
+    image: ckaanf/tiary-server:tiary
     ports:
       - "8088:8088"
     depends_on:
@@ -28,7 +28,7 @@ services:
 
   batch:
     container_name: tiary-batch
-    build: ./batch/
+    image: ckaanf/tiary-batch:tiary
     ports:
       - "8089:8089"
     depends_on:
@@ -37,21 +37,19 @@ services:
       - server
     restart: unless-stopped
 
-  payment:
-    container_name: tiary-payment
-    build: ./payment/
-    ports:
-      - "8889:8889"
-    depends_on:
-      - eureka
-      - config
-    restart: unless-stopped
+  # payment:
+  #   container_name: tiary-payment
+  #   image: your-docker-hub-username/payment-image:tag
+  #   ports:
+  #     - "8889:8889"
+  #   depends_on:
+  #     - eureka
+  #     - config
+  #   restart: unless-stopped
 
   gateway:
     container_name: tiary-gateway
-    build: ./gateway/
-    ports:
-      - "8090:8090"
+    image: ckaanf/tiary-gateway:tiary
     depends_on:
       - eureka
 
@@ -80,5 +78,3 @@ services:
       - prometheus
     volumes:
       - ./monitoring/grafana/data:/var/lib/grafana
-
-

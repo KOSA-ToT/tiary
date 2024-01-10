@@ -49,5 +49,4 @@ public class CommentResponseDTO {
 				.modifiedBy(comment.getModifiedBy())
 				.build();
 	}
-
 }

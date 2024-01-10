@@ -58,11 +58,14 @@ public class CommentController {
 	public ResponseEntity confirmPassword(@PathVariable("comment-id") Long commentId,
 		@RequestBody CommentRequestDTO commentRequestDTO) {
 		System.out.println(commentRequestDTO);
-		if (commentService.confirmPassword(commentId, commentRequestDTO.getPassword())) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+
+		// if (commentService.confirmPassword(commentId, commentRequestDTO.getPassword())) {
+		// 	return new ResponseEntity<>(HttpStatus.OK);
+		// } else {
+		// 	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		// }
+		commentService.confirmPassword(commentId, commentRequestDTO.getPassword()); // error PASSWORD_NOT_MATCHED , 403 , "비밀번호를 확인해주세요";
+		return new ResponseEntity(HttpStatus.OK);
 	}
 
 	// 댓글 수정

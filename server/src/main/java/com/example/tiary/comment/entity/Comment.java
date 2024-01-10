@@ -34,7 +34,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-@ToString
 @Getter
 @Entity
 public class Comment extends AuditingFields {
@@ -42,10 +41,11 @@ public class Comment extends AuditingFields {
 	@Id
 	private Long id;
 
-	@Column(length = 200)
+	@Column(length = 200) // 명세에 충실한 느낌을 줌 varchar 255
 	private String content;
 
-	@Column(length = 20)
+	@Column(length = 20) // 널이 되는애가 있어 -> content -> 5000 -> 서버 스펙이 후져요 램 2g -> 그런걸 해봤냐
+	// 메모리 최적화
 	private String password;
 
 	@Column(name = "comment_type")
@@ -60,23 +60,21 @@ public class Comment extends AuditingFields {
 	private Boolean isDeleted;
 
 	@JsonIgnore
-	@ManyToOne(fetch = LAZY)
+	@ManyToOne(fetch = LAZY) // 이거 왜 씀?
 	@JoinColumn(name = "parent_id")
-	@ToString.Exclude
 	private Comment parent;
 
 	@OneToMany(mappedBy = "parent", orphanRemoval = true) // 부모댓글이 삭제되면 자식댓글도 삭제 (DB도 삭제)
-	@ToString.Exclude
 	private List<Comment> children = new ArrayList<>();
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
 	private Users users;
 
-
-	public void setParent(Comment parent) {
-		this.parent = parent;
-	}
+	// 이런게 관리 안된 코드라는 느낌을 줌ㅇ
+	// public void setParent(Comment parent) {
+	// 	this.parent = parent;
+	// }
 
 	public void updateContent(String content) {
 		this.content = content;
@@ -86,7 +84,7 @@ public class Comment extends AuditingFields {
 		this.parent = comment;
 	}
 
-	public void changeIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+	// public void changeIsDeleted(Boolean isDeleted) {
+	// 	this.isDeleted = isDeleted;
+	// }
 }

@@ -6,6 +6,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.tiary.article.dto.request.RequestArticleDto;
+
 @Service
 public class BatchService {
 
@@ -25,13 +27,13 @@ public class BatchService {
 	// 	restTemplate.postForEntity(apiUrl, null, Void.class);
 	// }
 
-	public void updateRecommendationsAsync(Long postId) {
+	public void updateRecommendationsAsync(Long articleId , RequestArticleDto requestArticleDto) {
 		//http://localhost:8089
-		String requestUrl  =  batchServerUrl + "/batch/updateRecommendations/" + postId;
+		String requestUrl  =  batchServerUrl + "/batch/updateRecommendations/" + articleId;
 		System.out.println("서버 호스트 입니다: " + batchServerUrl);
 
 		// 게시물이 생성된 후 배치 서버 API를 호출
-		ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, null, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestArticleDto, String.class);
 
 		// HTTP 응답 확인 등 추가 로직이 필요할 경우 처리 가능
 	}
