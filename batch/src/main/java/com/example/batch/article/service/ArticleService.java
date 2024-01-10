@@ -30,7 +30,7 @@ public class ArticleService {
 
 	public ResponseArticleDto getRelatedArticle(Long articleId) {
 		Article article = articleRepository.findById(articleId).orElseThrow();
-		List<RelatedArticle> allRelatedArticles = article.getRelatedArticleList();
+		List<RelatedArticle> allRelatedArticles = recommendationService.getRecommendationsFromCache(articleId);
 
 		// 랜덤으로 6개의 연관 게시물 선택
 		List<RelatedArticle> selectedRelatedArticles = getRandomRelatedArticles(allRelatedArticles, 6);

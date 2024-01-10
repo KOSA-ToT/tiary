@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class RecommendationService {
 
+	private final CacheManager cacheManager;
 	private final ArticleRepository articleRepository;
 	private final ExtractKeywordRepository extractKeywordRepository;
 	private final KeywordAndSimilarityService keywordAndSimilarityService;
 
 	private static final String RECOMMENDATIONS_CACHE_NAME = "recommendations";
 
-	public RecommendationService(ArticleRepository articleRepository, ExtractKeywordRepository extractKeywordRepository,
-		KeywordAndSimilarityService keywordAndSimilarityService) {
+	public RecommendationService(CacheManager cacheManager, ArticleRepository articleRepository,
+		ExtractKeywordRepository extractKeywordRepository, KeywordAndSimilarityService keywordAndSimilarityService) {
+		this.cacheManager = cacheManager;
 		this.articleRepository = articleRepository;
 		this.extractKeywordRepository = extractKeywordRepository;
 		this.keywordAndSimilarityService = keywordAndSimilarityService;
@@ -39,7 +42,7 @@ public class RecommendationService {
 
 	@Cacheable(cacheNames = RECOMMENDATIONS_CACHE_NAME, key = "#articleId")
 	public List<RelatedArticle> getRecommendationsFromCache(Long articleId) {
-		return calculateAndCacheRecommendations(articleId);
+		return getRecommendationsDirectlyFromCache(articleId);
 	}
 
 	@CacheEvict(cacheNames = RECOMMENDATIONS_CACHE_NAME, key = "#aritcleId")
@@ -48,34 +51,38 @@ public class RecommendationService {
 	}
 
 	public List<RelatedArticle> calculateAndCacheRecommendations(Long articleId){
+		List<RelatedArticle> recommendations = getRecommendations(articleId);
+		cacheRecommendations(articleId, recommendations);
+		return recommendations;
+	}
+	private List<RelatedArticle> getRecommendationsDirectlyFromCache(Long articleId) {
+		log.info("Fetching recommendations directly from cache for articleId: {}", articleId);
+		return Optional.ofNullable(cacheManager.getCache(RECOMMENDATIONS_CACHE_NAME))
+			.map(cache -> cache.get(articleId, List.class))
+			.orElseGet(() -> {
+				log.info("Cache miss. Fetching recommendations from the original logic.");
+				return getRecommendations(articleId);
+			});
+	}
 
-		Article articleOrigin = articleRepository.findById(articleId).orElseThrow(()->new EntityNotFoundException("게시물이 존재하지 않습니다"));
+	private List<RelatedArticle> getRecommendations(Long articleId){
+		Article articleOrigin = articleRepository.findById(articleId)
+			.orElseThrow(() -> new EntityNotFoundException("게시물이 존재하지 않습니다"));
 		String keywords = extractKeywordRepository.findById(articleId)
 			.map(ExtractKeyword::getKeywords)
 			.orElse("");
 
 		Map<String, Double> targetTFIDF = keywordAndSimilarityService.calculateTFIDF(keywords);
-		/* 코사인 유사도 기반
-		List<RelatedArticle> recommendations = articleRepository.findAll().stream()
-			.filter(article -> !article.getId().equals(articleId))
-			.map(article -> {
-				double similarity = keywordAndSimilarityService.calculateCosineSimilarity(keywords,
-						extractKeywordRepository.findById(article.getId())
-					.map(ExtractKeyword::getKeywords)
-					.orElse(""));
-				return new RelatedArticle(article.getId(), articleOrigin, similarity);
-			}).toList();*/
 
 		List<RelatedArticle> recommendations = articleRepository.findAll().stream()
 			.filter(article -> !article.getId().equals(articleId))
-			.map(article -> keywordAndSimilarityService.calculateAssociationScore(article, targetTFIDF, getWordFrequencies(article)))
-			.filter(relatedArticle -> relatedArticle.getRelevanceScore() >0)
-			.sorted(Comparator.comparing(RelatedArticle::getRelevanceScore).reversed()) // Sort by relevance score in descending order
+			.map(article -> keywordAndSimilarityService.calculateAssociationScore(article, targetTFIDF,
+				getWordFrequencies(article)))
+			.filter(relatedArticle -> relatedArticle.getRelevanceScore() > 0)
+			.sorted(Comparator.comparing(RelatedArticle::getRelevanceScore).reversed())
 			.collect(Collectors.toList());
 
 		articleOrigin.setRelatedArticleList(recommendations);
-
-		cacheRecommendations(articleId, recommendations);
 		return recommendations;
 	}
 

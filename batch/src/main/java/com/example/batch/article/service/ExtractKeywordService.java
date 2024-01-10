@@ -22,12 +22,9 @@ public class ExtractKeywordService {
 		this.extractKeywordRepository = extractKeywordRepository;
 	}
 
-	public void calculateAndSaveKeywords(Long articleId){
-		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물이 없습니다."));
-		String keywords = extractAndProcessKeyword(article.getTitle() + " " + article.getContent());
-		ExtractKeyword extractKeyword = new ExtractKeyword(article.getId(), keywords);
-		System.out.println("키워드 저장 확인");
+	public void calculateAndSaveKeywords(Long articleId , String title, String content){
+		String keywords = extractAndProcessKeyword(title + " " + content);
+		ExtractKeyword extractKeyword = new ExtractKeyword(articleId, keywords);
 		extractKeywordRepository.save(extractKeyword);
 	}
 
