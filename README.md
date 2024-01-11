@@ -38,17 +38,21 @@
 <br>
 
 ## 🔧 기술 스택
-![stack](https://github.com/KOSA-ToT/tiary/blob/main/TIARY-001%20(1).png)
+![stack]
 
 <br>
 
 ## 📝 관련 문서
+#### [📌 API 명세서]
+
 
 #### [📌 시스템 아키텍쳐]
 
-#### [📌 API 명세서]
+![architecture](https://github.com/KOSA-ToT/tiary/blob/main/아키텍쳐.png)
 
 #### [📌 ERD]
+
+![ERD](https://github.com/KOSA-ToT/tiary/blob/main/2조_ERD.png)
 
 
 
