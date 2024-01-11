@@ -38,9 +38,7 @@
 <br>
 
 ## 🔧 기술 스택
-### **FE**
-
-### **BE**
+![stack](https://github.com/KOSA-ToT/tiary/blob/main/TIARY-001%20(1).png)
 
 <br>
 
