@@ -205,8 +205,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	@Override
 	public String deleteArticle(Long[] articleIdList, Long usersId) {
+		Users users = userService.getUserById(usersId);
 		for(Long i : articleIdList){
-			deleteArticle(i, usersId);
+			deleteArticleImpl(i, users.getId());
 		}
 		return "삭제 완료";
 	}
@@ -215,20 +216,21 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	@Override
 	public String deleteArticle(Long articleId, Long usersId) {
-		// Users users = usersRepository.findById(usersId)
-		// 	.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Users users = userService.getUserById(usersId);
-		getArticle(articleId);
+		deleteArticleImpl(articleId,users.getId());
+		return "삭제 완료";
+	}
+
+	private void deleteArticleImpl(Long articleId, Long usersId){
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_ALREADY_DELETE));
-		if(!Objects.equals(article.getUsers().getId(), users.getId())){
+		if(!Objects.equals(article.getUsers().getId(), usersId)){
 			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
 		}
 		articleImageRepository.findAllByArticleId(articleId)
 			.forEach(img -> s3UploadService.deleteImage(img.getImgUrl()));
 		articleLikesService.deleteLikes(articleId);
 		articleRepository.deleteArticleByIdAndUsersId(articleId,usersId);
-		return "삭제 완료";
 	}
 
 	@Override
