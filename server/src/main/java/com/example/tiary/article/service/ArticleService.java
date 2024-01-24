@@ -1,6 +1,7 @@
 package com.example.tiary.article.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -36,6 +37,11 @@ public interface ArticleService {
 	Article updateArticle(Long usersId, Long articleId, RequestArticleDto requestArticleDto,  List<String> storeNameList) throws
 		IOException;
 
+
+	@Transactional
+	String deleteArticle(Long[] articleIdList, Long usersId);
+
+	@Transactional
 	String deleteArticle(Long articleId, Long usersId);
 
 	@Transactional

@@ -36,7 +36,6 @@ import com.example.tiary.global.pagination.PageResponseArticleDto;
 import com.example.tiary.global.pagination.PaginationService;
 import com.example.tiary.global.s3.service.S3UploadService;
 import com.example.tiary.users.entity.Users;
-import com.example.tiary.users.repository.UsersRepository;
 import com.example.tiary.users.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 	private final ArticleRepository articleRepository;
-	private final UsersRepository usersRepository;
 	private final ArticleHashtagRepository articleHashtagRepository;
 	private final ArticleImageRepository articleImageRepository;
 
@@ -203,6 +201,14 @@ public class ArticleServiceImpl implements ArticleService {
 		batchService.updateRecommendationsAsync(article.getId(),requestArticleDto);
 
 		return articleRepository.save(article);
+	}
+	@Transactional
+	@Override
+	public String deleteArticle(Long[] articleIdList, Long usersId) {
+		for(Long i : articleIdList){
+			deleteArticle(i, usersId);
+		}
+		return "삭제 완료";
 	}
 
 	//게시물 삭제
