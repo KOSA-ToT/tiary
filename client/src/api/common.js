@@ -41,7 +41,6 @@ export const getUserInfoReq = async () => {
 };
 
 // comment
-
 export const getCommentList = async (articleId) => {
   return await instance.get("/comment/" + articleId);
 };
@@ -56,39 +55,37 @@ export const createGuestComment = async (commentRequestDTO, articleId) => {
 
 export const commentPasswordConfirm = async (commentRequestDTO, commentId) => {
   return await instance.post(
-    "/comment/guest/password-confirm/" + commentId,
+    "/comment/password-confirm/" + commentId,
     commentRequestDTO
   );
 };
 
 export const editUserComment = async (
   commentRequestDTO,
-  articleId,
   commentId
 ) => {
   return await authInstance.patch(
-    "/comment/" + articleId + "/" + commentId,
+    "/comment/" + commentId,
     commentRequestDTO
   );
 };
 
 export const editGuestComment = async (
   commentRequestDTO,
-  articleId,
   commentId
 ) => {
   return await instance.patch(
-    "/comment/guest/" + articleId + "/" + commentId,
+    "/comment/guest/" + commentId,
     commentRequestDTO
   );
 };
 
 export const deleteUserComment = async (articleId, commentId) => {
-  return await authInstance.delete("/comment/" + articleId + "/" + commentId);
+  return await authInstance.delete("/comment/" + commentId);
 };
 
 export const deleteGuestComment = async (articleId, commentId) => {
-  return await instance.delete("/comment/guest/" + articleId + "/" + commentId);
+  return await instance.delete("/comment/guest/" + commentId);
 };
 export const getArticleRequest = async (articleId) => {
   return await instance.get("/article/" + articleId);

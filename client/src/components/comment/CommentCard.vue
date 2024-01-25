@@ -168,7 +168,6 @@ async function editComment(content) {
   try {
     const editCommentResponse = await editComment(
       commentRequestDTO.value,
-      commentData.articleId,
       commentData.id
     );
     console.log("Comment updated successfully", editCommentResponse);

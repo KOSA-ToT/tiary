@@ -110,14 +110,14 @@ public class CommentService {
 
 	// 회원 수정
 	@Transactional
-	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO, Long articleId, Long userId) {
+	public CommentResponseDTO update(Long commentId, CommentRequestDTO commentRequestDTO, Long userId) {
 		Users users
 			= usersRepository.findById(userId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+		Article article = articleRepository.findById(comment.getArticle().getId())
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 
 		if(!Objects.equals(userId, comment.getUsers().getId()))
 			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
@@ -128,11 +128,11 @@ public class CommentService {
 
 	// 비회원 수정
 	@Transactional
-	public CommentResponseDTO guestUpdate(Long commentId, Long articleId, CommentRequestDTO commentRequestDTO) {
-		Article article = articleRepository.findById(articleId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+	public CommentResponseDTO guestUpdate(Long commentId,  CommentRequestDTO commentRequestDTO) {
 		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+				.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENTS_NOT_FOUND));
+		Article article = articleRepository.findById(comment.getArticle().getId())
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 
 		Optional.ofNullable(commentRequestDTO.getContent()).ifPresent(comment::updateContent);
 		return CommentResponseDTO.from(commentRepository.save(comment));
@@ -140,11 +140,12 @@ public class CommentService {
 
 	// 회원 댓글 삭제
 	@Transactional
-	public String delete(Long commentId, Long articleId, Long userId) {
+	public String delete(Long commentId, Long userId) {
 		Users users
 			= usersRepository.findById(userId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-		Article article = articleRepository.findById(articleId)
+		Comment comment = commentRepository.findById(commentId).get();
+		Article article = articleRepository.findById(comment.getArticle().getId())
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
 		commentRepository.deleteById(commentId);
 		return "회원 댓글 삭제 완료";
