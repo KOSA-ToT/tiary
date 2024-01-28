@@ -10,9 +10,9 @@
     -  만약, 이미지가 이미 존재한다면 이미지에 태그 붙이기 `docker tag {이미지 이름} {계정이름}/{도커허브레포지토리}:{태그명}`
 2. 이미지를 도커 허브로 전송
     - `docker push 이미지 이름` (ex. `docker push ysheee/test:v1`)
-3. 클라우드 서버에서, 도커 허브에 있는 이미지 풀 받기
+3. AWS 서버로 `docker-compose-aws.yml` 파일을 복사하여 `image` 부분을 자신의 허브 이미지 이름으로 바꿔 사용하세요! 
+    - (현재 서버에서, 도커 허브에 있는 이미지를 pull 받아 해당 이미지를 사용합니다)
     - MySQL의 PASSWORD, USER 값을 변경하세요
-    - AWS 서버로 `docker-compose-aws.yml` 파일을 복사하여 `image` 부분을 자신의 허브 이미지 이름으로 바꿔 사용하세요!
 
 ## 📄 application.yml 설정
 
