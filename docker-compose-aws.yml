@@ -7,11 +7,28 @@ services:
       - "5173:80"
     restart: always
 
+  mysql:
+    container_name: tiary-mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: tiarypassword
+      MYSQL_DATABASE: tiary
+      MYSQL_USER: tot
+      MYSQL_PASSWORD: totpassword
+      TZ: Asia/Seoul
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - tiary-db-volume:/var/lib/mysql
+
   eureka:
     container_name: tiary-eureka
     image: your_hub_image
     ports:
       - "8761:8761"
+    depends_on:
+      - mysql
     restart: always
 
   config:
@@ -92,3 +109,6 @@ services:
       - prometheus
     volumes:
       - ./monitoring/grafana/data:/var/lib/grafana
+
+volumes:
+  tiary-db-volume:
