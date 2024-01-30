@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.example.tiary.comment.filtering.BadWords;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +29,14 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final ArticleRepository articleRepository;
 	private final UsersRepository usersRepository;
+	private final BadWords badWords;
 
 	public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository,
-		UsersRepository usersRepository) {
+						  UsersRepository usersRepository, BadWords badWords) {
 		this.commentRepository = commentRepository;
 		this.articleRepository = articleRepository;
 		this.usersRepository = usersRepository;
+		this.badWords = badWords;
 	}
 
 	// 회원 댓글 등록
@@ -43,7 +46,10 @@ public class CommentService {
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+
+		commentRequestDTO.setContent(badWords.filterBadWords(commentRequestDTO.getContent()));
 		Comment comment = commentRequestDTO.toEntityUser(article, users);
+
 		Comment parentComment;
 		if (commentRequestDTO.getParentId() != null) { // 부모 댓글이 있을 경우
 			parentComment = commentRepository.findById(commentRequestDTO.getParentId())
@@ -59,6 +65,7 @@ public class CommentService {
 	public CommentResponseDTO guestCreate(CommentRequestDTO commentRequestDTO, Long articleId) {
 		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+		commentRequestDTO.setContent(badWords.filterBadWords(commentRequestDTO.getContent()));
 		Comment comment = commentRequestDTO.toEntityGuest(article);
 		Comment parentComment;
 		if (commentRequestDTO.getParentId() != null) {    // 부모 댓글이 있을 경우
