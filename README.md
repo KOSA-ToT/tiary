@@ -39,14 +39,14 @@
 <br>
 
 ## 🔧 기술 스택
-![stack]()
+![stack](images/stack.png)
 
 <br>
 
 ## 📝 관련 문서
 #### [📌 유스케이스]
 
-![usecase](https://drive.google.com/file/d/1XwxEaL8Qpr2vO5ExrJiNMdBWVsnyIKYb/view?usp=sharing)
+![usecase](images/usecase.png)
 
 
 #### [📌 시스템 아키텍쳐]
