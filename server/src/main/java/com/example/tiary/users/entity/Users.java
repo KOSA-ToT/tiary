@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.tiary.users.constant.Role;
+import com.example.tiary.users.constant.UserPicture;
 import com.example.tiary.users.constant.UserStatus;
 
 import jakarta.persistence.Column;
@@ -62,7 +63,8 @@ public class Users implements UserDetails {
 	}
 
 	public static Users signUp(String nickname, String email) {
-		return new Users(null, nickname, email, Role.USER, null, UserStatus.ACTIVE);
+		String defaultPictureName = UserPicture.DEFAULT_PICTURE.getFileName();
+		return new Users(null, nickname, email, Role.USER, defaultPictureName, UserStatus.ACTIVE);
 	}
 
 	@Override
